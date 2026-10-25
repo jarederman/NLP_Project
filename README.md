@@ -67,3 +67,16 @@ sbatch scripts/sync_github.slurm
 ```
 
 远程 URL 不含任何凭据。项目专用 HTTPS credential store 位于 `.runtime/git/credentials`，权限为 `0600`，并被 `.gitignore` 排除。
+
+## BERT 双向上下文对照
+
+`google-bert/bert-base-uncased` 在每个候选空白处插入 `[MASK]`，使用左右各约 126 token 的双向窗口，并与 Qwen 使用相同的 GUM train Platt calibration、dev 候选和 Soft F1：
+
+```bash
+sbatch scripts/run_bert_comparison.slurm
+# 已有完整概率缓存时只重算稳定校准和比较，不使用 GPU：
+source scripts/env.sh
+/scratch/wj2301/conda_envs/jit/bin/python -m src.run_bert_comparison --analyze-only
+```
+
+结果位于 `results/bert_vs_qwen_summary.md`、`results/bert_vs_qwen_metrics.csv` 和 `results/bert_vs_qwen.json`。

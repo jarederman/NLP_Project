@@ -1,0 +1,8 @@
+{
+  "model_name": "google-bert/bert-base-uncased",
+  "max_length": 256,
+  "batch_size": 128,
+  "probability_clip": 0.0001,
+  "seed": 20261025,
+  "rates": [0.1, 0.2]
+}

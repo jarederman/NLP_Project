@@ -126,22 +126,28 @@ class PlattCalibrator:
         return np.log(p) - np.log1p(-p)
 
     def fit(self, raw: np.ndarray, labels: np.ndarray, max_iter: int = 100) -> "PlattCalibrator":
+        from scipy.optimize import minimize
+
         x = self._logit(np.asarray(raw, dtype=float))
         y = np.asarray(labels, dtype=float)
-        a, b = 1.0, math.log((y.mean() + 1e-4) / (1 - y.mean() + 1e-4)) - float(np.mean(x))
+        a = 1.0
+        b = math.log((y.mean() + 1e-4) / (1 - y.mean() + 1e-4)) - float(np.mean(x))
         reg = 1e-4
-        for _ in range(max_iter):
-            z = np.clip(a * x + b, -30, 30)
-            p = 1 / (1 + np.exp(-z))
-            w = p * (1 - p)
-            grad = np.array([np.sum((p - y) * x) + reg * a, np.sum(p - y)])
-            hess = np.array([[np.sum(w * x * x) + reg, np.sum(w * x)], [np.sum(w * x), np.sum(w)]])
-            step = np.linalg.solve(hess + np.eye(2) * 1e-8, grad)
-            a -= step[0]
-            b -= step[1]
-            if np.max(np.abs(step)) < 1e-7:
-                break
-        self.slope, self.intercept = float(np.clip(a, 0.01, 20.0)), float(b)
+
+        def objective(theta):
+            slope, intercept = theta
+            z = slope * x + intercept
+            loss = np.mean(np.logaddexp(0.0, z) - y * z) + 0.5 * reg * slope * slope
+            p = 1 / (1 + np.exp(-np.clip(z, -30, 30)))
+            grad = np.array([np.mean((p - y) * x) + reg * slope, np.mean(p - y)])
+            return float(loss), grad
+
+        fitted = minimize(objective, np.array([a, np.clip(b, -30, 30)]), jac=True,
+                          method="L-BFGS-B", bounds=[(0.01, 20.0), (-30.0, 30.0)],
+                          options={"maxiter": max_iter, "ftol": 1e-12})
+        if not fitted.success or not np.isfinite(fitted.x).all():
+            raise RuntimeError(f"Stable Platt calibration failed: {fitted.message}")
+        self.slope, self.intercept = map(float, fitted.x)
         return self
 
     def predict(self, raw: np.ndarray) -> np.ndarray:

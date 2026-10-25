@@ -1,0 +1,55 @@
+{
+  "bert_model": "google-bert/bert-base-uncased",
+  "gpu": "NVIDIA H200 (cached extraction Job 20916796)",
+  "torch": "2.10.0+cu128",
+  "transformers": "5.7.0",
+  "train_documents": 197,
+  "dev_documents": 30,
+  "candidate_rows": 270,
+  "max_length": 256,
+  "batch_size": 128,
+  "bert_calibrator": {
+    "slope": 0.6532346603053178,
+    "intercept": 0.49176634036391564,
+    "method": "Platt scaling on official GUM train"
+  },
+  "qwen_calibrator": {
+    "slope": 0.5552294757758303,
+    "intercept": 1.9797162512963284,
+    "method": "Platt scaling on official GUM train"
+  },
+  "summaries": {
+    "Qwen left-context": {
+      "spearman_global": 0.21087892841222441,
+      "spearman_within_doc_mean": 0.8000070027704713,
+      "pairwise_accuracy": 0.8438095238095238,
+      "gold_beats_perturbed": 0.95,
+      "gold_wins_by_condition_rate": {
+        "over_0.1": 0.9333333333333333,
+        "over_0.2": 0.9333333333333333,
+        "under_0.1": 0.8666666666666667,
+        "under_0.2": 0.9666666666666667,
+        "shift_0.1": 1.0,
+        "shift_0.2": 1.0,
+        "mixed_0.1": 0.9333333333333333,
+        "mixed_0.2": 0.9666666666666667
+      }
+    },
+    "BERT bidirectional": {
+      "spearman_global": 0.23890612286883456,
+      "spearman_within_doc_mean": 0.877274066845583,
+      "pairwise_accuracy": 0.8942857142857142,
+      "gold_beats_perturbed": 0.9958333333333333,
+      "gold_wins_by_condition_rate": {
+        "over_0.1": 1.0,
+        "over_0.2": 1.0,
+        "under_0.1": 0.9666666666666667,
+        "under_0.2": 1.0,
+        "shift_0.1": 1.0,
+        "shift_0.2": 1.0,
+        "mixed_0.1": 1.0,
+        "mixed_0.2": 1.0
+      }
+    }
+  }
+}

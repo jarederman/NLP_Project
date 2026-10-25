@@ -12,5 +12,13 @@
     "stdout": "logs/formal_20913626.out",
     "stderr": "logs/formal_20913626.err"
   },
+  "bert_comparison": {
+    "job_id": "20916796",
+    "gpu": "NVIDIA H200",
+    "status": "BERT_COMPARISON_COMPLETE",
+    "stdout": "logs/bert_comparison_20916796.out",
+    "stderr": "logs/bert_comparison_20916796.err",
+    "note": "GPU probabilities complete; final tables use stable bounded Platt recalibration from the saved cache."
+  },
   "note": "Statuses are completion markers emitted by the experiment. sacct was temporarily unavailable after completion."
 }
