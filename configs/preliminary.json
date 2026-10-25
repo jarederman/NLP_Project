@@ -1,0 +1,15 @@
+{
+  "model_candidates": [
+    "Qwen/Qwen3.5-9B-Base",
+    "Qwen/Qwen3.5-9B"
+  ],
+  "seed": 20261025,
+  "splits": ["train", "dev"],
+  "max_context_tokens": 1536,
+  "context_overlap_tokens": 256,
+  "rates": [0.1, 0.2],
+  "weighted_bce_positive_weight": 10.0,
+  "soft_f_beta": 0.5,
+  "probability_clip": 0.0001,
+  "examples_per_group": 3
+}

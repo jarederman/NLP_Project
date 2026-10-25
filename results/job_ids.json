@@ -1,0 +1,16 @@
+{
+  "smoke": {
+    "job_id": "20913520",
+    "status": "PASS",
+    "stdout": "logs/smoke_20913520.out",
+    "stderr": "logs/smoke_20913520.err"
+  },
+  "formal": {
+    "job_id": "20913626",
+    "dependency": "afterok:20913520",
+    "status": "COMPLETE",
+    "stdout": "logs/formal_20913626.out",
+    "stderr": "logs/formal_20913626.err"
+  },
+  "note": "Statuses are completion markers emitted by the experiment. sacct was temporarily unavailable after completion."
+}

@@ -1,0 +1,6 @@
+# Reused environment: /scratch/wj2301/conda_envs/jit
+# Qwen3.5 text-only support requires a current Transformers release.
+torch>=2.10
+transformers>=5.7
+accelerate>=1.10
+numpy>=1.24

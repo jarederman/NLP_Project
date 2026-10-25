@@ -1,0 +1,21 @@
+# Project-local caches and runtime state
+.cache/
+.runtime/
+.tmp/
+.gitdata/
+__pycache__/
+*.py[cod]
+
+# Downloaded datasets and reusable LM probability caches
+data/UD_English-GUM/
+data/lm_cache/
+data/processed/
+
+# Scheduler logs and transient outputs
+logs/
+*.part
+
+# Editor/OS files
+.DS_Store
+.idea/
+.vscode/

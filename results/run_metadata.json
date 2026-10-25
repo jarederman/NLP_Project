@@ -1,0 +1,59 @@
+{
+  "model_name": "Qwen/Qwen3.5-9B-Base",
+  "gpu_name": "NVIDIA H200",
+  "torch_version": "2.10.0+cu128",
+  "transformers_version": "5.7.0",
+  "seed": 20261025,
+  "train_documents": 197,
+  "dev_documents": 30,
+  "dev_sentences": 1575,
+  "dev_candidate_positions": 24388,
+  "dev_removed_terminal_marks": 1414,
+  "rule_totals": {
+    "triggered": 21,
+    "beneficial_nonboundary": 21,
+    "detrimental_boundary": 0,
+    "fixes": 0,
+    "harms": 0
+  },
+  "calibrator": {
+    "slope": 0.5553899700653901,
+    "intercept": 1.9807845618310593,
+    "method": "Platt scaling on official GUM train"
+  },
+  "diagnostics": {
+    "boundary_prevalence": 0.0633508282762014,
+    "raw_positive_mean": 0.03921977950325461,
+    "raw_negative_mean": 0.0019801462926653268,
+    "raw_below_clip": 17406,
+    "calibrated_positive_mean": 0.3260393090568026,
+    "calibrated_negative_mean": 0.049675685547734605,
+    "calibrated_min": 0.0009377920995187719,
+    "calibrated_max": 0.9659066028752532,
+    "gold_length_rho_bce": 0.058954393770856504,
+    "gold_length_rho_weighted": 0.13592880978865407,
+    "gold_length_rho_soft_f1": 0.15595105672969967
+  },
+  "cases": {
+    "bce_under": {
+      "doc_id": "GUM_conversation_grounded",
+      "gold_f1": 0.8881118881118881,
+      "gold_bce": 0.31842616410101804,
+      "candidate_bce": 0.26642175241037197,
+      "context": "\u201cin it Did you just wash \u2014 Yes Really bothers me I kn- \u2014 | Oh oh I know I mean that 's the thing I thought of too\u201d\uff08p=0.0121\uff09"
+    },
+    "shift_success": {
+      "doc_id": "GUM_bio_emperor",
+      "gold_f1": 0.8108108108108109,
+      "gold_soft_f1": 0.32357944698251523,
+      "candidate_soft_f1": 0.22894539006606582,
+      "context": "\u771f\u8fb9\u754c \u201cretense by claiming to be \"Protector of Mexico\" as well | Born in England, Norton spent most of his early life in\u201d\uff08p=0.8763\uff09 \u88ab\u79fb\u5230\u975e\u8fb9\u754c \u201ce inadequacies of the legal and political structures of | the United States On September 17, 1859, he took matter\u201d\uff08p=0.0017\uff09"
+    },
+    "soft_failure": {
+      "doc_id": "GUM_bio_byron",
+      "gold_f1": 0.8837209302325582,
+      "delta": 0.010479868341661563,
+      "context": "\u201cng) against convicted or even suspected offenders. [26] | The liaison, on the other hand, may well have been \"pur\u201d\uff08p=0.0054\uff09"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "model": "Qwen/Qwen3.5-9B-Base",
+  "gpu": "NVIDIA H200",
+  "train_doc": "GUM_academic_art",
+  "dev_doc": "GUM_academic_exposure",
+  "dev_positions": 706,
+  "raw_min": 5.573368433431369e-09,
+  "raw_max": 0.6314021944999695,
+  "calibrator": {
+    "slope": 0.7341026866922166,
+    "intercept": 3.193166664109437,
+    "method": "Platt scaling on official GUM train"
+  }
+}
