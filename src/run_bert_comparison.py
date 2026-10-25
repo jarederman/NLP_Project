@@ -151,7 +151,7 @@ def main() -> None:
     verdict = "优于" if delta > 0 else "未优于"
     lines += ["", "## 结论", "",
               f"BERT 双向概率在本轮 {verdict} Qwen 左侧概率；pairwise accuracy 差值为 {delta:+.3f}。",
-              "BERT 在候选位置使用右侧文本，因此可能直接利用下一词大写等强信号；这属于本实验要测的双向上下文优势，但与在线 causal 评价的可用信息不同。"]
+              "BERT 在候选位置使用右侧词汇和句法信息；由于本模型为 uncased，它不能利用大小写。双向信息属于本实验要测的优势，但与在线 causal 评价可用的信息不同。"]
     (results / "bert_vs_qwen_summary.md").write_text("\n".join(lines) + "\n")
     print(json.dumps({"status": "BERT_COMPARISON_COMPLETE", **metadata}), flush=True)
 
