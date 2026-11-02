@@ -8,6 +8,7 @@ __pycache__/
 
 # Downloaded datasets and reusable LM probability caches
 data/UD_English-GUM/
+data/UD_English-EWT/
 data/lm_cache/
 data/processed/
 
