@@ -2,6 +2,7 @@
 .cache/
 .runtime/
 .tmp/
+.venv/
 .gitdata/
 __pycache__/
 *.py[cod]
@@ -11,6 +12,7 @@ data/UD_English-GUM/
 data/UD_English-EWT/
 data/lm_cache/
 data/processed/
+data/real_system/
 
 # Scheduler logs and transient outputs
 logs/

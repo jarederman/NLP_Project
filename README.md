@@ -73,6 +73,33 @@ python3 -m unittest discover -s tests -v
 
 `src.selection.selection_report` 以 Macro Selection Regret 为主要决策指标，并单独返回 pooled Micro sensitivity；Macro score 不会与 Micro Gold F1 混合比较。Minimum study 的候选系统为 Punkt、Stanza、WtP 和 SaT，关键部署基线为 Direct Internal Splitter 与 Always-SaT。
 
+## GUM 真实 Splitter 实验（Step 1 + Step 2）
+
+本轮固定使用 UD `r2.18` 的 GUM Train/Dev，并且不读取 Test。`src.surface_data` 从
+CoNLL-U surface token、MWT 与 `SpaceAfter=No` 重建完整文档；该路径忽略 `# text`、
+`# sent_id` 和句间空行。Gold offsets 由独立 artifact 保存，只有最终
+`src.analyze_real_splitters` 会加载 Dev Gold。
+
+评分协议保持 `google-bert/bert-base-uncased` + Platt calibration + 原 Soft F1 不变。
+若候选 gap 前已经存在 `.?!`（包括引号内的终止标点），BERT query 替换已有标点；
+否则在 gap 插入 `[MASK]`，避免询问“是否需要第二个标点”。真实候选系统为 Punkt、
+Stanza、`wtp-bert-mini` 和无 UD LoRA 的 `sat-3l-sm`。
+
+环境、一次 smoke 和正式实验按顺序提交：
+
+```bash
+setup_job=$(sbatch --parsable scripts/setup_real_environment.slurm)
+# setup 成功后：
+smoke_job=$(sbatch --parsable scripts/run_real_smoke.slurm)
+# logs/real_smoke_${smoke_job}.out 出现 REAL_SMOKE_PASS 后，只提交一次正式作业：
+sbatch scripts/run_real_formal.slurm
+```
+
+新增 Python 包和 NLTK/Stanza/Hugging Face 模型全部位于项目 `.venv/` 与 `.cache/`，
+不会写入 `$HOME`。正式结果为 `results/real_splitter_per_doc.csv`、
+`results/real_splitter_summary.csv`、`results/real_splitter_ranking.md`、
+`results/alignment_failures.jsonl` 和 `results/examples.jsonl`。
+
 ## GitHub 持续同步
 
 本环境的系统 `.git` 是只读空挂载，因此仓库元数据持久保存在被忽略的 `.gitdata/`。使用以下包装命令代替普通 `git`：
@@ -83,10 +110,11 @@ scripts/git_project.sh add <files>
 scripts/git_project.sh commit -m "message"
 ```
 
-Login node 当前不能解析 GitHub；提交后通过 CPU short job 安全地 fetch/rebase/push：
+Login node 当前不能解析 GitHub；提交后通过 CPU short job 安全地 fetch/rebase/push
+当前 review branch。必须显式传入分支名，脚本会拒绝推送 `main`：
 
 ```bash
-sbatch scripts/sync_github.slurm
+sbatch --export=ALL,GIT_SYNC_BRANCH=experiment/gum-real-splitter-eval scripts/sync_github.slurm
 ```
 
 远程 URL 不含任何凭据。项目专用 HTTPS credential store 位于 `.runtime/git/credentials`，权限为 `0600`，并被 `.gitignore` 排除。

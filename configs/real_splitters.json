@@ -1,0 +1,20 @@
+{
+  "protocol_version": "gum-real-splitters-v1",
+  "gum_release": "r2.18",
+  "expected_dev_documents": 32,
+  "systems": ["punkt", "stanza", "wtp", "sat"],
+  "bert": {
+    "model_name": "google-bert/bert-base-uncased",
+    "max_length": 256,
+    "batch_size": 128,
+    "mask_protocol": "surface_v1_replace_visible_terminal_else_insert_gap"
+  },
+  "splitters": {
+    "punkt": "nltk english.pickle; default parameters",
+    "stanza": "English tokenize processor; default model",
+    "wtp": "wtp-bert-mini; default threshold",
+    "sat": "sat-3l-sm; default threshold; no UD LoRA"
+  },
+  "soft_f1_beta": 1.0,
+  "fixed_seed": 20261102
+}

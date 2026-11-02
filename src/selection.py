@@ -153,9 +153,12 @@ def pairwise_ranking_accuracy(records: list[ScoredSegmentation]) -> dict[str, fl
             elif (left.quality > right.quality) == (left.gold_f1 > right.gold_f1):
                 correct += 1
     return {
-        "accuracy": correct / total if total else float("nan"),
+        "accuracy": (correct + 0.5 * ties) / total if total else float("nan"),
+        "strict_accuracy": correct / total if total else float("nan"),
         "tie_rate": ties / total if total else float("nan"),
         "pairs": float(total),
+        "correct": float(correct),
+        "ties": float(ties),
     }
 
 
