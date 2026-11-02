@@ -1,6 +1,6 @@
 {
   "protocol_version": "gum-real-splitters-v1",
-  "gum_release": "r2.18",
+  "gum_release": "1fe635509c649e376dfb449d528424ab78f4eaee",
   "expected_dev_documents": 32,
   "systems": ["punkt", "stanza", "wtp", "sat"],
   "bert": {

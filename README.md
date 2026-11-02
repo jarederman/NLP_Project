@@ -55,7 +55,7 @@ source scripts/env.sh
 
 ## Final-study infrastructure
 
-Proposal 后的核心实验使用冻结的 UD `r2.18` 数据版本。GUM train/dev 和 EWT test 分别由下列脚本下载；每个目录同时保存 `UD_RELEASE` 和 `SHA256SUMS`，不再跟随浮动的 `master`：
+Proposal 后的核心实验将 GUM 固定到 UD commit `1fe635509c649e376dfb449d528424ab78f4eaee`（32 篇 Dev 文档）。GUM train/dev 和 EWT test 分别由下列脚本下载；每个目录同时保存 `UD_RELEASE` 和 `SHA256SUMS`，不再跟随浮动的 `master`：
 
 ```bash
 source scripts/env.sh
@@ -75,7 +75,7 @@ python3 -m unittest discover -s tests -v
 
 ## GUM 真实 Splitter 实验（Step 1 + Step 2）
 
-本轮固定使用 UD `r2.18` 的 GUM Train/Dev，并且不读取 Test。`src.surface_data` 从
+本轮固定使用上述 UD commit 的 GUM Train/Dev，并且不读取 Test。`src.surface_data` 从
 CoNLL-U surface token、MWT 与 `SpaceAfter=No` 重建完整文档；该路径忽略 `# text`、
 `# sent_id` 和句间空行。`src.materialize_dev_gold` 只会在无参考分数冻结后生成
 Dev Gold artifact，随后仅 `src.analyze_real_splitters` 会加载它。
