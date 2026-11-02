@@ -1,0 +1,38 @@
+{
+  "protocol_version": "final-selection-v1",
+  "data": {
+    "ud_release": "r2.18",
+    "calibration_corpus": "UD_English-GUM/train",
+    "development_corpus": "UD_English-GUM/dev",
+    "held_out_corpus": "UD_English-EWT/test",
+    "target_gold_policy": "hidden_until_predictions_and_scores_are_frozen"
+  },
+  "systems": [
+    "punkt",
+    "stanza",
+    "wtp",
+    "sat"
+  ],
+  "evaluator": {
+    "version": "v1",
+    "evidence": "bert_masked_punctuation_probability",
+    "calibration": "platt_on_gum_train",
+    "candidate_score": "soft_f1"
+  },
+  "baselines": [
+    "direct_internal_splitter",
+    "always_sat"
+  ],
+  "primary_metrics": [
+    "macro_selection_regret",
+    "domain_system_ranking",
+    "within_document_pairwise_accuracy"
+  ],
+  "secondary_metrics": [
+    "micro_selection_regret_sensitivity",
+    "boundary_auprc",
+    "brier_score",
+    "expected_calibration_error",
+    "density_bias"
+  ]
+}
