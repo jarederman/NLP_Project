@@ -77,8 +77,8 @@ python3 -m unittest discover -s tests -v
 
 本轮固定使用 UD `r2.18` 的 GUM Train/Dev，并且不读取 Test。`src.surface_data` 从
 CoNLL-U surface token、MWT 与 `SpaceAfter=No` 重建完整文档；该路径忽略 `# text`、
-`# sent_id` 和句间空行。Gold offsets 由独立 artifact 保存，只有最终
-`src.analyze_real_splitters` 会加载 Dev Gold。
+`# sent_id` 和句间空行。`src.materialize_dev_gold` 只会在无参考分数冻结后生成
+Dev Gold artifact，随后仅 `src.analyze_real_splitters` 会加载它。
 
 评分协议保持 `google-bert/bert-base-uncased` + Platt calibration + 原 Soft F1 不变。
 若候选 gap 前已经存在 `.?!`（包括引号内的终止标点），BERT query 替换已有标点；

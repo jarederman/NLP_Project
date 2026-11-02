@@ -46,6 +46,7 @@ def main() -> None:
         "source": "UniversalDependencies/UD_English-GUM",
         "release": config["gum_release"],
         "test_read": False,
+        "dev_gold_materialized": False,
         "splits": {},
     }
     for split in ("train", "dev"):
@@ -53,7 +54,7 @@ def main() -> None:
         if not source.exists():
             raise FileNotFoundError(source)
         surfaces = load_surface_documents(source, split)
-        evaluation_gold = extract_gold_boundaries(source, split, surfaces)
+        evaluation_gold = extract_gold_boundaries(source, split, surfaces) if split == "train" else []
         if args.limit:
             surfaces = surfaces[:args.limit]
             selected = {doc.doc_id for doc in surfaces}
@@ -83,15 +84,16 @@ def main() -> None:
 
         write_surfaces(surfaces, args.output_root / f"surface_{split}.jsonl")
         write_contracts(raw_documents, args.output_root / f"raw_{split}.jsonl")
-        write_contracts(gold_contracts, args.output_root / f"gold_{split}.jsonl")
+        if split == "train":
+            write_contracts(gold_contracts, args.output_root / "gold_train.jsonl")
         manifest["splits"][split] = {
             "file": str(source.relative_to(ROOT)),
             "file_sha256": file_sha256(source),
             "documents": len(surfaces),
-            "sentences": int(sum(gold.sentence_count for gold in evaluation_gold)),
+            "sentences": int(sum(gold.sentence_count for gold in evaluation_gold)) if split == "train" else None,
             "surface_tokens": int(sum(len(doc.tokens) for doc in surfaces)),
             "candidate_positions": int(sum(len(doc.candidate_offsets) for doc in surfaces)),
-            "gold_boundaries": int(sum(len(gold.boundary_offsets) for gold in evaluation_gold)),
+            "gold_boundaries": int(sum(len(gold.boundary_offsets) for gold in evaluation_gold)) if split == "train" else None,
             "document_ids": [doc.doc_id for doc in surfaces],
         }
     args.manifest.parent.mkdir(parents=True, exist_ok=True)

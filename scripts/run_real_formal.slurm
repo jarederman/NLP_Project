@@ -19,6 +19,7 @@ python=.venv/bin/python
 "$python" -m src.run_real_splitters
 "$python" -m src.run_surface_bert
 "$python" -m src.score_real_splitters
+"$python" -m src.materialize_dev_gold
 "$python" -m src.analyze_real_splitters
 "$python" - <<'PY'
 import importlib.metadata as metadata

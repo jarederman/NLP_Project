@@ -31,8 +31,11 @@ mkdir -p "$smoke_root"
   --data-root "$smoke_root/data" --predictions "$smoke_root/predictions" \
   --evidence "$smoke_root/bert_dev_evidence.jsonl" \
   --output "$smoke_root/frozen_scores.jsonl"
+"$python" -m src.materialize_dev_gold \
+  --data-root "$smoke_root/data" --manifest "$smoke_root/data_manifest.json" \
+  --frozen-scores "$smoke_root/frozen_scores.jsonl"
 "$python" -m src.analyze_real_splitters \
   --data-root "$smoke_root/data" --scores "$smoke_root/frozen_scores.jsonl" \
   --evidence "$smoke_root/bert_dev_evidence.jsonl" --results "$smoke_root/results"
 test ! -s "$smoke_root/alignment_failures.jsonl"
-echo '{"status":"REAL_SMOKE_PASS","gold_loaded_only_by_final_analyzer":true}'
+echo '{"status":"REAL_SMOKE_PASS","dev_gold_materialized_only_after_score_freeze":true}'
