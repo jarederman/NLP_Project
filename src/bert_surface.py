@@ -8,7 +8,7 @@ import numpy as np
 
 
 PUNCTUATION = (".", "?", "!")
-TRAILING_PUNCTUATION = re.compile(r"([.!?])([\"'”’»\)\]\}]+)?$")
+TRAILING_PUNCTUATION = re.compile(r"([.!?]+)([\"'”’»\)\]\}]+)?$")
 
 
 def mask_anchor(text: str, boundary_offset: int) -> tuple[str, int]:
@@ -24,6 +24,15 @@ def mask_anchor(text: str, boundary_offset: int) -> tuple[str, int]:
     if match:
         return "replace_terminal_punctuation", match.start(1)
     return "insert_at_gap", boundary_offset
+
+
+def mask_span(text: str, boundary_offset: int) -> tuple[str, int, int]:
+    mode, start = mask_anchor(text, boundary_offset)
+    if mode == "insert_at_gap":
+        return mode, start, start
+    match = TRAILING_PUNCTUATION.search(text[:boundary_offset])
+    assert match is not None
+    return mode, match.start(1), match.end(1)
 
 
 def load_surface_bert(model_name: str, cache_dir: str):
@@ -58,27 +67,31 @@ def extract_surface_probabilities(
     offsets = [tuple(pair) for pair in encoded["offset_mapping"]]
     start_to_token = {start: i for i, (start, end) in enumerate(offsets) if end > start}
     span_to_token = {pair: i for i, pair in enumerate(offsets) if pair[1] > pair[0]}
-    plans: list[tuple[str, int, int]] = []
+    plans: list[tuple[str, int, int, int]] = []
     for boundary_offset in doc.candidate_offsets:
-        mode, anchor = mask_anchor(doc.text, boundary_offset)
+        mode, anchor_start, anchor_end = mask_span(doc.text, boundary_offset)
         if mode == "insert_at_gap":
             right_index = start_to_token.get(boundary_offset + 1)
             if right_index is None:
                 raise ValueError(
                     f"Cannot align right context in {doc.doc_id} at {boundary_offset}"
                 )
-            plans.append((mode, anchor, right_index))
+            plans.append((mode, anchor_start, right_index, right_index))
         else:
-            token_index = span_to_token.get((anchor, anchor + 1))
-            if token_index is None:
+            token_indices = [span_to_token.get((char, char + 1)) for char in range(anchor_start, anchor_end)]
+            if any(index is None for index in token_indices):
                 containing = [
                     (i, span) for i, span in enumerate(offsets)
-                    if span[0] <= anchor < span[1]
+                    if span[0] < anchor_end and span[1] > anchor_start
                 ]
                 raise ValueError(
-                    f"Terminal mark is not an exact BERT token in {doc.doc_id} at {anchor}: {containing[:2]}"
+                    f"Terminal mark is not exact BERT token(s) in {doc.doc_id} "
+                    f"at {anchor_start}:{anchor_end}: {containing[:4]}"
                 )
-            plans.append((mode, anchor, token_index))
+            indices = [int(index) for index in token_indices]
+            if indices != list(range(indices[0], indices[-1] + 1)):
+                raise ValueError(f"Non-contiguous punctuation tokens in {doc.doc_id}: {indices}")
+            plans.append((mode, anchor_start, indices[0], indices[-1] + 1))
 
     left_budget = (max_length - 3) // 2
     right_budget = max_length - 3 - left_budget
@@ -87,13 +100,13 @@ def extract_surface_probabilities(
         batch = plans[batch_start:batch_start + batch_size]
         sequences: list[list[int]] = []
         mask_positions: list[int] = []
-        for mode, _, token_index in batch:
+        for mode, _, left_stop, right_start in batch:
             if mode == "replace_terminal_punctuation":
-                left = full_ids[max(0, token_index - left_budget):token_index]
-                right = full_ids[token_index + 1:token_index + 1 + right_budget]
+                left = full_ids[max(0, left_stop - left_budget):left_stop]
+                right = full_ids[right_start:right_start + right_budget]
             else:
-                left = full_ids[max(0, token_index - left_budget):token_index]
-                right = full_ids[token_index:token_index + right_budget]
+                left = full_ids[max(0, left_stop - left_budget):left_stop]
+                right = full_ids[right_start:right_start + right_budget]
             sequence = [tokenizer.cls_token_id, *left, tokenizer.mask_token_id, *right, tokenizer.sep_token_id]
             sequences.append(sequence)
             mask_positions.append(1 + len(left))

@@ -200,7 +200,8 @@ def load_surface_documents(path: str | Path, split: str) -> list[SurfaceDocument
 
 
 def extract_gold_boundaries(
-    path: str | Path, split: str, surface_docs: Iterable[SurfaceDocument]
+    path: str | Path, split: str, surface_docs: Iterable[SurfaceDocument],
+    *, allow_source_superset: bool = False,
 ) -> list[GoldBoundaries]:
     """Create evaluation-only labels by aligning gold sentence ends to surfaces."""
     surfaces = {doc.doc_id: doc for doc in surface_docs}
@@ -208,6 +209,8 @@ def extract_gold_boundaries(
     seen: set[str] = set()
     for doc_id, sentences in _iter_documents_and_sentences(path):
         if doc_id not in surfaces:
+            if allow_source_superset:
+                continue
             raise ValueError(f"Gold document {doc_id} has no reconstructed surface")
         doc = surfaces[doc_id]
         flattened = [token.form for sentence in sentences for token in sentence]

@@ -97,8 +97,9 @@ def build_examples(
                 left,
                 right,
             ))
-    failures = sorted((item for item in candidates if item[0]), reverse=True)
-    successes = sorted((item for item in candidates if not item[0]), reverse=True)
+    ordering = lambda item: (item[0], item[1], item[2], item[3]["system"], item[4]["system"])
+    failures = sorted((item for item in candidates if item[0]), key=ordering, reverse=True)
+    successes = sorted((item for item in candidates if not item[0]), key=ordering, reverse=True)
     selected = failures[:max(0, limit - 4)] + successes[:4]
     examples = []
     for incorrect, gap, doc_id, left, right in selected:

@@ -29,7 +29,9 @@ def main() -> None:
     source = ROOT / "data/UD_English-GUM/en_gum-ud-dev.conllu"
     surfaces = load_surface_jsonl(args.data_root / "surface_dev.jsonl")
     raw = {doc.doc_id: doc for doc in read_raw_documents(args.data_root / "raw_dev.jsonl")}
-    internal_gold = extract_gold_boundaries(source, "dev", surfaces)
+    internal_gold = extract_gold_boundaries(
+        source, "dev", surfaces, allow_source_superset=True
+    )
     contracts = [GoldBoundaries(
         doc_id=record.doc_id,
         text_sha256=raw[record.doc_id].sha256,

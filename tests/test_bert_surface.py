@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from src.bert_surface import mask_anchor
+from src.bert_surface import mask_anchor, mask_span
 
 
 class MaskAnchorTest(unittest.TestCase):
@@ -23,6 +23,11 @@ class MaskAnchorTest(unittest.TestCase):
         second = text.index(" ", first + 1)
         self.assertEqual(mask_anchor(text, first), ("insert_at_gap", first))
         self.assertEqual(mask_anchor(text, second), ("insert_at_gap", second))
+
+    def test_terminal_punctuation_run_is_one_mask_query(self):
+        text = 'Really?!" Next'
+        boundary = text.rindex(" ")
+        self.assertEqual(mask_span(text, boundary), ("replace_terminal_punctuation", 6, 8))
 
 
 if __name__ == "__main__":

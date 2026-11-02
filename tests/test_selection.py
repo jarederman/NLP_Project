@@ -38,6 +38,16 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(pairwise["pairs"], 1.0)
         self.assertAlmostEqual(pairwise["accuracy"], 1.0)
 
+    def test_pairwise_metric_tie_receives_half_credit(self):
+        records = [
+            ScoredSegmentation("d", "punkt", (1, 0), (1, 0), (0.5, 0.5)),
+            ScoredSegmentation("d", "sat", (0, 1), (1, 0), (0.5, 0.5)),
+        ]
+        pairwise = selection_report(records, fixed_system="sat")["within_document_pairwise"]
+        self.assertAlmostEqual(pairwise["accuracy"], 0.5)
+        self.assertAlmostEqual(pairwise["strict_accuracy"], 0.0)
+        self.assertAlmostEqual(pairwise["tie_rate"], 1.0)
+
     def test_direct_internal_threshold(self):
         self.assertEqual(threshold_evidence((0.1, 0.5, 0.9), 0.5), (0, 1, 1))
 
