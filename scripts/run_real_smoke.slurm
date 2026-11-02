@@ -17,6 +17,7 @@ python=.venv/bin/python
 smoke_root="$PROJECT_ROOT/.tmp/real_smoke"
 mkdir -p "$smoke_root"
 
+scripts/fetch_gum.sh
 "$python" -m unittest discover -s tests -v
 "$python" -m src.prepare_real_data \
   --limit 2 --output-root "$smoke_root/data" --manifest "$smoke_root/data_manifest.json"

@@ -1,5 +1,5 @@
-# Installed into the project-local .venv; exact resolved versions are recorded
+# Installed into the project-local .venv. Transitive versions are also recorded
 # in results/real_run_metadata.json by the formal experiment.
-nltk>=3.9,<4
-stanza>=1.10,<2
-wtpsplit>=2.2,<3
+nltk==3.10.4
+stanza==1.15.0
+wtpsplit==2.2.2
