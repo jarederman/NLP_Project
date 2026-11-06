@@ -8,6 +8,9 @@ from typing import Iterable
 from .contracts import CandidateSegmentation, RawDocument
 
 
+INTRA_TOKEN_REASON = "predicted boundary is not a canonical inter-token whitespace gap"
+
+
 @dataclass(frozen=True)
 class AlignmentFailure:
     doc_id: str
@@ -77,7 +80,7 @@ def canonicalize_offsets(
         failures.append(AlignmentFailure(
             document.doc_id,
             system,
-            "predicted boundary is not a canonical inter-token whitespace gap",
+            INTRA_TOKEN_REASON,
             offset,
             document.text[start:end],
         ))
@@ -123,6 +126,9 @@ class RealSplitterSuite:
         if self._wtp is None:
             from wtpsplit import WtP
 
+            # split() is called without style/lang_code, so WtP's bundled
+            # sklearn "mixtures" (pickled with an older sklearn) are loaded but
+            # never used; the default 0.01 threshold applies.
             self._wtp = WtP("wtp-bert-mini")
             if self.use_gpu:
                 self._wtp.half().to("cuda")

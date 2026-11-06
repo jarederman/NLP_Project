@@ -39,6 +39,12 @@ class ScoredSegmentation:
     candidate: tuple[int, ...]
     gold: tuple[int, ...]
     evidence: tuple[float, ...]
+    # Splitter boundaries that are not a canonical inter-token whitespace gap:
+    # inside a surface token (e.g. an e-mail address) or between tokens with no
+    # whitespace (e.g. "al.|:"). The gold-free scorer has no evidence there, and
+    # Gold boundaries only occur at whitespace gaps, so meta-evaluation charges
+    # each one as a hard false positive.
+    non_gap_fp: int = 0
 
     def __post_init__(self) -> None:
         lengths = {len(self.candidate), len(self.gold), len(self.evidence)}
@@ -48,10 +54,13 @@ class ScoredSegmentation:
             raise ValueError("Candidate and gold vectors must be binary")
         if any(probability < 0.0 or probability > 1.0 for probability in self.evidence):
             raise ValueError("Evidence probabilities must be in [0, 1]")
+        if self.non_gap_fp < 0:
+            raise ValueError("non_gap_fp must be non-negative")
 
     @property
     def gold_counts(self) -> Counts:
-        return hard_counts(self.candidate, self.gold)
+        counts = hard_counts(self.candidate, self.gold)
+        return Counts(counts.tp, counts.fp + self.non_gap_fp, counts.fn)
 
     @property
     def soft_counts(self) -> Counts:
@@ -88,6 +97,35 @@ def threshold_evidence(evidence: tuple[float, ...], threshold: float) -> tuple[i
     if threshold < 0.0 or threshold > 1.0:
         raise ValueError("Threshold must be in [0, 1]")
     return tuple(int(probability >= threshold) for probability in evidence)
+
+
+def direct_internal_summary(
+    records: list[ScoredSegmentation], threshold: float
+) -> dict[str, float]:
+    """Gold quality of splitting directly with the evaluator's own evidence.
+
+    One evidence/gold vector per document is taken from the scored records (they
+    are validated to be identical across systems), thresholded, and evaluated
+    with the same Macro and pooled-Micro conventions as the real systems.
+    """
+    _validate_records(records)
+    first_by_doc: dict[str, ScoredSegmentation] = {}
+    for record in records:
+        first_by_doc.setdefault(record.doc_id, record)
+    total = Counts()
+    f1s = []
+    for record in first_by_doc.values():
+        counts = hard_counts(threshold_evidence(record.evidence, threshold), record.gold)
+        total += counts
+        f1s.append(counts.f1)
+    return {
+        "threshold": threshold,
+        "documents": float(len(f1s)),
+        "macro_gold_f1": sum(f1s) / len(f1s),
+        "micro_gold_f1": total.f1,
+        "micro_gold_precision": total.precision,
+        "micro_gold_recall": total.recall,
+    }
 
 
 def _validate_records(records: list[ScoredSegmentation]) -> None:
@@ -128,6 +166,9 @@ def summarize_systems(records: list[ScoredSegmentation]) -> dict[str, dict[str, 
             "micro_gold_f1": gold_total.f1,
             "micro_gold_precision": gold_total.precision,
             "micro_gold_recall": gold_total.recall,
+            "non_gap_false_positives": float(
+                sum(record.non_gap_fp for record in system_records)
+            ),
         }
     return summary
 
@@ -184,6 +225,10 @@ def selection_report(records: list[ScoredSegmentation], fixed_system: str = "sat
             "oracle": best_macro,
             "selection_regret": summary[best_macro]["macro_gold_f1"] - summary[selected_macro]["macro_gold_f1"],
             "oracle_headroom_over_fixed": summary[best_macro]["macro_gold_f1"] - summary[fixed_system]["macro_gold_f1"],
+            "fixed_system": fixed_system,
+            "fixed_system_regret": summary[best_macro]["macro_gold_f1"] - summary[fixed_system]["macro_gold_f1"],
+            # Negative: the reference-free selector is worse than always using the fixed system.
+            "selected_minus_fixed": summary[selected_macro]["macro_gold_f1"] - summary[fixed_system]["macro_gold_f1"],
         },
         "micro_sensitivity": {
             "predicted_ranking": predicted_micro,
@@ -191,6 +236,8 @@ def selection_report(records: list[ScoredSegmentation], fixed_system: str = "sat
             "selected": selected_micro,
             "oracle": best_micro,
             "selection_regret": summary[best_micro]["micro_gold_f1"] - summary[selected_micro]["micro_gold_f1"],
+            "fixed_system_regret": summary[best_micro]["micro_gold_f1"] - summary[fixed_system]["micro_gold_f1"],
+            "selected_minus_fixed": summary[selected_micro]["micro_gold_f1"] - summary[fixed_system]["micro_gold_f1"],
         },
         "within_document_pairwise": pairwise_ranking_accuracy(records),
     }

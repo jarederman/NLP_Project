@@ -12,7 +12,8 @@ import numpy as np
 
 from .contracts import read_gold_boundaries, read_raw_documents
 from .evaluate import spearman
-from .selection import ScoredSegmentation, selection_report
+from .selection import ScoredSegmentation, direct_internal_summary, selection_report
+from .real_splitters import INTRA_TOKEN_REASON
 from .surface_data import load_surface_jsonl
 
 
@@ -151,6 +152,10 @@ def main() -> None:
     parser.add_argument("--scores", type=Path, default=ROOT / "data/real_system/frozen_scores.jsonl")
     parser.add_argument("--evidence", type=Path, default=ROOT / "data/real_system/bert_dev_evidence.jsonl")
     parser.add_argument("--results", type=Path, default=ROOT / "results")
+    parser.add_argument(
+        "--failures", type=Path, default=ROOT / "results/alignment_failures.jsonl",
+        help="Non-gap splitter boundaries (inside a token or between tokens with no whitespace) written by run_real_splitters",
+    )
     args = parser.parse_args()
 
     documents = {doc.doc_id: doc for doc in read_raw_documents(args.data_root / "raw_dev.jsonl")}
@@ -159,6 +164,17 @@ def main() -> None:
     gold = {record.doc_id: record for record in gold_records}
     evidence = {record["doc_id"]: record for record in read_jsonl(args.evidence)}
     frozen = read_jsonl(args.scores)
+    if not args.failures.exists():
+        raise FileNotFoundError(f"{args.failures} missing; run src.run_real_splitters first")
+    systems_scored = {(row["doc_id"], row["system"]) for row in frozen}
+    non_gap: dict[tuple[str, str], int] = defaultdict(int)
+    for failure in read_jsonl(args.failures):
+        key = (failure["doc_id"], failure["system"])
+        if failure["reason"] != INTRA_TOKEN_REASON or key not in systems_scored:
+            raise RuntimeError(f"Unexpected alignment failure record: {failure}")
+        if failure["offset"] in set(gold[failure["doc_id"]].offsets):
+            raise RuntimeError(f"Non-gap boundary coincides with Gold: {failure}")
+        non_gap[key] += 1
 
     scored: list[ScoredSegmentation] = []
     per_doc_rows: list[dict] = []
@@ -174,7 +190,8 @@ def main() -> None:
         target = tuple(int(offset in gold_set) for offset in surface.candidate_offsets)
         probabilities = tuple(ev["calibrated_boundary_probability"])
         record = ScoredSegmentation(
-            row["doc_id"], row["system"], candidate, target, probabilities
+            row["doc_id"], row["system"], candidate, target, probabilities,
+            non_gap_fp=non_gap[(row["doc_id"], row["system"])],
         )
         if not math.isclose(record.quality, row["soft_f1"], rel_tol=0, abs_tol=1e-12):
             raise RuntimeError(f"Frozen score changed for {row['doc_id']} {row['system']}")
@@ -186,6 +203,7 @@ def main() -> None:
             "system": row["system"],
             "candidate_positions": len(candidate),
             "candidate_boundary_count": int(sum(candidate)),
+            "non_gap_boundary_count": record.non_gap_fp,
             "gold_boundary_count": int(sum(target)),
             "gold_precision": counts.precision,
             "gold_recall": counts.recall,
@@ -194,7 +212,17 @@ def main() -> None:
             "candidate_boundary_offsets": row["candidate_boundary_offsets"],
         })
 
-    report = selection_report(scored, fixed_system="sat")
+    config = json.loads((ROOT / "configs/real_splitters.json").read_text())
+    baselines = config["baselines"]
+    report = selection_report(scored, fixed_system=baselines["fixed_system"])
+    direct = direct_internal_summary(scored, baselines["direct_internal_threshold"])
+    # Provenance comes from the frozen artifacts, not the current config, so a
+    # re-analysis of archived outputs is labelled with the protocol that made them.
+    score_protocols = {row.get("score_protocol") for row in frozen}
+    mask_protocols = {record.get("protocol") for record in evidence.values()}
+    if len(score_protocols) != 1 or len(mask_protocols) != 1:
+        raise RuntimeError(f"Mixed protocols in inputs: {score_protocols} {mask_protocols}")
+    score_protocol, mask_protocol = score_protocols.pop(), mask_protocols.pop()
     pairwise = pairwise_details(per_doc_rows)
     by_doc: dict[str, list[dict]] = defaultdict(list)
     for row in per_doc_rows:
@@ -222,6 +250,9 @@ def main() -> None:
         "within_document_spearman_median": float(np.median(rhos)) if rhos else float("nan"),
         "pairwise": pairwise,
         "selection": report,
+        "direct_internal": direct,
+        "protocol_version": score_protocol,
+        "mask_protocol": mask_protocol,
     }
 
     summary_rows = []
@@ -237,22 +268,25 @@ def main() -> None:
     )
 
     examples = build_examples(per_doc_rows, documents, gold, evidence)
-    for target in (args.results / "examples.jsonl", args.results / "real_splitter_examples.jsonl"):
-        with target.open("w", encoding="utf-8") as out:
-            for example in examples:
-                out.write(json.dumps(example, ensure_ascii=False) + "\n")
+    # Only the real-splitter name: results/examples.jsonl belongs to the preliminary Qwen study.
+    with (args.results / "real_splitter_examples.jsonl").open("w", encoding="utf-8") as out:
+        for example in examples:
+            out.write(json.dumps(example, ensure_ascii=False) + "\n")
 
     lines = [
         "# GUM Dev 真实 Sentence Splitter 排名实验", "",
         "本报告仅在四个系统的预测与 BERT Soft F1 分数冻结后读取 GUM Dev Gold。Soft F1 公式未修改。", "",
         "## 系统结果", "",
-        "| System | Gold Macro F1 | Gold Micro F1 | Mean Soft F1 |",
-        "|---|---:|---:|---:|",
+        "非空白间隙边界（splitter 切在 surface token 内部，如邮件地址；或切在无空格的两个 token 之间，如 `al.|:`）不参与无参考 Soft F1，"
+        "但在 Gold 元评测中计为该系统的 false positive。", "",
+        "| System | Gold Macro F1 | Gold Micro F1 | Mean Soft F1 | Non-gap FP |",
+        "|---|---:|---:|---:|---:|",
     ]
     for row in summary_rows:
         lines.append(
             f"| {row['system']} | {row['macro_gold_f1']:.4f} | "
-            f"{row['micro_gold_f1']:.4f} | {row['macro_quality']:.4f} |"
+            f"{row['micro_gold_f1']:.4f} | {row['macro_quality']:.4f} | "
+            f"{int(row['non_gap_false_positives'])} |"
         )
     overall = pairwise["ALL"]
     lines += [
@@ -276,10 +310,25 @@ def main() -> None:
     lines += [
         "", "## Corpus-level 选择诊断", "",
         f"Soft F1 选择：**{report['macro']['selected']}**；Gold oracle：**{report['macro']['oracle']}**；"
-        f"selection regret={report['macro']['selection_regret']:.4f}。",
+        f"selection regret={report['macro']['selection_regret']:.4f}。", "",
+        "## 部署基线", "",
+        "| Policy | Gold Macro F1 | Gold Micro F1 |",
+        "|---|---:|---:|",
+        f"| Soft F1 选择（{report['macro']['selected']}） | "
+        f"{report['systems'][report['macro']['selected']]['macro_gold_f1']:.4f} | "
+        f"{report['systems'][report['micro_sensitivity']['selected']]['micro_gold_f1']:.4f} |",
+        f"| Always-{report['macro']['fixed_system']} | "
+        f"{report['systems'][report['macro']['fixed_system']]['macro_gold_f1']:.4f} | "
+        f"{report['systems'][report['macro']['fixed_system']]['micro_gold_f1']:.4f} |",
+        f"| Direct Internal（calibrated p ≥ {direct['threshold']}） | "
+        f"{direct['macro_gold_f1']:.4f} | {direct['micro_gold_f1']:.4f} |", "",
+        f"Soft F1 选择相对 Always-{report['macro']['fixed_system']}：Macro "
+        f"{report['macro']['selected_minus_fixed']:+.4f}，Micro "
+        f"{report['micro_sensitivity']['selected_minus_fixed']:+.4f}（负值表示不如固定策略）。",
         "", "## 解释限制", "",
         "这是 GUM 内域真实系统实验。BERT 的 Platt calibration 使用 GUM Train Gold；Dev Gold 仅用于最终 meta-evaluation。"
-        "本轮没有运行 Always-SaT、Direct Internal Splitter 或 EWT，也没有据此调整 Soft F1。",
+        f"协议版本：{score_protocol}（mask：{mask_protocol}）。"
+        "Direct Internal 阈值事先固定、未在任何 Gold 上调节。本轮未运行 EWT，也没有据此调整 Soft F1。",
     ]
     (args.results / "real_splitter_ranking.md").write_text("\n".join(lines) + "\n")
     print(json.dumps({"status": "REAL_SPLITTER_ANALYSIS_COMPLETE", **ranking}, ensure_ascii=False), flush=True)

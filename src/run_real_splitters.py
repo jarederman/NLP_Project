@@ -15,19 +15,28 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", type=Path, default=ROOT / "data/real_system")
-    parser.add_argument("--output-root", type=Path, default=ROOT / "data/real_system/predictions")
-    parser.add_argument("--failures", type=Path, default=ROOT / "results/alignment_failures.jsonl")
+    parser.add_argument("--split", choices=["dev", "train"], default="dev",
+                        help="train = GUM-train development set for cross-fitting (P1)")
+    parser.add_argument("--output-root", type=Path)
+    parser.add_argument("--failures", type=Path)
     parser.add_argument("--systems", nargs="*")
     parser.add_argument("--cpu", action="store_true")
     args = parser.parse_args()
+    defaults = {
+        "dev": (ROOT / "data/real_system/predictions", ROOT / "results/alignment_failures.jsonl"),
+        "train": (ROOT / "data/real_system/train_cv/predictions",
+                  ROOT / "data/real_system/train_cv/alignment_failures.jsonl"),
+    }[args.split]
+    args.output_root = args.output_root or defaults[0]
+    args.failures = args.failures or defaults[1]
 
     config = json.loads((ROOT / "configs/real_splitters.json").read_text())
     systems = args.systems or config["systems"]
-    documents = read_raw_documents(args.data_root / "raw_dev.jsonl")
-    surfaces = load_surface_jsonl(args.data_root / "surface_dev.jsonl")
+    documents = read_raw_documents(args.data_root / f"raw_{args.split}.jsonl")
+    surfaces = load_surface_jsonl(args.data_root / f"surface_{args.split}.jsonl")
     surface_by_id = {doc.doc_id: doc for doc in surfaces}
     if set(surface_by_id) != {doc.doc_id for doc in documents}:
-        raise RuntimeError("Raw/surface development document sets differ")
+        raise RuntimeError(f"Raw/surface {args.split} document sets differ")
     for document in documents:
         if surface_by_id[document.doc_id].text_sha256 != document.sha256:
             raise RuntimeError(f"Raw/surface checksum mismatch for {document.doc_id}")
@@ -61,11 +70,16 @@ def main() -> None:
     with args.failures.open("w", encoding="utf-8") as out:
         for failure in all_failures:
             out.write(json.dumps(failure, ensure_ascii=False) + "\n")
-    if all_failures:
-        raise RuntimeError(
-            f"Found {len(all_failures)} non-canonical splitter boundaries; see {args.failures}"
-        )
-    print(json.dumps({"status": "REAL_SPLITTERS_COMPLETE", "systems": systems}), flush=True)
+    # Non-gap boundaries (inside a token, or between tokens with no whitespace)
+    # are real system output: they are excluded from the
+    # gold-free score (no evidence exists there) and charged as Gold false
+    # positives by analyze_real_splitters, which reads this file.
+    print(json.dumps({
+        "status": "REAL_SPLITTERS_COMPLETE",
+        "systems": systems,
+        "non_gap_boundaries": len(all_failures),
+        "failures_file": str(args.failures),
+    }), flush=True)
 
 
 if __name__ == "__main__":

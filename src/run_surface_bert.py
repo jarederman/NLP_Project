@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from .bert_surface import (
+    PROTOCOLS,
     extract_surface_probabilities,
     load_surface_bert,
     read_cache,
@@ -29,7 +30,8 @@ def append_record(record: dict, path: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", type=Path, default=ROOT / "data/real_system")
-    parser.add_argument("--cache-root", type=Path, default=ROOT / "data/lm_cache/bert_surface_v1")
+    parser.add_argument("--cache-root", type=Path, default=None,
+                        help="Defaults to data/lm_cache/bert_surface_<protocol version>")
     parser.add_argument("--evidence", type=Path, default=ROOT / "data/real_system/bert_dev_evidence.jsonl")
     parser.add_argument("--calibration", type=Path, default=ROOT / "results/real_calibration.json")
     args = parser.parse_args()
@@ -40,6 +42,9 @@ def main() -> None:
         raise RuntimeError("Surface BERT extraction requires a GPU")
     config = json.loads((ROOT / "configs/real_splitters.json").read_text())
     bert_config = config["bert"]
+    if args.cache_root is None:
+        version = PROTOCOLS[bert_config["mask_protocol"]]
+        args.cache_root = ROOT / "data/lm_cache" / f"bert_surface_{version}"
     surfaces = {
         split: load_surface_jsonl(args.data_root / f"surface_{split}.jsonl")
         for split in ("train", "dev")
@@ -76,6 +81,7 @@ def main() -> None:
             record = extract_surface_probabilities(
                 model, tokenizer, punct_ids, doc,
                 bert_config["max_length"], bert_config["batch_size"],
+                protocol=bert_config["mask_protocol"],
             )
             record.update({
                 "split": split,

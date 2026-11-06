@@ -1,6 +1,6 @@
 # Reference-Free Sentence Segmentation Evaluation
 
-本项目在无待评文档 gold boundary 输入的条件下，用 Qwen3.5 的 next-token 句末标点概率作为 proxy，比较候选 sentence segmentation。正式评价只使用 GUM dev；GUM train 仅拟合一个冻结的两参数 Platt calibration；不读取 test。
+本项目在无待评文档 gold boundary 输入的条件下，用语言模型在候选间隙处的句末证据（初步研究为 Qwen3.5 next-token 句末标点概率，真实系统研究为 BERT `[MASK]` 概率）加 Platt calibration 和 Soft F1，为真实 sentence splitter 打分、排序与选择。GUM test 从不读取；EWT test 只在全部配置冻结后运行一次。实验结果汇总见下文“实验记录”。
 
 ## 项目结构
 
@@ -11,6 +11,8 @@
 - `src/evaluate.py`：Spearman、同文档 pairwise ranking、gold-win、类型/genre 汇总和实例选择。
 - `src/contracts.py`：将原始文档、Gold boundary offsets 和 splitter 输出分为独立 JSONL artifacts，并用文本 SHA256 防止错位或 Gold 泄漏。
 - `src/selection.py`：真实系统的 Macro/Micro 对齐聚合、Direct Internal threshold、pairwise ranking、Selection Regret 和 Always-SaT headroom。
+- `src/meta_eval.py`：Gold-win、pairwise、按领域选择/Regret/Kendall τ、Direct Internal 与分层 bootstrap（dev、train CV、EWT 共用）。
+- `src/train_crossfit.py`、`src/analyze_evidence_gaps.py`：P1 train 交叉拟合开发集及其证据误差分析。
 - `tests/`：不依赖 GPU 的数据契约与 selection-metric 单元测试。
 - `results/`：正式输出；`logs/`：Slurm stdout/stderr。
 
@@ -55,7 +57,7 @@ source scripts/env.sh
 
 ## Final-study infrastructure
 
-Proposal 后的核心实验将 GUM 固定到 UD commit `1fe635509c649e376dfb449d528424ab78f4eaee`（32 篇 Dev 文档）。GUM train/dev 和 EWT test 分别由下列脚本下载；每个目录同时保存 `UD_RELEASE` 和 `SHA256SUMS`，不再跟随浮动的 `master`：
+Proposal 后的核心实验将 GUM 固定到 UD commit `1fe635509c649e376dfb449d528424ab78f4eaee`（197 篇 Train、30 篇 Dev 文档）。GUM train/dev 和 EWT test 分别由下列脚本下载；每个目录同时保存 `UD_RELEASE` 和 `SHA256SUMS`，不再跟随浮动的 `master`：
 
 ```bash
 source scripts/env.sh
@@ -85,20 +87,70 @@ Dev Gold artifact，随后仅 `src.analyze_real_splitters` 会加载它。
 否则在 gap 插入 `[MASK]`，避免询问“是否需要第二个标点”。真实候选系统为 Punkt、
 Stanza、`wtp-bert-mini` 和无 UD LoRA 的 `sat-3l-sm`。
 
-环境、一次 smoke 和正式实验按顺序提交：
+v1.1 起（`configs/real_splitters.json` 中 `protocol_version=gum-real-splitters-v1.1`），终止标点后紧跟的
+引号/括号/引用标记 `[n]` 视为同一个终止单元，证据放在整个单元之后的 gap；单元内部的 gap 按插入查询。
+Splitter 切在非空白 gap 上的边界（token 内部，如邮件地址；或无空格相邻 token 之间，如 `al.|:`）
+不参与 Soft F1，但在 Gold 元评测中计为该系统的 false positive。
+
+代码已稳定，正式作业直接提交（脚本第一步运行单元测试，失败则不覆盖任何产物）：
 
 ```bash
-setup_job=$(sbatch --parsable scripts/setup_real_environment.slurm)
-# setup 成功后：
-smoke_job=$(sbatch --parsable scripts/run_real_smoke.slurm)
-# logs/real_smoke_${smoke_job}.out 出现 REAL_SMOKE_PASS 后，只提交一次正式作业：
-sbatch scripts/run_real_formal.slurm
+sbatch scripts/setup_real_environment.slurm      # 仅首次
+formal=$(sbatch --parsable scripts/run_real_formal.slurm)    # GUM dev；同时生成 train BERT cache
+sbatch --dependency=afterok:$formal --kill-on-invalid-dep=yes scripts/run_train_cv.slurm   # P1
 ```
 
-新增 Python 包和 NLTK/Stanza/Hugging Face 模型全部位于项目 `.venv/` 与 `.cache/`，
-不会写入 `$HOME`。正式结果为 `results/real_splitter_per_doc.csv`、
-`results/real_splitter_summary.csv`、`results/real_splitter_ranking.md`、
-`results/alignment_failures.jsonl` 和 `results/examples.jsonl`。
+新增 Python 包和 NLTK/Stanza/Hugging Face 模型全部位于项目 `.venv/` 与 `.cache/`，不会写入 `$HOME`。
+
+- GUM dev 产物：`results/real_splitter_per_doc.csv`、`real_splitter_summary.csv`、`real_splitter_ranking.{md,json}`、
+  `real_splitter_examples.jsonl`、`alignment_failures.jsonl`、`real_calibration.json`、`real_run_metadata.json`。
+- P1 产物：`results/train_cv/{summary.md,report.json,per_domain.csv,evidence_by_context.{md,json}}`；
+  中间产物（gold-free 冻结分数、fold 划分、每折校准参数）在 `data/real_system/train_cv/`。
+- 换协议重跑前先归档：v1 结果在 `results/real_v1/`，v1 数据产物在 `data/real_system_v1/`（未纳入 git）。
+
+### P1：GUM train 5 折交叉拟合（开发集）
+
+GUM dev 每个 genre 仅 2 篇且已在诊断中看过，因此开发与选型改在 GUM train（197 篇、15 个 genre）上做
+按 genre 分层的 5 折交叉拟合：第 k 折的 Platt 只用其余各折 Gold 拟合，再给第 k 折打分；全部 gold-free
+分数写盘冻结后才做元评测（`src/train_crossfit.py`，元评测逻辑在 `src/meta_eval.py`，dev/EWT 共用）。
+置信区间为按领域分层、按文档重采样的 bootstrap（2000 次，95% 百分位）。
+
+成功标准（事先确定，可按结果弹性调整）：Gold-win 率过半；L1 pairwise accuracy CI 下界 > 0.5；
+L2 领域平均 Kendall τ > 0；L3 领域平均 Selection Regret 低于 Always-SaT。
+
+## 实验记录
+
+### GUM dev（已在 v1 诊断中看过，仅作参考，不再用于调参）
+
+| 指标 | v1 | v1.1 |
+|---|---:|---:|
+| Pairwise accuracy | 0.541 | 0.616 |
+| 语料级 Soft F1 选择（Gold oracle 均为 SaT） | Punkt | Stanza |
+| Macro Selection Regret | 0.0589 | 0.0158 |
+| Micro Selection Regret | 0.0432 | 0.0087 |
+| Direct Internal（p ≥ 0.5）Macro Gold F1 | 0.826 | 0.848 |
+| Gold-win | 5/30 | — |
+
+四系统 Gold Macro F1（v1/v1.1 相同）：SaT 0.9720、Stanza 0.9561、Punkt 0.9131、WtP 0.9094。
+v1 → v1.1 的唯一变化是终止单元包含引用标记 `[n]`（v1 诊断发现的真实 bug）。
+v1 诊断：约 10% 的 Gold 边界（标题、列表项、破折号、引用）左侧没有可见终止标点，证据很弱。
+
+### P1 train 交叉拟合（v1.1，job 21776943，2026-11-04）
+
+| 层次 | 指标 | 估计 [95% CI] | 标准 | 是否达标 |
+|---|---|---|---|---|
+| 前提 | Gold-win 率 | 0.162 [0.112, 0.213] | > 0.5 | 否 |
+| L1 | Pairwise accuracy | 0.629 [0.596, 0.662] | 下界 > 0.5 | 是 |
+| L2 | 领域平均 Kendall τ | 0.289 [0.156, 0.378] | > 0 | 是 |
+| L3 | 领域平均 Selection Regret | 0.0277 [0.0226, 0.0381]（Always-SaT 0.0014） | 低于 Always-SaT | 否 |
+| L3 | 领域平均（所选 − Always-SaT） | −0.0263 [−0.0367, −0.0210] | > 0 | 否 |
+
+15 个领域中仅 news、textbook 选中 SaT，9 个领域选 Punkt。Direct Internal 0.831，低于四个系统中的任何一个。
+评分函数对照：neg BCE 更差（pairwise 0.560，τ 0.04）；归一化 Soft F1 与原版几乎相同（regret 0.0257），只作辅助指标。
+
+误差分析（`results/train_cv/evidence_by_context.md`）：左侧有终止标点的 gap 中 94.3% 是 Gold，
+但两参数 Platt 只给 Gold 平均 p=0.770，16.2% 低于 0.5；无标点 Gold（标题、列表项，占 6.1%）平均 p=0.293。
+由于 Soft F1 下一个边界只有在 p > F/2 时才划算，切得更全的 SaT 被系统性低估。
 
 ## GitHub 持续同步
 

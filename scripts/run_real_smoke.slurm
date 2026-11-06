@@ -37,6 +37,7 @@ scripts/fetch_gum.sh
   --frozen-scores "$smoke_root/frozen_scores.jsonl"
 "$python" -m src.analyze_real_splitters \
   --data-root "$smoke_root/data" --scores "$smoke_root/frozen_scores.jsonl" \
-  --evidence "$smoke_root/bert_dev_evidence.jsonl" --results "$smoke_root/results"
-test ! -s "$smoke_root/alignment_failures.jsonl"
+  --evidence "$smoke_root/bert_dev_evidence.jsonl" --results "$smoke_root/results" \
+  --failures "$smoke_root/alignment_failures.jsonl"
+test -e "$smoke_root/alignment_failures.jsonl"
 echo '{"status":"REAL_SMOKE_PASS","dev_gold_materialized_only_after_score_freeze":true}'

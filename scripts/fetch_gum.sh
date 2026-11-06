@@ -4,7 +4,7 @@ source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
 target="$PROJECT_ROOT/data/UD_English-GUM"
 ud_release="1fe635509c649e376dfb449d528424ab78f4eaee"
-expected_dev_documents=32
+expected_dev_documents=30
 release_marker="$target/UD_RELEASE"
 if [[ -s "$target/en_gum-ud-train.conllu" && -s "$target/en_gum-ud-dev.conllu" && \
       -s "$release_marker" && "$(<"$release_marker")" == "$ud_release" && \

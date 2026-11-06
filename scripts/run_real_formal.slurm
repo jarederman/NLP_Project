@@ -15,6 +15,8 @@ source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
 python=.venv/bin/python
 
+# Fail fast before any artifact under data/real_system or results/ is overwritten.
+"$python" -m unittest discover -s tests
 "$python" -m src.prepare_real_data
 "$python" -m src.run_real_splitters
 "$python" -m src.run_surface_bert

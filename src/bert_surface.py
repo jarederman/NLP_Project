@@ -8,29 +8,67 @@ import numpy as np
 
 
 PUNCTUATION = (".", "?", "!")
-TRAILING_PUNCTUATION = re.compile(r"([.!?]+)([\"'”’»\)\]\}]+)?$")
+CLOSERS = r"[\"'”’»\)\]\}]"
+# Bracketed reference/annotation marker after a sentence-final mark, e.g. "[17]",
+# "[a]", "[citation needed]". Such markers conventionally belong to the sentence
+# they follow, so the terminal unit ends after them.
+REFERENCE_MARKER = r"\[[^\[\]\n]{1,30}\]"
+# surface_v1: terminal mark plus directly attached closers.
+TRAILING_PUNCTUATION = re.compile(rf"([.!?]+)({CLOSERS}+)?$")
+# surface_v1.1: additionally allow whitespace-separated reference markers.
+TRAILING_PUNCTUATION_V11 = re.compile(rf"([.!?]+)({CLOSERS}*)((?:\s*{REFERENCE_MARKER})*)$")
+LEADING_REFERENCE_MARKER = re.compile(rf"^\s*{REFERENCE_MARKER}")
+PROTOCOLS = {
+    "surface_v1_replace_visible_terminal_else_insert_gap": "v1",
+    "surface_v1.1_terminal_unit_incl_reference_markers_else_insert_gap": "v1.1",
+}
+DEFAULT_PROTOCOL = "surface_v1_replace_visible_terminal_else_insert_gap"
 
 
-def mask_anchor(text: str, boundary_offset: int) -> tuple[str, int]:
+def _terminal_match(text: str, boundary_offset: int, protocol: str):
+    """Return the terminal-mark match that owns this gap, or None.
+
+    v1.1 treats "terminal mark + closers + reference markers" as one sentence-final
+    unit. Only the gap after the complete unit owns the terminal-mark evidence; a
+    gap inside the unit (e.g. between "." and "[17]") is queried as a plain gap,
+    so one visible mark is never counted at two candidate positions.
+    """
+    version = PROTOCOLS.get(protocol)
+    if version is None:
+        raise ValueError(f"Unknown mask protocol: {protocol}")
+    left = text[:boundary_offset]
+    if version == "v1":
+        return TRAILING_PUNCTUATION.search(left)
+    if LEADING_REFERENCE_MARKER.match(text[boundary_offset:]):
+        return None
+    return TRAILING_PUNCTUATION_V11.search(left)
+
+
+def mask_anchor(
+    text: str, boundary_offset: int, protocol: str = DEFAULT_PROTOCOL
+) -> tuple[str, int]:
     """Choose an MLM query without asking for a second terminal mark.
 
-    If a terminal mark already occurs immediately before the gap (possibly
-    inside closing punctuation), replace that mark. Otherwise insert a mask at
-    the gap. The decision depends only on raw text, never on a gold boundary.
+    If a terminal mark already ends the text before the gap (possibly followed by
+    closing punctuation, and in v1.1 by reference markers), replace that mark.
+    Otherwise insert a mask at the gap. The decision depends only on raw text,
+    never on a gold boundary.
     """
     if not (0 < boundary_offset < len(text)):
         raise ValueError(f"Boundary offset outside document interior: {boundary_offset}")
-    match = TRAILING_PUNCTUATION.search(text[:boundary_offset])
+    match = _terminal_match(text, boundary_offset, protocol)
     if match:
         return "replace_terminal_punctuation", match.start(1)
     return "insert_at_gap", boundary_offset
 
 
-def mask_span(text: str, boundary_offset: int) -> tuple[str, int, int]:
-    mode, start = mask_anchor(text, boundary_offset)
+def mask_span(
+    text: str, boundary_offset: int, protocol: str = DEFAULT_PROTOCOL
+) -> tuple[str, int, int]:
+    mode, start = mask_anchor(text, boundary_offset, protocol)
     if mode == "insert_at_gap":
         return mode, start, start
-    match = TRAILING_PUNCTUATION.search(text[:boundary_offset])
+    match = _terminal_match(text, boundary_offset, protocol)
     assert match is not None
     return mode, match.start(1), match.end(1)
 
@@ -57,7 +95,8 @@ def load_surface_bert(model_name: str, cache_dir: str):
 
 
 def extract_surface_probabilities(
-    model, tokenizer, punct_ids: list[int], doc, max_length: int, batch_size: int
+    model, tokenizer, punct_ids: list[int], doc, max_length: int, batch_size: int,
+    protocol: str = DEFAULT_PROTOCOL,
 ) -> dict:
     """Score all canonical raw-text gaps with balanced bidirectional context."""
     import torch
@@ -69,7 +108,7 @@ def extract_surface_probabilities(
     span_to_token = {pair: i for i, pair in enumerate(offsets) if pair[1] > pair[0]}
     plans: list[tuple[str, int, int, int]] = []
     for boundary_offset in doc.candidate_offsets:
-        mode, anchor_start, anchor_end = mask_span(doc.text, boundary_offset)
+        mode, anchor_start, anchor_end = mask_span(doc.text, boundary_offset, protocol)
         if mode == "insert_at_gap":
             right_index = start_to_token.get(boundary_offset + 1)
             if right_index is None:
@@ -141,7 +180,7 @@ def extract_surface_probabilities(
         "mask_modes": [plan[0] for plan in plans],
         "mask_anchors": [plan[1] for plan in plans],
         "token_count": len(full_ids),
-        "protocol": "surface_v1_replace_visible_terminal_else_insert_gap",
+        "protocol": protocol,
     }
 
 
