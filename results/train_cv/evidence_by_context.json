@@ -1,0 +1,119 @@
+{
+  "total_gold_boundaries": 11117,
+  "total_gaps": 168917,
+  "categories": {
+    "terminal": {
+      "gold": {
+        "count": 10029,
+        "mean_p": 0.7704033710228213,
+        "share_p_below_0.5": 0.1622295343503839,
+        "share_right_capitalized": 0.9632067005683518
+      },
+      "non_gold": {
+        "count": 610,
+        "mean_p": 0.641049193015833,
+        "share_p_below_0.5": 0.3639344262295082,
+        "share_right_capitalized": 0.4245901639344262
+      },
+      "share_of_gold": 0.9021318701088423,
+      "gold_base_rate": 0.9426637841902434
+    },
+    "no_punct_alnum": {
+      "gold": {
+        "count": 678,
+        "mean_p": 0.2925354950585221,
+        "share_p_below_0.5": 0.7404129793510325,
+        "share_right_capitalized": 0.8923303834808259
+      },
+      "non_gold": {
+        "count": 144280,
+        "mean_p": 0.01729530080865944,
+        "share_p_below_0.5": 0.9938245079013031,
+        "share_right_capitalized": 0.08233296368172997
+      },
+      "share_of_gold": 0.060987676531438335,
+      "gold_base_rate": 0.004677216849018336
+    },
+    "no_punct_other": {
+      "gold": {
+        "count": 84,
+        "mean_p": 0.28171324482011806,
+        "share_p_below_0.5": 0.7738095238095238,
+        "share_right_capitalized": 0.8095238095238095
+      },
+      "non_gold": {
+        "count": 1011,
+        "mean_p": 0.03977861962615377,
+        "share_p_below_0.5": 0.9802176063303659,
+        "share_right_capitalized": 0.17804154302670624
+      },
+      "share_of_gold": 0.007555995322479086,
+      "gold_base_rate": 0.07671232876712329
+    },
+    "dash": {
+      "gold": {
+        "count": 212,
+        "mean_p": 0.22248940351092014,
+        "share_p_below_0.5": 0.7971698113207547,
+        "share_right_capitalized": 0.9528301886792453
+      },
+      "non_gold": {
+        "count": 807,
+        "mean_p": 0.10497452542172753,
+        "share_p_below_0.5": 0.9306071871127634,
+        "share_right_capitalized": 0.161090458488228
+      },
+      "share_of_gold": 0.01906989295673293,
+      "gold_base_rate": 0.20804710500490678
+    },
+    "colon": {
+      "gold": {
+        "count": 71,
+        "mean_p": 0.022018735325425802,
+        "share_p_below_0.5": 1.0,
+        "share_right_capitalized": 0.6901408450704225
+      },
+      "non_gold": {
+        "count": 290,
+        "mean_p": 0.01186756934606515,
+        "share_p_below_0.5": 1.0,
+        "share_right_capitalized": 0.5
+      },
+      "share_of_gold": 0.00638661509400018,
+      "gold_base_rate": 0.19667590027700832
+    },
+    "semicolon": {
+      "gold": {
+        "count": 15,
+        "mean_p": 0.013764716483287835,
+        "share_p_below_0.5": 1.0,
+        "share_right_capitalized": 0.13333333333333333
+      },
+      "non_gold": {
+        "count": 229,
+        "mean_p": 0.01726914093749711,
+        "share_p_below_0.5": 1.0,
+        "share_right_capitalized": 0.1572052401746725
+      },
+      "share_of_gold": 0.0013492848790141224,
+      "gold_base_rate": 0.06147540983606557
+    },
+    "comma": {
+      "gold": {
+        "count": 28,
+        "mean_p": 0.016593321827788485,
+        "share_p_below_0.5": 1.0,
+        "share_right_capitalized": 0.75
+      },
+      "non_gold": {
+        "count": 10573,
+        "mean_p": 0.009613570739751746,
+        "share_p_below_0.5": 0.9990541946467417,
+        "share_right_capitalized": 0.11926605504587157
+      },
+      "share_of_gold": 0.0025186651074930286,
+      "gold_base_rate": 0.0026412602584661824
+    }
+  },
+  "protocol": "surface_v1.1_terminal_unit_incl_reference_markers_else_insert_gap"
+}
