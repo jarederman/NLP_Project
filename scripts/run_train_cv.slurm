@@ -23,4 +23,5 @@ python=.venv/bin/python
 "$python" -m src.run_real_splitters --split train
 "$python" -m src.train_crossfit
 "$python" -m src.analyze_evidence_gaps
+"$python" -m src.evidence_ceiling
 echo '{"status":"TRAIN_CV_COMPLETE"}'
