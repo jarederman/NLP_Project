@@ -1,0 +1,138 @@
+{
+  "platt": {
+    "sat-vs-punkt/punkt-only/terminal": {
+      "gaps": 224,
+      "gold_share": 0.03571428571428571,
+      "mean_p": 0.3881758871163417,
+      "rewarded_share": 0.42410714285714285
+    },
+    "sat-vs-punkt/sat-only/non_terminal": {
+      "gaps": 1170,
+      "gold_share": 0.7649572649572649,
+      "mean_p": 0.24137844218805887,
+      "rewarded_share": 0.2717948717948718
+    },
+    "sat-vs-punkt/sat-only/terminal": {
+      "gaps": 166,
+      "gold_share": 0.927710843373494,
+      "mean_p": 0.8646911243904281,
+      "rewarded_share": 0.9216867469879518
+    },
+    "sat-vs-stanza/sat-only/non_terminal": {
+      "gaps": 842,
+      "gold_share": 0.6983372921615202,
+      "mean_p": 0.203409554812281,
+      "rewarded_share": 0.22209026128266032
+    },
+    "sat-vs-stanza/sat-only/terminal": {
+      "gaps": 73,
+      "gold_share": 0.3561643835616438,
+      "mean_p": 0.5843862549543773,
+      "rewarded_share": 0.684931506849315
+    },
+    "sat-vs-stanza/stanza-only/non_terminal": {
+      "gaps": 26,
+      "gold_share": 0.23076923076923078,
+      "mean_p": 0.13985202016655707,
+      "rewarded_share": 0.15384615384615385
+    },
+    "sat-vs-stanza/stanza-only/terminal": {
+      "gaps": 25,
+      "gold_share": 0.32,
+      "mean_p": 0.7046702118062491,
+      "rewarded_share": 0.8
+    },
+    "sat-vs-wtp/sat-only/non_terminal": {
+      "gaps": 450,
+      "gold_share": 0.7133333333333334,
+      "mean_p": 0.24728425025332462,
+      "rewarded_share": 0.2911111111111111
+    },
+    "sat-vs-wtp/sat-only/terminal": {
+      "gaps": 574,
+      "gold_share": 0.9425087108013938,
+      "mean_p": 0.6556988023842851,
+      "rewarded_share": 0.8344947735191638
+    },
+    "sat-vs-wtp/wtp-only/non_terminal": {
+      "gaps": 921,
+      "gold_share": 0.07709011943539631,
+      "mean_p": 0.050783710856197366,
+      "rewarded_share": 0.04234527687296417
+    },
+    "sat-vs-wtp/wtp-only/terminal": {
+      "gaps": 256,
+      "gold_share": 0.04296875,
+      "mean_p": 0.3615176001237255,
+      "rewarded_share": 0.3671875
+    }
+  },
+  "B+C+K+A+L+O/hgb": {
+    "sat-vs-punkt/punkt-only/terminal": {
+      "gaps": 224,
+      "gold_share": 0.03571428571428571,
+      "mean_p": 0.18315146437185445,
+      "rewarded_share": 0.16964285714285715
+    },
+    "sat-vs-punkt/sat-only/non_terminal": {
+      "gaps": 1170,
+      "gold_share": 0.7649572649572649,
+      "mean_p": 0.4722356310496882,
+      "rewarded_share": 0.5102564102564102
+    },
+    "sat-vs-punkt/sat-only/terminal": {
+      "gaps": 166,
+      "gold_share": 0.927710843373494,
+      "mean_p": 0.8872546971533015,
+      "rewarded_share": 0.9518072289156626
+    },
+    "sat-vs-stanza/sat-only/non_terminal": {
+      "gaps": 842,
+      "gold_share": 0.6983372921615202,
+      "mean_p": 0.36568064884159374,
+      "rewarded_share": 0.37885985748218526
+    },
+    "sat-vs-stanza/sat-only/terminal": {
+      "gaps": 73,
+      "gold_share": 0.3561643835616438,
+      "mean_p": 0.5838519163214007,
+      "rewarded_share": 0.6575342465753424
+    },
+    "sat-vs-stanza/stanza-only/non_terminal": {
+      "gaps": 26,
+      "gold_share": 0.23076923076923078,
+      "mean_p": 0.31381049916004333,
+      "rewarded_share": 0.3076923076923077
+    },
+    "sat-vs-stanza/stanza-only/terminal": {
+      "gaps": 25,
+      "gold_share": 0.32,
+      "mean_p": 0.7231181443731655,
+      "rewarded_share": 0.8
+    },
+    "sat-vs-wtp/sat-only/non_terminal": {
+      "gaps": 450,
+      "gold_share": 0.7133333333333334,
+      "mean_p": 0.42702761636747966,
+      "rewarded_share": 0.4688888888888889
+    },
+    "sat-vs-wtp/sat-only/terminal": {
+      "gaps": 574,
+      "gold_share": 0.9425087108013938,
+      "mean_p": 0.9357387249340329,
+      "rewarded_share": 0.9581881533101045
+    },
+    "sat-vs-wtp/wtp-only/non_terminal": {
+      "gaps": 921,
+      "gold_share": 0.07709011943539631,
+      "mean_p": 0.10752986760016923,
+      "rewarded_share": 0.06840390879478828
+    },
+    "sat-vs-wtp/wtp-only/terminal": {
+      "gaps": 256,
+      "gold_share": 0.04296875,
+      "mean_p": 0.16953757854121937,
+      "rewarded_share": 0.1484375
+    }
+  }
+}

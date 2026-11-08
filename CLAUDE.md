@@ -17,7 +17,7 @@ This sets `HOME`, all HF/Torch/NLTK/Stanza/pip/tmp caches to paths inside the pr
 - Real-splitter pipeline interpreter: `.venv/bin/python`. This venv uses `--system-site-packages` on top of `/scratch/wj2301/conda_envs/jit`; set it up via `scripts/setup_real_environment.slurm`.
 - Preliminary Qwen/BERT-comparison code: `/scratch/wj2301/conda_envs/jit/bin/python` (PyTorch 2.10, Transformers 5.7).
 - Don't modify the shared conda env.
-- GPU work runs through Slurm (`h200_tandon` partition, account `torch_pr_676_tandon_advanced`). Logs go to `logs/`.
+- GPU work runs through Slurm (`h200_tandon` partition, account `torch_pr_676_tandon_advanced`). CPU jobs use `cpu_short` with account `torch_pr_676_general`; 16 CPUs / 32G is accepted, while 36 CPUs / 96G is rejected. Logs go to `logs/`.
 
 ## Tests
 
@@ -38,6 +38,9 @@ The codebase is considered stable: submit formal jobs directly, without a smoke 
 sbatch scripts/setup_real_environment.slurm
 sbatch scripts/run_real_formal.slurm     # GUM dev; also builds the train BERT cache
 sbatch scripts/run_train_cv.slurm        # P1: GUM-train 5-fold cross-fitting (needs the formal run first)
+sbatch scripts/run_calibration_search.slurm   # P2: feature x model calibration search, 5-fold + leave-one-genre-out (CPU, ~4 min)
+sbatch scripts/run_conditioned_context.slurm  # BERT context: raw vs raw+candidate vs candidate-only (GPU, ~11 min; raw wins)
+sbatch scripts/run_boundary_probe.slurm      # amendment 3: [MASK]-state probe / insertion likelihood ratio / paragraph-[SEP] layout control (GPU, one job)
 # scripts/run_real_smoke.slurm still exists for debugging GPU-only code paths
 
 # Preliminary Qwen study (synthetic perturbation candidates)
@@ -68,7 +71,7 @@ Data is pinned to UD commit `1fe635509c649e376dfb449d528424ab78f4eaee`, which ha
 - Splitters and scorers must read only `RawDocument` artifacts.
 - Gold must never be read before scores are frozen.
 - Never read GUM test.
-- Train is used only to fit the two-parameter Platt calibration.
+- Train is used to fit calibration. Development and selection use train cross-fitting only (P1/P2), and selection rules are pre-registered in `results/calibration_search/PREREGISTRATION.md`.
 - Frozen protocol settings live in `configs/real_splitters.json` (model, mask protocol, systems, seed). Changing any of them is a protocol change.
 
 The preliminary study (`run_experiment.py`, `data.py`, `lm.py`, `candidates.py`, `scoring.py`, `evaluate.py`, `report.py`) works differently. It removes sentence-final `.?!` from the text using gold (only to build the benchmark), generates seeded Gold/Over/Under/Shift/Mixed candidates, and caches Qwen logits per document in `data/lm_cache/`. A known leak remains: the final period of an in-word abbreviation can't be removed without loss.

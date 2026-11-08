@@ -94,13 +94,13 @@ def load_surface_bert(model_name: str, cache_dir: str):
     return model, tokenizer, punct_ids, mapping
 
 
-def extract_surface_probabilities(
-    model, tokenizer, punct_ids: list[int], doc, max_length: int, batch_size: int,
-    protocol: str = DEFAULT_PROTOCOL,
-) -> dict:
-    """Score all canonical raw-text gaps with balanced bidirectional context."""
-    import torch
+def plan_queries(tokenizer, doc, protocol: str = DEFAULT_PROTOCOL) -> tuple[list[int], list[tuple[str, int, int, int]]]:
+    """Tokenise the raw text once and locate each gap's query slot.
 
+    Returns the token ids and, per candidate gap, ``(mode, anchor_char, slot_start,
+    slot_end)``: the token range the ``[MASK]`` replaces (the terminal mark) or, for
+    ``insert_at_gap``, the empty range just before the right-context token.
+    """
     encoded = tokenizer(doc.text, add_special_tokens=False, return_offsets_mapping=True)
     full_ids = encoded["input_ids"]
     offsets = [tuple(pair) for pair in encoded["offset_mapping"]]
@@ -131,46 +131,65 @@ def extract_surface_probabilities(
             if indices != list(range(indices[0], indices[-1] + 1)):
                 raise ValueError(f"Non-contiguous punctuation tokens in {doc.doc_id}: {indices}")
             plans.append((mode, anchor_start, indices[0], indices[-1] + 1))
+    return full_ids, plans
+
+
+def masked_punctuation_probabilities(
+    model, tokenizer, punct_ids: list[int], ids: list[int], slots: list[tuple[int, int]],
+    max_length: int, batch_size: int,
+) -> np.ndarray:
+    """P(terminal mark at [MASK]) when each slot of ``ids`` is replaced by one [MASK],
+    with balanced left/right windows of at most ``max_length`` tokens in total."""
+    import torch
 
     left_budget = (max_length - 3) // 2
     right_budget = max_length - 3 - left_budget
     probabilities: list[float] = []
-    for batch_start in range(0, len(plans), batch_size):
-        batch = plans[batch_start:batch_start + batch_size]
+    for batch_start in range(0, len(slots), batch_size):
+        batch = slots[batch_start:batch_start + batch_size]
         sequences: list[list[int]] = []
         mask_positions: list[int] = []
-        for mode, _, left_stop, right_start in batch:
-            if mode == "replace_terminal_punctuation":
-                left = full_ids[max(0, left_stop - left_budget):left_stop]
-                right = full_ids[right_start:right_start + right_budget]
-            else:
-                left = full_ids[max(0, left_stop - left_budget):left_stop]
-                right = full_ids[right_start:right_start + right_budget]
+        for left_stop, right_start in batch:
+            left = ids[max(0, left_stop - left_budget):left_stop]
+            right = ids[right_start:right_start + right_budget]
             sequence = [tokenizer.cls_token_id, *left, tokenizer.mask_token_id, *right, tokenizer.sep_token_id]
             sequences.append(sequence)
             mask_positions.append(1 + len(left))
         width = max(map(len, sequences))
-        ids = torch.full(
+        tensor = torch.full(
             (len(sequences), width), tokenizer.pad_token_id, dtype=torch.long, device="cuda"
         )
-        attention = torch.zeros_like(ids)
+        attention = torch.zeros_like(tensor)
         for row, sequence in enumerate(sequences):
-            ids[row, :len(sequence)] = torch.tensor(sequence, dtype=torch.long, device="cuda")
+            tensor[row, :len(sequence)] = torch.tensor(sequence, dtype=torch.long, device="cuda")
             attention[row, :len(sequence)] = 1
         mask_index = torch.tensor(mask_positions, dtype=torch.long, device="cuda")
         with torch.inference_mode():
             hidden = model.bert(
-                input_ids=ids, attention_mask=attention, return_dict=True
+                input_ids=tensor, attention_mask=attention, return_dict=True
             ).last_hidden_state
             masked_hidden = hidden[torch.arange(len(sequences), device="cuda"), mask_index]
             logits = model.cls(masked_hidden).float()
             log_denom = torch.logsumexp(logits, dim=-1)
             log_num = torch.logsumexp(logits[:, punct_ids], dim=-1)
             probabilities.extend(torch.exp(log_num - log_denom).cpu().tolist())
-        del ids, attention, hidden, masked_hidden, logits
-
+        del tensor, attention, hidden, masked_hidden, logits
     values = np.asarray(probabilities, dtype=float)
-    if len(values) != len(doc.candidate_offsets) or not np.isfinite(values).all():
+    if len(values) != len(slots) or not np.isfinite(values).all():
+        raise RuntimeError("Invalid masked-LM output")
+    return values
+
+
+def extract_surface_probabilities(
+    model, tokenizer, punct_ids: list[int], doc, max_length: int, batch_size: int,
+    protocol: str = DEFAULT_PROTOCOL,
+) -> dict:
+    """Score all canonical raw-text gaps with balanced bidirectional context."""
+    full_ids, plans = plan_queries(tokenizer, doc, protocol)
+    values = masked_punctuation_probabilities(
+        model, tokenizer, punct_ids, full_ids, [(plan[2], plan[3]) for plan in plans], max_length, batch_size
+    )
+    if len(values) != len(doc.candidate_offsets):
         raise RuntimeError(f"Invalid surface BERT output for {doc.doc_id}")
     return {
         "doc_id": doc.doc_id,
