@@ -14,6 +14,7 @@ data/lm_cache/
 data/processed/
 data/real_system/
 data/real_system_v1/
+data/real_system_ewt/
 
 # Scheduler logs and transient outputs
 logs/

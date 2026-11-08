@@ -201,9 +201,13 @@ def load_surface_documents(path: str | Path, split: str) -> list[SurfaceDocument
 
 def extract_gold_boundaries(
     path: str | Path, split: str, surface_docs: Iterable[SurfaceDocument],
-    *, allow_source_superset: bool = False,
+    *, allow_source_superset: bool = False, allow_non_gap: bool = False,
 ) -> list[GoldBoundaries]:
-    """Create evaluation-only labels by aligning gold sentence ends to surfaces."""
+    """Create evaluation-only labels by aligning gold sentence ends to surfaces.
+
+    ``allow_non_gap`` keeps Gold boundaries that sit between tokens with no whitespace (absent
+    from GUM, present in EWT): they stay in ``boundary_offsets`` for Gold F1 but have no
+    candidate gap, so ``labels`` (per gap) cannot mark them."""
     surfaces = {doc.doc_id: doc for doc in surface_docs}
     output: list[GoldBoundaries] = []
     seen: set[str] = set()
@@ -226,7 +230,7 @@ def extract_gold_boundaries(
         ]
         candidates = set(doc.candidate_offsets)
         missing = [offset for offset in boundary_offsets if offset not in candidates]
-        if missing:
+        if missing and not allow_non_gap:
             raise ValueError(
                 f"{doc_id} has {len(missing)} gold boundaries outside canonical whitespace gaps: {missing[:5]}"
             )

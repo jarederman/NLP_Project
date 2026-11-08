@@ -41,10 +41,15 @@ class ScoredSegmentation:
     evidence: tuple[float, ...]
     # Splitter boundaries that are not a canonical inter-token whitespace gap:
     # inside a surface token (e.g. an e-mail address) or between tokens with no
-    # whitespace (e.g. "al.|:"). The gold-free scorer has no evidence there, and
-    # Gold boundaries only occur at whitespace gaps, so meta-evaluation charges
-    # each one as a hard false positive.
+    # whitespace (e.g. "al.|:"). The gold-free scorer has no evidence there; meta-evaluation
+    # charges each one as a hard false positive unless it matches a non-gap Gold boundary.
     non_gap_fp: int = 0
+    # Boundaries between tokens with no whitespace carry no evidence and are outside the Soft F1
+    # candidate space, but count exactly in Gold F1: a system boundary at a non-gap Gold offset is
+    # a TP (non_gap_tp), an unmatched non-gap Gold boundary is a FN (non_gap_fn), any other non-gap
+    # system boundary is a FP (non_gap_fp).
+    non_gap_tp: int = 0
+    non_gap_fn: int = 0
 
     def __post_init__(self) -> None:
         lengths = {len(self.candidate), len(self.gold), len(self.evidence)}
@@ -54,13 +59,13 @@ class ScoredSegmentation:
             raise ValueError("Candidate and gold vectors must be binary")
         if any(probability < 0.0 or probability > 1.0 for probability in self.evidence):
             raise ValueError("Evidence probabilities must be in [0, 1]")
-        if self.non_gap_fp < 0:
-            raise ValueError("non_gap_fp must be non-negative")
+        if min(self.non_gap_fp, self.non_gap_tp, self.non_gap_fn) < 0:
+            raise ValueError("non-gap counts must be non-negative")
 
     @property
     def gold_counts(self) -> Counts:
         counts = hard_counts(self.candidate, self.gold)
-        return Counts(counts.tp, counts.fp + self.non_gap_fp, counts.fn)
+        return Counts(counts.tp + self.non_gap_tp, counts.fp + self.non_gap_fp, counts.fn + self.non_gap_fn)
 
     @property
     def soft_counts(self) -> Counts:
@@ -73,6 +78,15 @@ class ScoredSegmentation:
     @property
     def quality(self) -> float:
         return self.soft_counts.f1
+
+
+def non_gap_counts(system_offsets: list[int], gold_non_gap: set[int]) -> tuple[int, int, int]:
+    """(tp, fp, fn) at non-gap positions. ``system_offsets`` has one entry per non-gap system
+    boundary record (FP counting keeps one per record, as before); ``gold_non_gap`` are the Gold
+    boundaries that are not candidate gaps."""
+    matched = set(system_offsets) & gold_non_gap
+    fp = sum(1 for offset in system_offsets if offset not in gold_non_gap)
+    return len(matched), fp, len(gold_non_gap - matched)
 
 
 def hard_counts(candidate: tuple[int, ...], gold: tuple[int, ...]) -> Counts:

@@ -87,3 +87,21 @@ class SelectionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class NonGapGoldTests(unittest.TestCase):
+    """Amendment 4a: Gold boundaries between tokens with no whitespace count exactly in Gold F1."""
+
+    def test_non_gap_counts(self):
+        from src.selection import non_gap_counts
+        # system splits at 10 (a non-gap Gold boundary) and twice at 30 (not Gold); Gold also at 20
+        self.assertEqual(non_gap_counts([10, 30, 30], {10, 20}), (1, 2, 1))
+        self.assertEqual(non_gap_counts([], set()), (0, 0, 0))
+        self.assertEqual(non_gap_counts([5], set()), (0, 1, 0))     # GUM behaviour: every non-gap split is a FP
+
+    def test_gold_counts_include_non_gap(self):
+        record = ScoredSegmentation("d", "s", (1, 0), (1, 1), (0.9, 0.1), non_gap_fp=1, non_gap_tp=1, non_gap_fn=2)
+        counts = record.gold_counts
+        self.assertEqual((counts.tp, counts.fp, counts.fn), (2, 1, 3))
+        with self.assertRaises(ValueError):
+            ScoredSegmentation("d", "s", (1,), (1,), (0.5,), non_gap_fn=-1)

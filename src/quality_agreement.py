@@ -31,7 +31,7 @@ from scipy.stats import pearsonr, spearmanr
 from .contracts import read_gold_boundaries, read_raw_documents
 from .meta_eval import max_soft_f1
 from .real_splitters import INTRA_TOKEN_REASON
-from .selection import ScoredSegmentation
+from .selection import ScoredSegmentation, non_gap_counts
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -250,11 +250,11 @@ def load_items(evidence_path: Path, config_path: Path = ROOT / "configs/real_spl
     chosen = defaultdict(dict)
     for row in jsonl(candidates or cv_root / "frozen_scores_cv.jsonl"):
         chosen[row["doc_id"]][row["system"]] = set(row["candidate_boundary_offsets"])
-    non_gap = defaultdict(int)
+    non_gap = defaultdict(list)
     for failure in jsonl(failures or cv_root / "alignment_failures.jsonl"):
         if failure["reason"] != INTRA_TOKEN_REASON:
             raise RuntimeError(f"Unexpected alignment failure record: {failure}")
-        non_gap[(failure["doc_id"], failure["system"])] += 1
+        non_gap[(failure["doc_id"], failure["system"])].append(failure["offset"])
 
     records = []
     for doc_id in sorted(documents):
@@ -265,7 +265,9 @@ def load_items(evidence_path: Path, config_path: Path = ROOT / "configs/real_spl
             if p is None:
                 raise RuntimeError(f"No evidence for {doc_id}/{system}")
             vector = tuple(int(o in chosen[doc_id][system]) for o in offsets)
-            records.append(ScoredSegmentation(doc_id, system, vector, labels, p, non_gap_fp=non_gap[(doc_id, system)]))
+            tp, fp, fn = non_gap_counts(non_gap[(doc_id, system)], gold[doc_id] - set(offsets))
+            records.append(ScoredSegmentation(doc_id, system, vector, labels, p,
+                                              non_gap_fp=fp, non_gap_tp=tp, non_gap_fn=fn))
     return build_items(records, {d: documents[d].genre for d in documents}), len(documents)
 
 

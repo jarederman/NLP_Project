@@ -35,7 +35,7 @@ from .meta_eval import evaluate as meta_evaluate, max_soft_f1
 from .quality_agreement import Items, evaluate, load_items, statistics
 from .real_splitters import INTRA_TOKEN_REASON
 from .scoring import soft_fbeta
-from .selection import ScoredSegmentation
+from .selection import ScoredSegmentation, non_gap_counts
 from .surface_data import extract_gold_boundaries, load_surface_documents, load_surface_jsonl, save_jsonl
 
 
@@ -216,7 +216,9 @@ def materialize_gold(args) -> None:
             raise RuntimeError("Refusing to read EWT Gold before every score file is frozen")
     surfaces = test_surfaces()
     raw = {d.doc_id: d for d in read_raw_documents(DATA / "raw_test.jsonl")}
-    internal = extract_gold_boundaries(SOURCE, "test", surfaces)
+    internal = extract_gold_boundaries(SOURCE, "test", surfaces, allow_non_gap=True)  # amendment 4a
+    gaps = {d.doc_id: set(d.candidate_offsets) for d in surfaces}
+    non_gap_gold = sum(1 for r in internal for o in r.boundary_offsets if o not in gaps[r.doc_id])
     contracts = [GoldBoundaries(doc_id=r.doc_id, text_sha256=raw[r.doc_id].sha256, offsets=tuple(r.boundary_offsets),
                                 annotation_source=f"UD_English-EWT@{EWT_RELEASE}") for r in internal]
     for record in contracts:
@@ -225,7 +227,8 @@ def materialize_gold(args) -> None:
     manifest = json.loads((RESULTS / "data_manifest.json").read_text())
     manifest.update({"gold_materialized": True, "gold_materialized_after_frozen_scores": True,
                      "sentences": int(sum(r.sentence_count for r in internal)),
-                     "gold_boundaries": int(sum(len(r.boundary_offsets) for r in internal))})
+                     "gold_boundaries": int(sum(len(r.boundary_offsets) for r in internal)),
+                     "gold_boundaries_not_at_whitespace_gaps": int(non_gap_gold)})
     (RESULTS / "data_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({"status": "EWT_GOLD_MATERIALIZED_AFTER_FREEZE", "documents": len(contracts)}), flush=True)
 
@@ -236,19 +239,20 @@ def _records(evidence_path: Path, systems: list[str]) -> list[ScoredSegmentation
     chosen = defaultdict(dict)
     for row in jsonl(DATA / "frozen" / "raw.jsonl"):
         chosen[row["doc_id"]][row["system"]] = set(row["candidate_boundary_offsets"])
-    non_gap = defaultdict(int)
+    non_gap = defaultdict(list)
     for failure in jsonl(DATA / "alignment_failures.jsonl"):
         if failure["reason"] != INTRA_TOKEN_REASON:
             raise RuntimeError(f"Unexpected alignment failure record: {failure}")
-        non_gap[(failure["doc_id"], failure["system"])] += 1
+        non_gap[(failure["doc_id"], failure["system"])].append(failure["offset"])
     records = []
     for row in jsonl(evidence_path):
         d, offsets = row["doc_id"], row["candidate_offsets"]
         labels = tuple(int(o in gold[d]) for o in offsets)
         p = tuple(row["calibrated_boundary_probability"])
         for s in systems:
+            tp, fp, fn = non_gap_counts(non_gap[(d, s)], gold[d] - set(offsets))
             records.append(ScoredSegmentation(d, s, tuple(int(o in chosen[d][s]) for o in offsets), labels, p,
-                                              non_gap_fp=non_gap[(d, s)]))
+                                              non_gap_fp=fp, non_gap_tp=tp, non_gap_fn=fn))
     return records
 
 
