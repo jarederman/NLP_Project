@@ -13,6 +13,10 @@
 - `src/selection.py`：真实系统的 Macro/Micro 对齐聚合、Direct Internal threshold、pairwise ranking、Selection Regret 和 Always-SaT headroom。
 - `src/meta_eval.py`：Gold-win、pairwise、按领域选择/Regret/Kendall τ、Direct Internal 与分层 bootstrap（dev、train CV、EWT 共用）。
 - `src/train_crossfit.py`、`src/analyze_evidence_gaps.py`：P1 train 交叉拟合开发集及其证据误差分析。
+- `src/quality_agreement.py`：跨文档质量一致性（主指标：全局 Spearman；按 |ΔGold F1| 分档的配对准确率）。
+- `src/boundary_probe.py`、`src/boundary_probe_eval.py`、`src/layout_data.py`：`[MASK]` 隐状态探针、插入似然比与版面控制变量（修订 3）。
+- `src/ewt_test.py`：冻结方法的 EWT 一次性测试（修订 4）。
+- `paper/draft.md`：论文草稿（中文）。
 - `tests/`：不依赖 GPU 的数据契约与 selection-metric 单元测试。
 - `results/`：正式输出；`logs/`：Slurm stdout/stderr。
 
@@ -231,6 +235,32 @@ logit 的交互）、K（左右词形）、A（缩写线索，Kiss & Strunk 式�
 Gold）：raw 0.240 → raw_plus_candidate 0.452 → candidate_only 0.458；其余三格基本不变。即候选条件化主要让证据
 附和候选自身的错误边界，降低区分度。成本：GPU 抽取 268 s（197 篇 × 9 次渲染，约为 raw 单次的 8–9 倍），整作业
 11 分钟。结论：保留 raw 原文上下文。
+
+**标点 vs 边界：探针 / 似然比 / 版面控制变量**（修订 3；job 22259665，2026-11-08；`src/boundary_probe.py`、
+`src/boundary_probe_eval.py`、`src/layout_data.py`，`scripts/run_boundary_probe.slurm`；完整表
+`results/boundary_probe/summary.md`）。冻结 BERT 与 v1.1 查询不变；方法 1 = `[MASK]` 处第 8/12 层隐状态上的 L2 逻辑回归
+探针（λ=1e-3）；方法 2 = 插入 “.” 前后左 2 / 右 3 个 token 的掩码对数概率差；`para` = 段落分隔（`# newpar`）以 `[SEP]`
+写入输入（控制变量，只作分析；GUM 的段落分隔全是 Gold，占 Gold 39.2%、占无终止标点 Gold 86.1%）。
+
+| 配置（LOGO，归一化） | 全局 Spearman | 配对差 vs raw/platt | 大差距配对 | 文档内配对 | 无标点 Gold 平均 p | 带标点非 Gold 平均 p | 所选 − 永远 SaT | Gold-win |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| raw/platt | 0.355 | — | 0.714 | 0.628 | 0.249 | 0.641 | −0.0263 | 0.162 |
+| raw/lr | 0.416 | [+0.026, +0.097] | 0.746 | 0.633 | 0.295 | 0.628 | −0.0288 | 0.183 |
+| raw/probe | 0.559 | [+0.142, +0.272] | 0.832 | 0.814 | 0.548 | 0.204 | −0.0020 | 0.523 |
+| **raw/probe+lr（按规则选中）** | **0.574** | [+0.156, +0.280] | 0.841 | 0.826 | 0.561 | 0.203 | +0.0003 | 0.553 |
+| para/platt | 0.605 | [+0.199, +0.304] | 0.851 | 0.832 | 0.796 | 0.627 | −0.0002 | 0.695 |
+| para/probe+lr | 0.735 | [+0.309, +0.445] | 0.923 | 0.925 | 0.906 | 0.161 | +0.0011 | 0.807 |
+
+要点：探针同时修复无标点真边界与缩写类假边界；5 折结果方向一致（raw/probe+lr 0.621）；λ 敏感性不改变结论；选择类
+指标为点估计（不在预注册判据内）。para 下非段落分隔的无标点 Gold 平均 p 反而降低（0.348 vs raw 0.514）。raw 抽取与冻结
+缓存：中位差 0，632 / 168917 个空隙差值 > 0.01（bf16 批次差异）。成本：整作业 13 分 49 秒；GPU 非空闲时平均利用率 98.1%。
+
+**方法冻结与 EWT test**（修订 4，2026-11-08）。用户决定主方法为**不带版面信息的 `raw/probe+lr`**，`para` 只作补充实验。
+最终模型在全部 197 篇 GUM train 上拟合一次（λ=1e-3），EWT test（UD English EWT r2.18，316 篇、5 个领域：answers、
+email、newsgroup、reviews、weblog）只运行一次：原文重建 → 四个切分器 → 证据 → 写盘冻结分数 → 之后才读 EWT Gold →
+分析；版面产物（由句首 `# newpar` 推出）在主方法分数冻结后才生成。主判据：归一化 Soft F1 全局 Spearman，
+`raw/probe+lr` 相对 `raw/platt` 的配对差 CI 全在 0 以上。作业：`sbatch scripts/run_ewt_test.slurm`（`src/ewt_test.py`；
+job 22337008），输出 `results/ewt_test/{summary.md,report.json,data_manifest.json}`，中间产物在 `data/real_system_ewt/`。
 
 ## GitHub 持续同步
 

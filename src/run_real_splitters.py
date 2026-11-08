@@ -15,8 +15,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", type=Path, default=ROOT / "data/real_system")
-    parser.add_argument("--split", choices=["dev", "train"], default="dev",
-                        help="train = GUM-train development set for cross-fitting (P1)")
+    parser.add_argument("--split", choices=["dev", "train", "test"], default="dev",
+                        help="train = GUM-train development set for cross-fitting (P1); "
+                             "test = EWT test (use --data-root data/real_system_ewt)")
     parser.add_argument("--output-root", type=Path)
     parser.add_argument("--failures", type=Path)
     parser.add_argument("--systems", nargs="*")
@@ -26,6 +27,8 @@ def main() -> None:
         "dev": (ROOT / "data/real_system/predictions", ROOT / "results/alignment_failures.jsonl"),
         "train": (ROOT / "data/real_system/train_cv/predictions",
                   ROOT / "data/real_system/train_cv/alignment_failures.jsonl"),
+        "test": (ROOT / "data/real_system_ewt/predictions",
+                 ROOT / "data/real_system_ewt/alignment_failures.jsonl"),
     }[args.split]
     args.output_root = args.output_root or defaults[0]
     args.failures = args.failures or defaults[1]

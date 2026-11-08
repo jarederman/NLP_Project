@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-Reference-free sentence segmentation evaluation. It scores candidate segmentations of a document without reading that document's gold boundaries, using LM evidence at each candidate gap: Qwen3.5-9B next-token terminal-punctuation probability in the preliminary study, and `google-bert/bert-base-uncased` `[MASK]` probability in the real-splitter study. The scores are Platt-calibrated on GUM train, and candidates are ranked by Soft F1 against those probabilities. The goal is to pick the best real splitter (Punkt, Stanza, WtP `wtp-bert-mini`, SaT `sat-3l-sm`) per document. README.md is in Chinese and is the authoritative experiment log.
+Reference-free sentence segmentation evaluation. It scores candidate segmentations of a document without reading that document's gold boundaries, using LM evidence at each candidate gap: Qwen3.5-9B next-token terminal-punctuation probability in the preliminary study, and `google-bert/bert-base-uncased` `[MASK]` probability in the real-splitter study. The scores are Platt-calibrated on GUM train, and candidates are ranked by Soft F1 against those probabilities. Candidates come from real splitters (Punkt, Stanza, WtP `wtp-bert-mini`, SaT `sat-3l-sm`). Since amendment 2 the primary goal is cross-document/cross-domain agreement with Gold quality (global Spearman of normalized Soft F1); picking the best splitter is secondary. The frozen main method (amendment 4) is `raw/probe+lr`: an L2 logistic probe on the frozen uncased BERT's `[MASK]` hidden states (layers 8/12) plus insertion likelihood-ratio features, fitted on all of GUM train; no casing features, no layout (`para` = paragraph-[SEP] variant, supplementary only). README.md is in Chinese and is the authoritative experiment log; `paper/draft.md` is the paper draft.
 
 ## Environment (always do this first)
 
@@ -40,7 +40,8 @@ sbatch scripts/run_real_formal.slurm     # GUM dev; also builds the train BERT c
 sbatch scripts/run_train_cv.slurm        # P1: GUM-train 5-fold cross-fitting (needs the formal run first)
 sbatch scripts/run_calibration_search.slurm   # P2: feature x model calibration search, 5-fold + leave-one-genre-out (CPU, ~4 min)
 sbatch scripts/run_conditioned_context.slurm  # BERT context: raw vs raw+candidate vs candidate-only (GPU, ~11 min; raw wins)
-sbatch scripts/run_boundary_probe.slurm      # amendment 3: [MASK]-state probe / insertion likelihood ratio / paragraph-[SEP] layout control (GPU, one job)
+sbatch scripts/run_boundary_probe.slurm      # amendment 3: [MASK]-state probe / insertion likelihood ratio / paragraph-[SEP] layout control (GPU, one job, ~14 min)
+sbatch scripts/run_ewt_test.slurm            # amendment 4: one-shot EWT test of the frozen method (fetch with scripts/fetch_ewt.sh first). Run ONCE.
 # scripts/run_real_smoke.slurm still exists for debugging GPU-only code paths
 
 # Preliminary Qwen study (synthetic perturbation candidates)

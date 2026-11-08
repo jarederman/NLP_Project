@@ -224,13 +224,15 @@ def render(result: dict, title: str, note: str) -> str:
 
 def load_items(evidence_path: Path, config_path: Path = ROOT / "configs/real_splitters.json",
                data_root: Path = ROOT / "data/real_system",
-               cv_root: Path = ROOT / "data/real_system/train_cv") -> tuple[Items, int]:
-    """GUM-train (document, system) items scored on one evidence file (shared or per-system rows)."""
+               cv_root: Path = ROOT / "data/real_system/train_cv", split: str = "train",
+               candidates: Path | None = None, failures: Path | None = None) -> tuple[Items, int]:
+    """(document, system) items scored on one evidence file (shared or per-system rows).
+    Defaults: the GUM-train development set; ``split``/``candidates``/``failures`` select another."""
     config = json.loads(config_path.read_text())
     systems = sorted(config["systems"])
-    documents = {d.doc_id: d for d in read_raw_documents(data_root / "raw_train.jsonl")}
+    documents = {d.doc_id: d for d in read_raw_documents(data_root / f"raw_{split}.jsonl")}
     gold = {}
-    for record in read_gold_boundaries(data_root / "gold_train.jsonl"):
+    for record in read_gold_boundaries(data_root / f"gold_{split}.jsonl"):
         record.validate_against(documents[record.doc_id])
         gold[record.doc_id] = set(record.offsets)
 
@@ -246,10 +248,10 @@ def load_items(evidence_path: Path, config_path: Path = ROOT / "configs/real_spl
         evidence[key] = tuple(row["calibrated_boundary_probability"])
         offsets_of[row["doc_id"]] = row["candidate_offsets"]
     chosen = defaultdict(dict)
-    for row in jsonl(cv_root / "frozen_scores_cv.jsonl"):
+    for row in jsonl(candidates or cv_root / "frozen_scores_cv.jsonl"):
         chosen[row["doc_id"]][row["system"]] = set(row["candidate_boundary_offsets"])
     non_gap = defaultdict(int)
-    for failure in jsonl(cv_root / "alignment_failures.jsonl"):
+    for failure in jsonl(failures or cv_root / "alignment_failures.jsonl"):
         if failure["reason"] != INTRA_TOKEN_REASON:
             raise RuntimeError(f"Unexpected alignment failure record: {failure}")
         non_gap[(failure["doc_id"], failure["system"])] += 1

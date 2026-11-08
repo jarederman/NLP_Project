@@ -277,8 +277,10 @@ def predict_logistic(torch, model: dict, x):
     return torch.sigmoid(((x.double() - model["mu"]) / model["sd"]) @ model["w"] + model["b"]).to(x.dtype)
 
 
-def extract(args, torch, config: dict, surfaces, layout: dict, reference: dict) -> tuple[dict, dict]:
-    """GPU stage: [MASK] rows and likelihood-ratio rows for both input variants."""
+def extract(args, torch, config: dict, surfaces, layout: dict, reference: dict | None,
+            variants: tuple[str, ...] = VARIANTS, feature_name: str = "train.pt") -> tuple[dict, dict]:
+    """GPU stage: [MASK] rows and likelihood-ratio rows for both input variants. ``reference``
+    (the frozen v1.1 cache) is checked against the raw variant when given."""
     bert = config["bert"]
     protocol = bert["mask_protocol"]
     left_budget, right_budget = window_budgets(bert["max_length"])
@@ -290,7 +292,7 @@ def extract(args, torch, config: dict, surfaces, layout: dict, reference: dict) 
         full_ids, plan = plan_queries(tokenizer, doc, protocol)
         plans[doc.doc_id] = (full_ids, [(p[2], p[3]) for p in plan], right_token_indices(tokenizer, doc))
     timings, features = {}, {}
-    for variant in VARIANTS:
+    for variant in variants:
         started = time.time()
         documents = []
         for doc in surfaces:
@@ -310,7 +312,7 @@ def extract(args, torch, config: dict, surfaces, layout: dict, reference: dict) 
         logp = run_lr_rows(model, torch, src, l_spec, corpus.at, ids_of["mask"], args.lr_batch)
         torch.cuda.synchronize()
         p = probability.cpu().numpy().astype(float)
-        if variant == "raw":
+        if variant == "raw" and reference is not None:
             cached = np.concatenate([reference[d.doc_id]["raw_punctuation_probability"] for d in surfaces])
             diff = np.abs(p - cached)
             timings["raw_vs_cache"] = {"max_abs_diff": float(diff.max()), "p99_abs_diff": float(np.quantile(diff, 0.99))}
@@ -329,15 +331,16 @@ def extract(args, torch, config: dict, surfaces, layout: dict, reference: dict) 
                     "p_punct": torch.as_tensor(p), "hidden": features[variant]["hidden"], "lr": torch.as_tensor(lr),
                     "probe_layers": PROBE_LAYERS, "protocol": protocol, "model_name": bert["model_name"],
                     "timings": timings[variant], "raw_vs_cache": timings.get("raw_vs_cache")},
-                   destination / "train.pt")
+                   destination / feature_name)
         del src
     return features, timings
 
 
-def load_features(torch, feature_root: Path, surfaces) -> tuple[dict, dict]:
+def load_features(torch, feature_root: Path, surfaces, variants: tuple[str, ...] = VARIANTS,
+                  feature_name: str = "train.pt") -> tuple[dict, dict]:
     features, timings = {}, {}
-    for variant in VARIANTS:
-        saved = torch.load(feature_root / variant / "train.pt", weights_only=False)
+    for variant in variants:
+        saved = torch.load(feature_root / variant / feature_name, weights_only=False)
         if saved["doc_ids"] != [d.doc_id for d in surfaces]:
             raise RuntimeError("Saved features do not match the documents")
         features[variant] = {"p": saved["p_punct"].numpy(), "hidden": saved["hidden"], "lr": saved["lr"].numpy()}
