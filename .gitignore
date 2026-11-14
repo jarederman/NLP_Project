@@ -15,6 +15,10 @@ data/processed/
 data/real_system/
 data/real_system_v1/
 data/real_system_ewt/
+data/UD_English-GENTLE/
+data/UD_English-LinES/
+data/real_system_gentle/
+data/real_system_lines/
 
 # Scheduler logs and transient outputs
 logs/
