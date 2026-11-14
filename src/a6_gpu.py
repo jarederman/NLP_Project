@@ -222,8 +222,12 @@ def run_finetune(args) -> None:
     corpus = CORPORA[args.corpus]
     docs = surfaces(corpus)
     MODEL_CACHE.mkdir(parents=True, exist_ok=True)
+    k = args.seed_offset
+    if k and corpus.name != "gum":
+        raise RuntimeError("--seed-offset is a GUM-train LOGO analysis (amendment 7.4)")
     for name in args.models:
         model_name = FT_MODELS[name]
+        out_name = f"{name}-seed{k}" if k else name
         started = time.time()
         if corpus.name == "gum":
             gold = gold_sets(corpus)
@@ -234,15 +238,19 @@ def run_finetune(args) -> None:
             for g, genre in enumerate(genres):
                 train_docs = [d for d in docs if d.genre != genre]
                 held = [d for d in docs if d.genre == genre]
-                tagger = train(torch, model_name, train_docs, gold, SEED + g)
+                tagger = train(torch, model_name, train_docs, gold, SEED + 100 * k + g)
                 pred = predict(tagger, held)
                 idx = np.concatenate([np.arange(sl.start, sl.stop) for d, sl in zip(docs, slices) if d.genre == genre])
                 logit[idx] = pred
-                print(json.dumps({"status": "A6_FT_FOLD", "model": name, "genre": genre,
+                print(json.dumps({"status": "A6_FT_FOLD", "model": out_name, "genre": genre,
                                   "seconds": round(time.time() - started, 1)}), flush=True)
                 del tagger
                 torch.cuda.empty_cache()
-            save_gap_array(corpus, f"{name}_logit", docs, logit)
+            save_gap_array(corpus, f"{out_name}_logit", docs, logit)
+            if k:                     # amendment 7.4: LOGO only, the test components stay untouched
+                print(json.dumps({"status": "A6_FT_COMPLETE", "corpus": corpus.name, "model": out_name,
+                                  "seconds": round(time.time() - started, 1)}), flush=True)
+                continue
             tagger = train(torch, model_name, docs, gold, SEED)
             torch.save({"encoder": {k: v.to(torch.bfloat16) for k, v in tagger.encoder.state_dict().items()},
                         "head": tagger.head.state_dict(), "model_name": model_name}, MODEL_CACHE / f"{name}_final.pt")
@@ -303,6 +311,8 @@ def main() -> None:
     parser.add_argument("stage", choices=["sat", "finetune", "stability"])
     parser.add_argument("--corpus", choices=sorted(CORPORA), default="gum")
     parser.add_argument("--models", nargs="*", default=list(FT_MODELS))
+    parser.add_argument("--seed-offset", type=int, default=0,
+                        help="amendment 7.4: fold seed = SEED + 100*k + g; LOGO only, saved as <model>-seed<k>")
     args = parser.parse_args()
     {"sat": run_sat, "finetune": run_finetune, "stability": run_stability}[args.stage](args)
 
