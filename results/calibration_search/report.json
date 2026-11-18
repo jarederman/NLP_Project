@@ -1,0 +1,2229 @@
+{
+  "protocol": "surface_v1.1_terminal_unit_incl_reference_markers_else_insert_gap",
+  "fixed_system": "sat",
+  "n_documents": 197,
+  "n_domains": 15,
+  "schemes": {
+    "kfold5": {
+      "configs": {
+        "platt": {
+          "groups": [
+            "Bz"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.02629013223213399,
+          "gold_win": 0.16243654822335024,
+          "pairwise": 0.6291779584462511,
+          "kendall_tau": 0.28888888888888886,
+          "regret": 0.027694278893374155,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.8309225837390882,
+          "gap_log_loss": 0.07158574370809627,
+          "non_terminal_auc": 0.9001969036628583,
+          "non_terminal_gold_mean_p": 0.24935168424028695,
+          "terminal_non_gold_mean_p": 0.6409860187231476,
+          "primary_ci": [
+            -0.036813019764520005,
+            -0.021001000672691103
+          ],
+          "gold_win_ci": [
+            0.116751269035533,
+            0.20812182741116753
+          ],
+          "primary_minus_platt_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "B": {
+          "groups": [
+            "B"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.501806684733514,
+          "kendall_tau": 0.04444444444444444,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9183141559080457,
+          "gap_log_loss": 0.04445773173744471,
+          "non_terminal_auc": 0.8997026944724069,
+          "non_terminal_gold_mean_p": 0.04172776593940848,
+          "terminal_non_gold_mean_p": 0.7157835532616444,
+          "primary_ci": [
+            -0.04368831902117039,
+            -0.03307599265735184
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.1065989847715736
+          ],
+          "primary_minus_platt_ci": [
+            -0.016514984741954432,
+            -0.003025247857507938
+          ]
+        },
+        "B+C": {
+          "groups": [
+            "B",
+            "C"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.503613369467028,
+          "kendall_tau": 0.08888888888888889,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9171229235607142,
+          "gap_log_loss": 0.03530254672878296,
+          "non_terminal_auc": 0.9407208352200221,
+          "non_terminal_gold_mean_p": 0.13651482601500237,
+          "terminal_non_gold_mean_p": 0.6675416519405835,
+          "primary_ci": [
+            -0.04354899754975487,
+            -0.03228402327752384
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.10152284263959391
+          ],
+          "primary_minus_platt_ci": [
+            -0.0162620113654651,
+            -0.0028352853480183697
+          ]
+        },
+        "B+K": {
+          "groups": [
+            "B",
+            "K"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.03515189138567142,
+          "gold_win": 0.13705583756345177,
+          "pairwise": 0.5894308943089431,
+          "kendall_tau": 0.22222222222222224,
+          "regret": 0.036556038046911585,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9276352652835305,
+          "gap_log_loss": 0.029034153878779872,
+          "non_terminal_auc": 0.9741495398973891,
+          "non_terminal_gold_mean_p": 0.2444761866392358,
+          "terminal_non_gold_mean_p": 0.5303043494648558,
+          "primary_ci": [
+            -0.039313533915807726,
+            -0.02692228027657542
+          ],
+          "gold_win_ci": [
+            0.09644670050761421,
+            0.17766497461928935
+          ],
+          "primary_minus_platt_ci": [
+            -0.01167028695021722,
+            0.0018072679689084708
+          ]
+        },
+        "B+A": {
+          "groups": [
+            "B",
+            "A"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.06091370558375635,
+          "pairwise": 0.523486901535682,
+          "kendall_tau": 0.08888888888888889,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.922709079416887,
+          "gap_log_loss": 0.03755566539231615,
+          "non_terminal_auc": 0.8998238713546363,
+          "non_terminal_gold_mean_p": 0.057093210751800176,
+          "terminal_non_gold_mean_p": 0.48789853284394163,
+          "primary_ci": [
+            -0.04360028833657064,
+            -0.03184742398300209
+          ],
+          "gold_win_ci": [
+            0.030456852791878174,
+            0.09137055837563451
+          ],
+          "primary_minus_platt_ci": [
+            -0.016372563758466813,
+            -0.0022040101183639998
+          ]
+        },
+        "B+L": {
+          "groups": [
+            "B",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.5,
+          "kendall_tau": 0.06666666666666667,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9174060841765193,
+          "gap_log_loss": 0.04113887110897124,
+          "non_terminal_auc": 0.9419385155375848,
+          "non_terminal_gold_mean_p": 0.08448316204386877,
+          "terminal_non_gold_mean_p": 0.7029377300379366,
+          "primary_ci": [
+            -0.043584285227844084,
+            -0.03276757238256265
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.1065989847715736
+          ],
+          "primary_minus_platt_ci": [
+            -0.016373951977808887,
+            -0.002903117262021565
+          ]
+        },
+        "B+C+K": {
+          "groups": [
+            "B",
+            "C",
+            "K"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.02564509171769789,
+          "gold_win": 0.2182741116751269,
+          "pairwise": 0.6553748870822041,
+          "kendall_tau": 0.4444444444444444,
+          "regret": 0.027049238378938054,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "punkt",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9320471034647955,
+          "gap_log_loss": 0.024349979297771218,
+          "non_terminal_auc": 0.9822513289462359,
+          "non_terminal_gold_mean_p": 0.33961030042339824,
+          "terminal_non_gold_mean_p": 0.4741013019283108,
+          "primary_ci": [
+            -0.03324545084229367,
+            -0.017132026894862706
+          ],
+          "gold_win_ci": [
+            0.16751269035532995,
+            0.26903553299492383
+          ],
+          "primary_minus_platt_ci": [
+            -0.00327588180605797,
+            0.00990849164358364
+          ]
+        },
+        "B+C+K+A": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.0181282871153182,
+          "gold_win": 0.20812182741116753,
+          "pairwise": 0.6626016260162602,
+          "kendall_tau": 0.4888888888888889,
+          "regret": 0.019532433776558365,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "stanza",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9370740431683185,
+          "gap_log_loss": 0.021476117145853492,
+          "non_terminal_auc": 0.9831219793487086,
+          "non_terminal_gold_mean_p": 0.34600013903472004,
+          "terminal_non_gold_mean_p": 0.3100466534742898,
+          "primary_ci": [
+            -0.027934515369000757,
+            -0.013852213430555087
+          ],
+          "gold_win_ci": [
+            0.15736040609137056,
+            0.25888324873096447
+          ],
+          "primary_minus_platt_ci": [
+            0.0010784301972759382,
+            0.014238234237822962
+          ]
+        },
+        "B+C+K+L": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.019821846204658426,
+          "gold_win": 0.20812182741116753,
+          "pairwise": 0.6662149954832882,
+          "kendall_tau": 0.46666666666666673,
+          "regret": 0.02122599286589859,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9328736460725351,
+          "gap_log_loss": 0.023051258996842062,
+          "non_terminal_auc": 0.9857175175321735,
+          "non_terminal_gold_mean_p": 0.3665143789881135,
+          "terminal_non_gold_mean_p": 0.4547860909352865,
+          "primary_ci": [
+            -0.028396349978114205,
+            -0.014619818278101446
+          ],
+          "gold_win_ci": [
+            0.16243654822335024,
+            0.25888324873096447
+          ],
+          "primary_minus_platt_ci": [
+            0.0006738851489381939,
+            0.015116541269859724
+          ]
+        },
+        "B+C+K+A+L": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.015361000373026552,
+          "gold_win": 0.19796954314720813,
+          "pairwise": 0.6860885275519422,
+          "kendall_tau": 0.5333333333333333,
+          "regret": 0.01676514703426672,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9380610328765054,
+          "gap_log_loss": 0.02055525443155651,
+          "non_terminal_auc": 0.9863002295835315,
+          "non_terminal_gold_mean_p": 0.37268341945834793,
+          "terminal_non_gold_mean_p": 0.3095125458670415,
+          "primary_ci": [
+            -0.025137779278744766,
+            -0.012408636835846512
+          ],
+          "gold_win_ci": [
+            0.1521573604060914,
+            0.24873096446700507
+          ],
+          "primary_minus_platt_ci": [
+            0.004089722122159415,
+            0.01807835203838156
+          ]
+        },
+        "B+K+A+L": {
+          "groups": [
+            "B",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.024971335737220383,
+          "gold_win": 0.19796954314720813,
+          "pairwise": 0.6336946702800361,
+          "kendall_tau": 0.31111111111111106,
+          "regret": 0.026375482398460548,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "punkt",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "stanza",
+            "news": "stanza",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "stanza",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9342604937412071,
+          "gap_log_loss": 0.023174713123260155,
+          "non_terminal_auc": 0.979122376255038,
+          "non_terminal_gold_mean_p": 0.30592603528759404,
+          "terminal_non_gold_mean_p": 0.35012149063318115,
+          "primary_ci": [
+            -0.032363574775933185,
+            -0.01813793350778745
+          ],
+          "gold_win_ci": [
+            0.14720812182741116,
+            0.24873096446700507
+          ],
+          "primary_minus_platt_ci": [
+            -0.0037464008614223883,
+            0.010203632034708329
+          ]
+        },
+        "B+C+A+L": {
+          "groups": [
+            "B",
+            "C",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.03523377677104109,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.5370370370370371,
+          "kendall_tau": 0.13333333333333333,
+          "regret": 0.036637923432281255,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9251596185052494,
+          "gap_log_loss": 0.027591977857592015,
+          "non_terminal_auc": 0.975563059691718,
+          "non_terminal_gold_mean_p": 0.20602112981528478,
+          "terminal_non_gold_mean_p": 0.42625671417195715,
+          "primary_ci": [
+            -0.042495391826066375,
+            -0.029277671617529158
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.10152284263959391
+          ],
+          "primary_minus_platt_ci": [
+            -0.014777275232827495,
+            9.350961120911357e-05
+          ]
+        },
+        "B+C+K+A+L/hgb": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.013787702092589792,
+          "gold_win": 0.29949238578680204,
+          "pairwise": 0.7475158084914183,
+          "kendall_tau": 0.6666666666666666,
+          "regret": 0.015191848753829958,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.947239752313877,
+          "gap_log_loss": 0.01776468396058294,
+          "non_terminal_auc": 0.9908820067883378,
+          "non_terminal_gold_mean_p": 0.43526525220096796,
+          "terminal_non_gold_mean_p": 0.2275258229970748,
+          "primary_ci": [
+            -0.01924363104741117,
+            -0.009651991394337792
+          ],
+          "gold_win_ci": [
+            0.24873096446700507,
+            0.3553299492385787
+          ],
+          "primary_minus_platt_ci": [
+            0.007390822376587926,
+            0.02274700654448076
+          ]
+        },
+        "C+K+A+L（无 LM）": {
+          "groups": [
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.015361000373026552,
+          "gold_win": 0.20304568527918782,
+          "pairwise": 0.6942186088527552,
+          "kendall_tau": 0.5333333333333333,
+          "regret": 0.01676514703426672,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9368381772220654,
+          "gap_log_loss": 0.020995971158269035,
+          "non_terminal_auc": 0.9859554625256807,
+          "non_terminal_gold_mean_p": 0.3738884841777077,
+          "terminal_non_gold_mean_p": 0.34612036354775605,
+          "primary_ci": [
+            -0.024557751750545285,
+            -0.012016892357060525
+          ],
+          "gold_win_ci": [
+            0.15723350253807108,
+            0.25888324873096447
+          ],
+          "primary_minus_platt_ci": [
+            0.004358828805779398,
+            0.018271003220676183
+          ]
+        },
+        "C+K+A+L/hgb（无 LM）": {
+          "groups": [
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.014356715644049885,
+          "gold_win": 0.28426395939086296,
+          "pairwise": 0.7375790424570913,
+          "kendall_tau": 0.6,
+          "regret": 0.01576086230529005,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "sat",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9449128926144503,
+          "gap_log_loss": 0.01814897935628285,
+          "non_terminal_auc": 0.9908225702409599,
+          "non_terminal_gold_mean_p": 0.41639962135120334,
+          "terminal_non_gold_mean_p": 0.2325909400226722,
+          "primary_ci": [
+            -0.020486245292894948,
+            -0.01031288024902505
+          ],
+          "gold_win_ci": [
+            0.22842639593908629,
+            0.3401015228426396
+          ],
+          "primary_minus_platt_ci": [
+            0.006827227430088497,
+            0.021656858760628356
+          ]
+        },
+        "B+C+K+O": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "O"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.01576015093490766,
+          "gold_win": 0.26903553299492383,
+          "pairwise": 0.7104787714543812,
+          "kendall_tau": 0.5777777777777778,
+          "regret": 0.017164297596147824,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.937977098034145,
+          "gap_log_loss": 0.022597242595685588,
+          "non_terminal_auc": 0.9818421376995993,
+          "non_terminal_gold_mean_p": 0.40445124046269554,
+          "terminal_non_gold_mean_p": 0.45346271319402437,
+          "primary_ci": [
+            -0.02606664996544842,
+            -0.01285407099402489
+          ],
+          "gold_win_ci": [
+            0.2182741116751269,
+            0.3197969543147208
+          ],
+          "primary_minus_platt_ci": [
+            0.0026749205942239894,
+            0.017112039832552082
+          ]
+        },
+        "B+C+K+W": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "W"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.020720359689060504,
+          "gold_win": 0.20304568527918782,
+          "pairwise": 0.6626016260162602,
+          "kendall_tau": 0.4222222222222222,
+          "regret": 0.02212450635030067,
+          "domains_selecting_fixed": 5,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "sat",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "punkt",
+            "textbook": "stanza",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9344373431549452,
+          "gap_log_loss": 0.023543883486445285,
+          "non_terminal_auc": 0.9836436059489638,
+          "non_terminal_gold_mean_p": 0.3529935422373369,
+          "terminal_non_gold_mean_p": 0.4540631079887415,
+          "primary_ci": [
+            -0.030864504106588565,
+            -0.016300478150779306
+          ],
+          "gold_win_ci": [
+            0.15736040609137056,
+            0.24873096446700507
+          ],
+          "primary_minus_platt_ci": [
+            -0.0008090527916481611,
+            0.012816471830238676
+          ]
+        },
+        "B+C+K+A+L+O": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.01418717887040882,
+          "gold_win": 0.27918781725888325,
+          "pairwise": 0.7547425474254743,
+          "kendall_tau": 0.6222222222222222,
+          "regret": 0.015591325531648985,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9444888161479399,
+          "gap_log_loss": 0.019206290292690876,
+          "non_terminal_auc": 0.9862545631364067,
+          "non_terminal_gold_mean_p": 0.4312422909409156,
+          "terminal_non_gold_mean_p": 0.3015499492029377,
+          "primary_ci": [
+            -0.02102456300247979,
+            -0.010091844128484696
+          ],
+          "gold_win_ci": [
+            0.2233502538071066,
+            0.3350253807106599
+          ],
+          "primary_minus_platt_ci": [
+            0.006983690460577085,
+            0.021282256417974623
+          ]
+        },
+        "B+C+K+A+L+O+W": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O",
+            "W"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.01418717887040882,
+          "gold_win": 0.2436548223350254,
+          "pairwise": 0.7574525745257452,
+          "kendall_tau": 0.6666666666666666,
+          "regret": 0.015591325531648985,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9477342269175241,
+          "gap_log_loss": 0.018444198619287484,
+          "non_terminal_auc": 0.9868445081448827,
+          "non_terminal_gold_mean_p": 0.4472905221571353,
+          "terminal_non_gold_mean_p": 0.2750358598470714,
+          "primary_ci": [
+            -0.01956193834246067,
+            -0.010371581145100112
+          ],
+          "gold_win_ci": [
+            0.19289340101522842,
+            0.29949238578680204
+          ],
+          "primary_minus_platt_ci": [
+            0.007240923816324785,
+            0.021094121481773462
+          ]
+        },
+        "B+C+K+A+L+O/hgb": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.013787702092589792,
+          "gold_win": 0.3604060913705584,
+          "pairwise": 0.7926829268292683,
+          "kendall_tau": 0.7333333333333332,
+          "regret": 0.015191848753829958,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "sat",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9521953060409721,
+          "gap_log_loss": 0.0164185003697004,
+          "non_terminal_auc": 0.9924580488487144,
+          "non_terminal_gold_mean_p": 0.4913753517632835,
+          "terminal_non_gold_mean_p": 0.22193587063749498,
+          "primary_ci": [
+            -0.017300771398217337,
+            -0.007596929411013257
+          ],
+          "gold_win_ci": [
+            0.29949238578680204,
+            0.4213197969543147
+          ],
+          "primary_minus_platt_ci": [
+            0.008627870747849733,
+            0.024704290936859146
+          ]
+        },
+        "B+V（投票）": {
+          "groups": [
+            "B",
+            "V"
+          ],
+          "model": "lr",
+          "eligible": false,
+          "primary": -0.00188094823727963,
+          "gold_win": 0.2131979695431472,
+          "pairwise": 0.8279132791327913,
+          "kendall_tau": 0.8666666666666666,
+          "regret": 0.003285094898519795,
+          "domains_selecting_fixed": 10,
+          "selected_by_domain": {
+            "academic": "sat",
+            "bio": "sat",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "sat",
+            "fiction": "sat",
+            "interview": "sat",
+            "letter": "sat",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "sat",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "stanza",
+            "whow": "sat"
+          },
+          "direct_internal_macro_f1": 0.9587769747185444,
+          "gap_log_loss": 0.016937808830664283,
+          "non_terminal_auc": 0.979327980516273,
+          "non_terminal_gold_mean_p": 0.5487889354024922,
+          "terminal_non_gold_mean_p": 0.35878295287806977,
+          "primary_ci": [
+            -0.015197906828833718,
+            -0.0007048705883721542
+          ],
+          "gold_win_ci": [
+            0.16243654822335024,
+            0.2639593908629442
+          ],
+          "primary_minus_platt_ci": [
+            0.010545093277903136,
+            0.0326996803450045
+          ]
+        },
+        "B+C+K+A+L+V（投票）": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "V"
+          ],
+          "model": "lr",
+          "eligible": false,
+          "primary": 0.0007755076806716351,
+          "gold_win": 0.2893401015228426,
+          "pairwise": 0.8514001806684733,
+          "kendall_tau": 0.8,
+          "regret": 0.00062863898056853,
+          "domains_selecting_fixed": 13,
+          "selected_by_domain": {
+            "academic": "sat",
+            "bio": "sat",
+            "conversation": "stanza",
+            "court": "sat",
+            "essay": "sat",
+            "fiction": "sat",
+            "interview": "sat",
+            "letter": "sat",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "sat",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "sat",
+            "whow": "sat"
+          },
+          "direct_internal_macro_f1": 0.9669580589947969,
+          "gap_log_loss": 0.013172355749297935,
+          "non_terminal_auc": 0.9912873096627162,
+          "non_terminal_gold_mean_p": 0.6273228169684906,
+          "terminal_non_gold_mean_p": 0.1708309851952465,
+          "primary_ci": [
+            -0.004193478879721013,
+            0.0020820305220985674
+          ],
+          "gold_win_ci": [
+            0.233502538071066,
+            0.34517766497461927
+          ],
+          "primary_minus_platt_ci": [
+            0.019648170943930197,
+            0.03717322240873058
+          ]
+        }
+      },
+      "decision": {
+        "best_primary": "B+C+K+A+L+O/hgb",
+        "indistinguishable_from_best": [
+          "B+C+K+A+L",
+          "B+C+K+A+L+O",
+          "B+C+K+A+L+O+W",
+          "B+C+K+A+L+O/hgb",
+          "B+C+K+A+L/hgb",
+          "B+C+K+O",
+          "C+K+A+L/hgb（无 LM）",
+          "C+K+A+L（无 LM）"
+        ],
+        "chosen": "B+C+K+O"
+      }
+    },
+    "logo": {
+      "configs": {
+        "platt": {
+          "groups": [
+            "Bz"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.02629013223213399,
+          "gold_win": 0.16751269035532995,
+          "pairwise": 0.6282746160794941,
+          "kendall_tau": 0.28888888888888886,
+          "regret": 0.027694278893374155,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.8312675868393854,
+          "gap_log_loss": 0.07181873907276713,
+          "non_terminal_auc": 0.899223521295884,
+          "non_terminal_gold_mean_p": 0.24851453663956868,
+          "terminal_non_gold_mean_p": 0.641350346716356,
+          "primary_ci": [
+            -0.0369604925981934,
+            -0.02095902190617388
+          ],
+          "gold_win_ci": [
+            0.1218274111675127,
+            0.2182741116751269
+          ],
+          "primary_minus_platt_ci": [
+            0.0,
+            0.0
+          ]
+        },
+        "B": {
+          "groups": [
+            "B"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.501806684733514,
+          "kendall_tau": 0.04444444444444444,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9181463393223263,
+          "gap_log_loss": 0.045033272417505474,
+          "non_terminal_auc": 0.8968053630535171,
+          "non_terminal_gold_mean_p": 0.040542389078330014,
+          "terminal_non_gold_mean_p": 0.717092637190178,
+          "primary_ci": [
+            -0.04368831902117039,
+            -0.03305002749702752
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.1065989847715736
+          ],
+          "primary_minus_platt_ci": [
+            -0.016500162351363246,
+            -0.00298201204528023
+          ]
+        },
+        "B+C": {
+          "groups": [
+            "B",
+            "C"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07614213197969544,
+          "pairwise": 0.503613369467028,
+          "kendall_tau": 0.08888888888888889,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9171150814729838,
+          "gap_log_loss": 0.03617866446742992,
+          "non_terminal_auc": 0.9333588543089478,
+          "non_terminal_gold_mean_p": 0.12815747083289414,
+          "terminal_non_gold_mean_p": 0.7075739927621897,
+          "primary_ci": [
+            -0.04357750162614785,
+            -0.03249923216333034
+          ],
+          "gold_win_ci": [
+            0.04568527918781726,
+            0.1065989847715736
+          ],
+          "primary_minus_platt_ci": [
+            -0.01628077194305817,
+            -0.0027535075688161718
+          ]
+        },
+        "B+K": {
+          "groups": [
+            "B",
+            "K"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.03521151681477986,
+          "gold_win": 0.1319796954314721,
+          "pairwise": 0.5776874435411021,
+          "kendall_tau": 0.2,
+          "regret": 0.03661566347602003,
+          "domains_selecting_fixed": 1,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9259468800982509,
+          "gap_log_loss": 0.029943481642800154,
+          "non_terminal_auc": 0.9732039637774443,
+          "non_terminal_gold_mean_p": 0.2280415053546935,
+          "terminal_non_gold_mean_p": 0.5286135843702462,
+          "primary_ci": [
+            -0.039725035700778,
+            -0.027479982588172438
+          ],
+          "gold_win_ci": [
+            0.09137055837563451,
+            0.17258883248730963
+          ],
+          "primary_minus_platt_ci": [
+            -0.01216260057574274,
+            0.0014856823995238791
+          ]
+        },
+        "B+A": {
+          "groups": [
+            "B",
+            "A"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.06091370558375635,
+          "pairwise": 0.5225835591689251,
+          "kendall_tau": 0.06666666666666667,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9219978047376999,
+          "gap_log_loss": 0.03849660526913106,
+          "non_terminal_auc": 0.8972835392864762,
+          "non_terminal_gold_mean_p": 0.05604181594084892,
+          "terminal_non_gold_mean_p": 0.5111144750515929,
+          "primary_ci": [
+            -0.04363024604906739,
+            -0.03191554431767736
+          ],
+          "gold_win_ci": [
+            0.030456852791878174,
+            0.09137055837563451
+          ],
+          "primary_minus_platt_ci": [
+            -0.016338913003838603,
+            -0.0024248890733588064
+          ]
+        },
+        "B+L": {
+          "groups": [
+            "B",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.039171161261541264,
+          "gold_win": 0.07106598984771574,
+          "pairwise": 0.500903342366757,
+          "kendall_tau": 0.06666666666666667,
+          "regret": 0.040575307922781426,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "punkt"
+          },
+          "direct_internal_macro_f1": 0.9174987844423479,
+          "gap_log_loss": 0.04188278825733879,
+          "non_terminal_auc": 0.9399763434940107,
+          "non_terminal_gold_mean_p": 0.08125039520522725,
+          "terminal_non_gold_mean_p": 0.7047094368742208,
+          "primary_ci": [
+            -0.04361993475550747,
+            -0.03282813861929928
+          ],
+          "gold_win_ci": [
+            0.04060913705583756,
+            0.1065989847715736
+          ],
+          "primary_minus_platt_ci": [
+            -0.016338932564021805,
+            -0.002830144739682473
+          ]
+        },
+        "B+C+K": {
+          "groups": [
+            "B",
+            "C",
+            "K"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.027347203357659715,
+          "gold_win": 0.2233502538071066,
+          "pairwise": 0.6436314363143631,
+          "kendall_tau": 0.3555555555555555,
+          "regret": 0.02875135001889988,
+          "domains_selecting_fixed": 2,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "punkt",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "stanza",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9293651611311844,
+          "gap_log_loss": 0.025764424912608833,
+          "non_terminal_auc": 0.9798161495735771,
+          "non_terminal_gold_mean_p": 0.32227506440984766,
+          "terminal_non_gold_mean_p": 0.5403214194962136,
+          "primary_ci": [
+            -0.03448277611018567,
+            -0.01862071378502859
+          ],
+          "gold_win_ci": [
+            0.17766497461928935,
+            0.26903553299492383
+          ],
+          "primary_minus_platt_ci": [
+            -0.005287542426058349,
+            0.008025693064939369
+          ]
+        },
+        "B+C+K+A": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.0219322321133472,
+          "gold_win": 0.2131979695431472,
+          "pairwise": 0.6526648599819331,
+          "kendall_tau": 0.4222222222222222,
+          "regret": 0.023336378774587364,
+          "domains_selecting_fixed": 1,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "stanza",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "stanza",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9336891106113847,
+          "gap_log_loss": 0.022970107789899732,
+          "non_terminal_auc": 0.9809018415798788,
+          "non_terminal_gold_mean_p": 0.3274505714367282,
+          "terminal_non_gold_mean_p": 0.39149289409833726,
+          "primary_ci": [
+            -0.02957109297420307,
+            -0.015454450337217892
+          ],
+          "gold_win_ci": [
+            0.16751269035532995,
+            0.2639593908629442
+          ],
+          "primary_minus_platt_ci": [
+            -0.0005010577198259041,
+            0.012901536758970903
+          ]
+        },
+        "B+C+K+L": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.019821846204658426,
+          "gold_win": 0.18781725888324874,
+          "pairwise": 0.6544715447154471,
+          "kendall_tau": 0.4444444444444445,
+          "regret": 0.02122599286589859,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9303819051360833,
+          "gap_log_loss": 0.024602492468513114,
+          "non_terminal_auc": 0.9834295349764056,
+          "non_terminal_gold_mean_p": 0.34341150315524027,
+          "terminal_non_gold_mean_p": 0.5007069167565303,
+          "primary_ci": [
+            -0.03065688570458138,
+            -0.01605802048560628
+          ],
+          "gold_win_ci": [
+            0.14213197969543148,
+            0.23857868020304568
+          ],
+          "primary_minus_platt_ci": [
+            -0.0011448633548643726,
+            0.013145942505695308
+          ]
+        },
+        "B+C+K+A+L": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.01786231050891275,
+          "gold_win": 0.17258883248730963,
+          "pairwise": 0.6680216802168022,
+          "kendall_tau": 0.46666666666666673,
+          "regret": 0.019266457170152917,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9356790281515353,
+          "gap_log_loss": 0.021940205824888755,
+          "non_terminal_auc": 0.9844386348199818,
+          "non_terminal_gold_mean_p": 0.35023376769799935,
+          "terminal_non_gold_mean_p": 0.36244908009412863,
+          "primary_ci": [
+            -0.026719151465485622,
+            -0.013317444985216947
+          ],
+          "gold_win_ci": [
+            0.12690355329949238,
+            0.2233502538071066
+          ],
+          "primary_minus_platt_ci": [
+            0.0027620698209686115,
+            0.01642176138969695
+          ]
+        },
+        "B+K+A+L": {
+          "groups": [
+            "B",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.024971335737220383,
+          "gold_win": 0.16751269035532995,
+          "pairwise": 0.6219512195121951,
+          "kendall_tau": 0.28888888888888886,
+          "regret": 0.026375482398460548,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "punkt",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "stanza",
+            "news": "stanza",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "stanza",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9330788456184026,
+          "gap_log_loss": 0.02418602271505892,
+          "non_terminal_auc": 0.978258543660164,
+          "non_terminal_gold_mean_p": 0.28837959815042175,
+          "terminal_non_gold_mean_p": 0.3686422585821208,
+          "primary_ci": [
+            -0.0334038448411027,
+            -0.01956340066460483
+          ],
+          "gold_win_ci": [
+            0.1218274111675127,
+            0.2182741116751269
+          ],
+          "primary_minus_platt_ci": [
+            -0.004824932293241925,
+            0.008642846126843047
+          ]
+        },
+        "B+C+A+L": {
+          "groups": [
+            "B",
+            "C",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.03523377677104109,
+          "gold_win": 0.08121827411167512,
+          "pairwise": 0.5370370370370371,
+          "kendall_tau": 0.13333333333333333,
+          "regret": 0.036637923432281255,
+          "domains_selecting_fixed": 0,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "punkt",
+            "court": "punkt",
+            "essay": "punkt",
+            "fiction": "punkt",
+            "interview": "punkt",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "punkt",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "punkt",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9234633594901335,
+          "gap_log_loss": 0.028895985551544028,
+          "non_terminal_auc": 0.9723113572278583,
+          "non_terminal_gold_mean_p": 0.1928558746784061,
+          "terminal_non_gold_mean_p": 0.48902015619699957,
+          "primary_ci": [
+            -0.04252949706910095,
+            -0.029810968738691754
+          ],
+          "gold_win_ci": [
+            0.04568527918781726,
+            0.116751269035533
+          ],
+          "primary_minus_platt_ci": [
+            -0.01502530989255419,
+            7.462656342484869e-05
+          ]
+        },
+        "B+C+K+A+L/hgb": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.015067794964081076,
+          "gold_win": 0.3096446700507614,
+          "pairwise": 0.7339656729900632,
+          "kendall_tau": 0.5777777777777777,
+          "regret": 0.01647194162532124,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9455824810934396,
+          "gap_log_loss": 0.019576848276694286,
+          "non_terminal_auc": 0.9897947769746616,
+          "non_terminal_gold_mean_p": 0.40526216032368234,
+          "terminal_non_gold_mean_p": 0.25180842030684525,
+          "primary_ci": [
+            -0.02296491441017189,
+            -0.011238097395490353
+          ],
+          "gold_win_ci": [
+            0.25380710659898476,
+            0.36548223350253806
+          ],
+          "primary_minus_platt_ci": [
+            0.005159442671203674,
+            0.020289817516980935
+          ]
+        },
+        "C+K+A+L（无 LM）": {
+          "groups": [
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.01922457080016399,
+          "gold_win": 0.17258883248730963,
+          "pairwise": 0.6680216802168022,
+          "kendall_tau": 0.4222222222222222,
+          "regret": 0.020628717461404156,
+          "domains_selecting_fixed": 2,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "punkt",
+            "speech": "stanza",
+            "textbook": "stanza",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9304878922816637,
+          "gap_log_loss": 0.022920128565714102,
+          "non_terminal_auc": 0.9843912843860745,
+          "non_terminal_gold_mean_p": 0.3514376296840484,
+          "terminal_non_gold_mean_p": 0.44118966079618516,
+          "primary_ci": [
+            -0.0276722632709709,
+            -0.013333247424302594
+          ],
+          "gold_win_ci": [
+            0.12690355329949238,
+            0.2233502538071066
+          ],
+          "primary_minus_platt_ci": [
+            0.0018276316834998424,
+            0.01650455010214178
+          ]
+        },
+        "C+K+A+L/hgb（无 LM）": {
+          "groups": [
+            "C",
+            "K",
+            "A",
+            "L"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.017339165095789314,
+          "gold_win": 0.27411167512690354,
+          "pairwise": 0.7195121951219512,
+          "kendall_tau": 0.5555555555555556,
+          "regret": 0.01874331175702948,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "sat",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9426259408082417,
+          "gap_log_loss": 0.019910945037005627,
+          "non_terminal_auc": 0.98922278864469,
+          "non_terminal_gold_mean_p": 0.38493990225616714,
+          "terminal_non_gold_mean_p": 0.2635378323884057,
+          "primary_ci": [
+            -0.02453775606695624,
+            -0.012310101683703329
+          ],
+          "gold_win_ci": [
+            0.2233502538071066,
+            0.3248730964467005
+          ],
+          "primary_minus_platt_ci": [
+            0.003221498846352206,
+            0.01890640018854991
+          ]
+        },
+        "B+C+K+O": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "O"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.021648891424169377,
+          "gold_win": 0.25380710659898476,
+          "pairwise": 0.7032520325203252,
+          "kendall_tau": 0.5333333333333333,
+          "regret": 0.023053038085409542,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "stanza",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9358748666488818,
+          "gap_log_loss": 0.023892741789761193,
+          "non_terminal_auc": 0.9793640809829244,
+          "non_terminal_gold_mean_p": 0.3926327155673557,
+          "terminal_non_gold_mean_p": 0.5134980595730497,
+          "primary_ci": [
+            -0.027291667618229327,
+            -0.013578991025711638
+          ],
+          "gold_win_ci": [
+            0.20304568527918782,
+            0.30456852791878175
+          ],
+          "primary_minus_platt_ci": [
+            0.0012561636813735449,
+            0.01561909323466974
+          ]
+        },
+        "B+C+K+W": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "W"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.03138889141794155,
+          "gold_win": 0.19289340101522842,
+          "pairwise": 0.6228545618789522,
+          "kendall_tau": 0.28888888888888886,
+          "regret": 0.03279303807918172,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "punkt",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "sat",
+            "essay": "punkt",
+            "fiction": "sat",
+            "interview": "stanza",
+            "letter": "punkt",
+            "news": "punkt",
+            "podcast": "stanza",
+            "speech": "punkt",
+            "textbook": "punkt",
+            "vlog": "sat",
+            "voyage": "punkt",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9289189331395246,
+          "gap_log_loss": 0.026051058187687746,
+          "non_terminal_auc": 0.9795583241805533,
+          "non_terminal_gold_mean_p": 0.30624573010558176,
+          "terminal_non_gold_mean_p": 0.5252970579636381,
+          "primary_ci": [
+            -0.035001174233121594,
+            -0.01906824349111293
+          ],
+          "gold_win_ci": [
+            0.14720812182741116,
+            0.23857868020304568
+          ],
+          "primary_minus_platt_ci": [
+            -0.005677501703785082,
+            0.007915226093326408
+          ]
+        },
+        "B+C+K+A+L+O": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.016289012228475994,
+          "gold_win": 0.25888324873096447,
+          "pairwise": 0.7448057813911473,
+          "kendall_tau": 0.5777777777777778,
+          "regret": 0.01769315888971616,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9435108567005254,
+          "gap_log_loss": 0.020521795425801324,
+          "non_terminal_auc": 0.9839496062277574,
+          "non_terminal_gold_mean_p": 0.4159917643961938,
+          "terminal_non_gold_mean_p": 0.346387560702112,
+          "primary_ci": [
+            -0.022503567157165016,
+            -0.010917274273068878
+          ],
+          "gold_win_ci": [
+            0.20812182741116753,
+            0.3097715736040602
+          ],
+          "primary_minus_platt_ci": [
+            0.005852622090698065,
+            0.020323236220311788
+          ]
+        },
+        "B+C+K+A+L+O+W": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O",
+            "W"
+          ],
+          "model": "lr",
+          "eligible": true,
+          "primary": -0.016289012228475994,
+          "gold_win": 0.23857868020304568,
+          "pairwise": 0.7240289069557362,
+          "kendall_tau": 0.5777777777777778,
+          "regret": 0.01769315888971616,
+          "domains_selecting_fixed": 3,
+          "selected_by_domain": {
+            "academic": "stanza",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "punkt",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9431916840933307,
+          "gap_log_loss": 0.020485729828199024,
+          "non_terminal_auc": 0.9839294568581295,
+          "non_terminal_gold_mean_p": 0.4048357335391425,
+          "terminal_non_gold_mean_p": 0.3274772128287957,
+          "primary_ci": [
+            -0.02197188022693965,
+            -0.011669301358842527
+          ],
+          "gold_win_ci": [
+            0.18781725888324874,
+            0.29441624365482233
+          ],
+          "primary_minus_platt_ci": [
+            0.005812814547322942,
+            0.01950566990436771
+          ]
+        },
+        "B+C+K+A+L+O/hgb": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "O"
+          ],
+          "model": "hgb",
+          "eligible": true,
+          "primary": -0.013628234998222959,
+          "gold_win": 0.3197969543147208,
+          "pairwise": 0.7619692863595302,
+          "kendall_tau": 0.6888888888888887,
+          "regret": 0.015032381659463124,
+          "domains_selecting_fixed": 4,
+          "selected_by_domain": {
+            "academic": "sat",
+            "bio": "stanza",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "stanza",
+            "fiction": "stanza",
+            "interview": "stanza",
+            "letter": "stanza",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "stanza",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "stanza"
+          },
+          "direct_internal_macro_f1": 0.9506739329509575,
+          "gap_log_loss": 0.017972486016466685,
+          "non_terminal_auc": 0.9907876304388095,
+          "non_terminal_gold_mean_p": 0.474729882078618,
+          "terminal_non_gold_mean_p": 0.24333473687951687,
+          "primary_ci": [
+            -0.018554666003027596,
+            -0.008658187105939564
+          ],
+          "gold_win_ci": [
+            0.2639593908629442,
+            0.38071065989847713
+          ],
+          "primary_minus_platt_ci": [
+            0.008180839018993339,
+            0.023960295629960916
+          ]
+        },
+        "B+V（投票）": {
+          "groups": [
+            "B",
+            "V"
+          ],
+          "model": "lr",
+          "eligible": false,
+          "primary": -0.01119874073971064,
+          "gold_win": 0.2131979695431472,
+          "pairwise": 0.8224932249322493,
+          "kendall_tau": 0.8,
+          "regret": 0.012602887400950806,
+          "domains_selecting_fixed": 9,
+          "selected_by_domain": {
+            "academic": "sat",
+            "bio": "wtp",
+            "conversation": "stanza",
+            "court": "stanza",
+            "essay": "sat",
+            "fiction": "sat",
+            "interview": "sat",
+            "letter": "sat",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "sat",
+            "textbook": "sat",
+            "vlog": "stanza",
+            "voyage": "stanza",
+            "whow": "sat"
+          },
+          "direct_internal_macro_f1": 0.958474131052219,
+          "gap_log_loss": 0.017499099696588718,
+          "non_terminal_auc": 0.9778583015168979,
+          "non_terminal_gold_mean_p": 0.5496674901864468,
+          "terminal_non_gold_mean_p": 0.3763996909032886,
+          "primary_ci": [
+            -0.015952773959820525,
+            -0.0008377544261520696
+          ],
+          "gold_win_ci": [
+            0.16243654822335024,
+            0.2639593908629442
+          ],
+          "primary_minus_platt_ci": [
+            0.009515114535503967,
+            0.03220095084517865
+          ]
+        },
+        "B+C+K+A+L+V（投票）": {
+          "groups": [
+            "B",
+            "C",
+            "K",
+            "A",
+            "L",
+            "V"
+          ],
+          "model": "lr",
+          "eligible": false,
+          "primary": -0.0021697358691375717,
+          "gold_win": 0.25888324873096447,
+          "pairwise": 0.8450767841011744,
+          "kendall_tau": 0.7999999999999999,
+          "regret": 0.0035738825303777365,
+          "domains_selecting_fixed": 12,
+          "selected_by_domain": {
+            "academic": "sat",
+            "bio": "sat",
+            "conversation": "stanza",
+            "court": "sat",
+            "essay": "sat",
+            "fiction": "sat",
+            "interview": "sat",
+            "letter": "sat",
+            "news": "sat",
+            "podcast": "stanza",
+            "speech": "sat",
+            "textbook": "sat",
+            "vlog": "sat",
+            "voyage": "stanza",
+            "whow": "sat"
+          },
+          "direct_internal_macro_f1": 0.965593207255332,
+          "gap_log_loss": 0.014309017499673365,
+          "non_terminal_auc": 0.9906549258484486,
+          "non_terminal_gold_mean_p": 0.6073520819486773,
+          "terminal_non_gold_mean_p": 0.2128389923547065,
+          "primary_ci": [
+            -0.006373047014515298,
+            0.0015431934522783701
+          ],
+          "gold_win_ci": [
+            0.20304568527918782,
+            0.3147208121827411
+          ],
+          "primary_minus_platt_ci": [
+            0.0175623942675081,
+            0.03575021416682066
+          ]
+        }
+      },
+      "decision": {
+        "best_primary": "B+C+K+A+L+O/hgb",
+        "indistinguishable_from_best": [
+          "B+C+K+A+L+O",
+          "B+C+K+A+L+O+W",
+          "B+C+K+A+L+O/hgb",
+          "B+C+K+A+L/hgb",
+          "C+K+A+L/hgb（无 LM）"
+        ],
+        "chosen": "B+C+K+A+L/hgb"
+      }
+    }
+  }
+}

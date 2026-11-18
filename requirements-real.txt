@@ -1,0 +1,5 @@
+# Installed into the project-local .venv. Transitive versions are also recorded
+# in results/real_run_metadata.json by the formal experiment.
+nltk==3.10.4
+stanza==1.15.0
+wtpsplit==2.2.2

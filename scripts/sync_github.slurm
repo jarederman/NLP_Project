@@ -14,5 +14,14 @@ set -euo pipefail
 PROJECT_ROOT=/scratch/wj2301/NLP_Project
 mkdir -p "$PROJECT_ROOT/logs"
 cd "$PROJECT_ROOT"
-scripts/git_sync.sh main origin
+branch="${GIT_SYNC_BRANCH:-}"
+if [[ -z "$branch" ]]; then
+  echo "Set GIT_SYNC_BRANCH explicitly when submitting this job." >&2
+  exit 2
+fi
+if [[ "$branch" == "main" ]]; then
+  echo "This project sync job does not push protected main; use a review branch." >&2
+  exit 2
+fi
+scripts/git_sync.sh "$branch" origin
 echo "GITHUB_SYNC_OK"

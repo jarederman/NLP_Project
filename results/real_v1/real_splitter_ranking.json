@@ -1,0 +1,148 @@
+{
+  "documents": 30,
+  "documents_with_distinct_gold_f1": 29,
+  "documents_with_distinct_soft_f1": 29,
+  "documents_with_all_system_outputs_identical": 1,
+  "within_document_spearman_eligible": 29,
+  "within_document_spearman_mean": 0.14551315237091278,
+  "within_document_spearman_median": 0.316227766016838,
+  "pairwise": {
+    "punkt--sat": {
+      "correct": 10,
+      "ties": 0,
+      "total": 29,
+      "accuracy_half_ties": 0.3448275862068966,
+      "strict_accuracy": 0.3448275862068966
+    },
+    "punkt--stanza": {
+      "correct": 8,
+      "ties": 0,
+      "total": 27,
+      "accuracy_half_ties": 0.2962962962962963,
+      "strict_accuracy": 0.2962962962962963
+    },
+    "punkt--wtp": {
+      "correct": 19,
+      "ties": 0,
+      "total": 29,
+      "accuracy_half_ties": 0.6551724137931034,
+      "strict_accuracy": 0.6551724137931034
+    },
+    "sat--stanza": {
+      "correct": 10,
+      "ties": 0,
+      "total": 23,
+      "accuracy_half_ties": 0.43478260869565216,
+      "strict_accuracy": 0.43478260869565216
+    },
+    "sat--wtp": {
+      "correct": 20,
+      "ties": 0,
+      "total": 25,
+      "accuracy_half_ties": 0.8,
+      "strict_accuracy": 0.8
+    },
+    "stanza--wtp": {
+      "correct": 19,
+      "ties": 0,
+      "total": 26,
+      "accuracy_half_ties": 0.7307692307692307,
+      "strict_accuracy": 0.7307692307692307
+    },
+    "ALL": {
+      "correct": 86,
+      "ties": 0,
+      "total": 159,
+      "accuracy_half_ties": 0.5408805031446541,
+      "strict_accuracy": 0.5408805031446541,
+      "identical_output_pairs": 18
+    }
+  },
+  "selection": {
+    "systems": {
+      "punkt": {
+        "documents": 30.0,
+        "macro_quality": 0.7638498814366602,
+        "macro_gold_f1": 0.9130608988860037,
+        "micro_quality": 0.7376414476695652,
+        "micro_gold_f1": 0.930953182889862,
+        "micro_gold_precision": 0.9705056179775281,
+        "micro_gold_recall": 0.8944983818770227,
+        "intra_token_false_positives": 2.0
+      },
+      "sat": {
+        "documents": 30.0,
+        "macro_quality": 0.727411511256597,
+        "macro_gold_f1": 0.9719787550341461,
+        "micro_quality": 0.7128750835697983,
+        "micro_gold_f1": 0.974176888315042,
+        "micro_gold_precision": 0.9716677398583387,
+        "micro_gold_recall": 0.9766990291262136,
+        "intra_token_false_positives": 0.0
+      },
+      "stanza": {
+        "documents": 30.0,
+        "macro_quality": 0.7354953387377478,
+        "macro_gold_f1": 0.9561400573796824,
+        "micro_quality": 0.7185199378479642,
+        "micro_gold_f1": 0.9655172413793104,
+        "micro_gold_precision": 0.9898028552005439,
+        "micro_gold_recall": 0.9423948220064725,
+        "intra_token_false_positives": 0.0
+      },
+      "wtp": {
+        "documents": 30.0,
+        "macro_quality": 0.7082786466414007,
+        "macro_gold_f1": 0.9094365303818724,
+        "micro_quality": 0.6801930373810435,
+        "micro_gold_f1": 0.8992297817715019,
+        "micro_gold_precision": 0.8917886696371737,
+        "micro_gold_recall": 0.9067961165048544,
+        "intra_token_false_positives": 4.0
+      }
+    },
+    "macro": {
+      "predicted_ranking": [
+        "punkt",
+        "stanza",
+        "sat",
+        "wtp"
+      ],
+      "gold_ranking": [
+        "sat",
+        "stanza",
+        "punkt",
+        "wtp"
+      ],
+      "selected": "punkt",
+      "oracle": "sat",
+      "selection_regret": 0.05891785614814238,
+      "oracle_headroom_over_fixed": 0.0
+    },
+    "micro_sensitivity": {
+      "predicted_ranking": [
+        "punkt",
+        "stanza",
+        "sat",
+        "wtp"
+      ],
+      "gold_ranking": [
+        "sat",
+        "stanza",
+        "punkt",
+        "wtp"
+      ],
+      "selected": "punkt",
+      "oracle": "sat",
+      "selection_regret": 0.04322370542518006
+    },
+    "within_document_pairwise": {
+      "accuracy": 0.5408805031446541,
+      "strict_accuracy": 0.5408805031446541,
+      "tie_rate": 0.0,
+      "pairs": 159.0,
+      "correct": 86.0,
+      "ties": 0.0
+    }
+  }
+}

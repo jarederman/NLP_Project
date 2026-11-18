@@ -1,0 +1,396 @@
+{
+  "gum": {
+    "gold_variance_between_documents": 0.5051100025174857,
+    "gold_variance_between_documents_ci": [
+      0.4327880173556158,
+      0.5699406016440923
+    ],
+    "point": {
+      "ours: probe+lr": {
+        "global": 0.5738337095255127,
+        "between_documents": 0.5435082200854501,
+        "within_documents": 0.8171483879186684
+      },
+      "ours-baseline: platt": {
+        "global": 0.3550309477160141,
+        "between_documents": 0.44971260308461186,
+        "within_documents": 0.4007211390591144
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": 0.7333132601975235,
+        "between_documents": 0.893302479878549,
+        "within_documents": 0.5787157512845834
+      },
+      "ours + consensus (rank average)": {
+        "global": 0.751447445614003,
+        "between_documents": 0.7801984782551385,
+        "within_documents": 0.7686713690634
+      },
+      "B3a punctuation-rule reference": {
+        "global": 0.3415358942083159,
+        "between_documents": 0.8142110060819395,
+        "within_documents": -0.0142147211342127
+      },
+      "B1 pseudo-reference = sat": {
+        "global": 0.7766743204623169,
+        "between_documents": 0.9175279617610406,
+        "within_documents": 0.8327788195531509
+      }
+    },
+    "ci": {
+      "ours: probe+lr": {
+        "global": [
+          0.504285834683672,
+          0.6374263267322453
+        ],
+        "between_documents": [
+          0.428095618307802,
+          0.6376347989068812
+        ],
+        "within_documents": [
+          0.7770720495401472,
+          0.8567323220355169
+        ]
+      },
+      "ours-baseline: platt": {
+        "global": [
+          0.26619406082541386,
+          0.43992479751810976
+        ],
+        "between_documents": [
+          0.32711088215954903,
+          0.5534232416032335
+        ],
+        "within_documents": [
+          0.31269052447362117,
+          0.48762307203991584
+        ]
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": [
+          0.6851147773267534,
+          0.7757797717057712
+        ],
+        "between_documents": [
+          0.8541949532339037,
+          0.9247934943886136
+        ],
+        "within_documents": [
+          0.5133527362161684,
+          0.6451895972477528
+        ]
+      },
+      "ours + consensus (rank average)": {
+        "global": [
+          0.7063260803354624,
+          0.7905722237889583
+        ],
+        "between_documents": [
+          0.714790851038517,
+          0.8332915320274062
+        ],
+        "within_documents": [
+          0.7265165621898763,
+          0.8071817246436207
+        ]
+      },
+      "B3a punctuation-rule reference": {
+        "global": [
+          0.2741947885508047,
+          0.4107521048213891
+        ],
+        "between_documents": [
+          0.7481928271321712,
+          0.8705964069561714
+        ],
+        "within_documents": [
+          -0.09129693225364831,
+          0.07200644066924415
+        ]
+      },
+      "B1 pseudo-reference = sat": {
+        "global": [
+          0.7405787275465149,
+          0.8115281583215387
+        ],
+        "between_documents": [
+          0.8784875359505906,
+          0.9459347199015051
+        ],
+        "within_documents": [
+          0.7807491690348128,
+          0.8772181732704971
+        ]
+      }
+    },
+    "paired_vs_ours": {
+      "ours-baseline: platt": {
+        "global": [
+          -0.28039348477105436,
+          -0.15566466840267812
+        ],
+        "between_documents": [
+          -0.17412010433556951,
+          -0.01956705526353163
+        ],
+        "within_documents": [
+          -0.49752147736711916,
+          -0.3368359827421364
+        ]
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": [
+          0.08506347146464893,
+          0.2391489184249201
+        ],
+        "between_documents": [
+          0.2577289275827034,
+          0.4521908296727113
+        ],
+        "within_documents": [
+          -0.3000779677081071,
+          -0.17698202382637196
+        ]
+      },
+      "ours + consensus (rank average)": {
+        "global": [
+          0.13502403205439542,
+          0.22022676449658757
+        ],
+        "between_documents": [
+          0.17366112186789556,
+          0.3032828975559972
+        ],
+        "within_documents": [
+          -0.08689621319127201,
+          -0.01169699830636108
+        ]
+      },
+      "B3a punctuation-rule reference": {
+        "global": [
+          -0.314006345934144,
+          -0.15281896407459558
+        ],
+        "between_documents": [
+          0.17755453906769258,
+          0.3772483805761709
+        ],
+        "within_documents": [
+          -0.9082955912657261,
+          -0.7479711814914535
+        ]
+      },
+      "B1 pseudo-reference = sat": {
+        "global": [
+          0.1373278648780447,
+          0.27659107892638174
+        ],
+        "between_documents": [
+          0.28101808440400455,
+          0.48361860936911744
+        ],
+        "within_documents": [
+          -0.04092338714576788,
+          0.07569038399648553
+        ]
+      }
+    }
+  },
+  "ewt": {
+    "gold_variance_between_documents": 0.48027008086372464,
+    "gold_variance_between_documents_ci": [
+      0.3993724542752372,
+      0.5600131116067932
+    ],
+    "point": {
+      "ours: probe+lr": {
+        "global": 0.4113513931898833,
+        "between_documents": 0.5824833591267071,
+        "within_documents": 0.4038373996479461
+      },
+      "ours-baseline: platt": {
+        "global": 0.33761717365884836,
+        "between_documents": 0.5403870442996423,
+        "within_documents": 0.28059535778968214
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": 0.657371572969943,
+        "between_documents": 0.8842972731634164,
+        "within_documents": 0.5548570277538568
+      },
+      "ours + consensus (rank average)": {
+        "global": 0.6606987802571739,
+        "between_documents": 0.7630439354821508,
+        "within_documents": 0.6234079691752041
+      },
+      "B3a punctuation-rule reference": {
+        "global": 0.39193546905342147,
+        "between_documents": 0.8851358508238069,
+        "within_documents": 0.08642149712023298
+      },
+      "B1 pseudo-reference = sat": {
+        "global": 0.621432381234235,
+        "between_documents": 0.9106172511497143,
+        "within_documents": 0.5439827942519856
+      }
+    },
+    "ci": {
+      "ours: probe+lr": {
+        "global": [
+          0.31249165258172484,
+          0.4971356006886175
+        ],
+        "between_documents": [
+          0.46800656509318644,
+          0.6835778436494718
+        ],
+        "within_documents": [
+          0.2762549810133483,
+          0.5108180271370373
+        ]
+      },
+      "ours-baseline: platt": {
+        "global": [
+          0.2485263849576794,
+          0.416192621950085
+        ],
+        "between_documents": [
+          0.42505548238955265,
+          0.6361018756791122
+        ],
+        "within_documents": [
+          0.16485806528515315,
+          0.3919298388797385
+        ]
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": [
+          0.5916444393863675,
+          0.7184720231606858
+        ],
+        "between_documents": [
+          0.831823915819079,
+          0.9234834823856121
+        ],
+        "within_documents": [
+          0.4714535219472266,
+          0.6400546945327824
+        ]
+      },
+      "ours + consensus (rank average)": {
+        "global": [
+          0.6093987811755756,
+          0.7033421228269897
+        ],
+        "between_documents": [
+          0.6994653320455898,
+          0.8145015466236574
+        ],
+        "within_documents": [
+          0.535878292530008,
+          0.7010459170580643
+        ]
+      },
+      "B3a punctuation-rule reference": {
+        "global": [
+          0.30616101100663456,
+          0.47528021487626576
+        ],
+        "between_documents": [
+          0.8321033525743395,
+          0.9245109347378957
+        ],
+        "within_documents": [
+          -0.044593801459308774,
+          0.2222927764898836
+        ]
+      },
+      "B1 pseudo-reference = sat": {
+        "global": [
+          0.5469866069813815,
+          0.6920893960475888
+        ],
+        "between_documents": [
+          0.8586927749990019,
+          0.9481835953707142
+        ],
+        "within_documents": [
+          0.4373209860061811,
+          0.6484675747729113
+        ]
+      }
+    },
+    "paired_vs_ours": {
+      "ours-baseline: platt": {
+        "global": [
+          -0.12625568683862415,
+          -0.02311931314360101
+        ],
+        "between_documents": [
+          -0.10068697057817538,
+          0.017008259005415447
+        ],
+        "within_documents": [
+          -0.19338896385859397,
+          -0.05334078379369364
+        ]
+      },
+      "B2 consensus (leave-one-out)": {
+        "global": [
+          0.1285033032608817,
+          0.36795463736716627
+        ],
+        "between_documents": [
+          0.18251967524178866,
+          0.4257948654162906
+        ],
+        "within_documents": [
+          0.005067520310493752,
+          0.31159866590212465
+        ]
+      },
+      "ours + consensus (rank average)": {
+        "global": [
+          0.18891435441805932,
+          0.31765801685853323
+        ],
+        "between_documents": [
+          0.11015255968431664,
+          0.25335054965372783
+        ],
+        "within_documents": [
+          0.13018050506872084,
+          0.31441237469969024
+        ]
+      },
+      "B3a punctuation-rule reference": {
+        "global": [
+          -0.15109047864972974,
+          0.12370041514300308
+        ],
+        "between_documents": [
+          0.18624095477888986,
+          0.42277203706739275
+        ],
+        "within_documents": [
+          -0.5177367473983797,
+          -0.12333067862972995
+        ]
+      },
+      "B1 pseudo-reference = sat": {
+        "global": [
+          0.09814732564898156,
+          0.3280364288870228
+        ],
+        "between_documents": [
+          0.21244444127630546,
+          0.44904254411180583
+        ],
+        "within_documents": [
+          0.005700811633239509,
+          0.2873480618720637
+        ]
+      }
+    }
+  }
+}

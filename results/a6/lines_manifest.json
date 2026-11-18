@@ -1,0 +1,16 @@
+{
+  "source": "UniversalDependencies/UD_English-LinES",
+  "release": "r2.18",
+  "file": "data/UD_English-LinES/en_lines-ud-test.conllu",
+  "file_sha256": "46cb8e412aab30725acfb916fdb092672597e12eef511165f0843efaf6c6926a",
+  "documents": 9,
+  "genres": {
+    "lines": 9
+  },
+  "candidate_positions": 17371,
+  "gold_materialized": true,
+  "gold_materialized_after_frozen_scores": true,
+  "sentences": 1121,
+  "gold_boundaries": 1112,
+  "gold_boundaries_not_at_whitespace_gaps": 5
+}

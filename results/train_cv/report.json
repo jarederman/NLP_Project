@@ -1,0 +1,745 @@
+{
+  "point": {
+    "gold_win_rate": 0.16243654822335024,
+    "scorers": {
+      "soft_f1": {
+        "systems": {
+          "punkt": {
+            "macro_quality": 0.7437436574433173,
+            "macro_gold_f1": 0.9142182442730764,
+            "micro_quality": 0.7262365354611876,
+            "micro_gold_f1": 0.926412614980289
+          },
+          "sat": {
+            "macro_quality": 0.7402529900161492,
+            "macro_gold_f1": 0.9714120340640913,
+            "micro_quality": 0.7205657279338399,
+            "micro_gold_f1": 0.9732839748450114
+          },
+          "stanza": {
+            "macro_quality": 0.7516720793718248,
+            "macro_gold_f1": 0.9486870980216909,
+            "micro_quality": 0.7314911410318642,
+            "micro_gold_f1": 0.9566266178039616
+          },
+          "wtp": {
+            "macro_quality": 0.7048458849461262,
+            "macro_gold_f1": 0.9020938424805588,
+            "micro_quality": 0.684273059986174,
+            "micro_gold_f1": 0.8966676992521131
+          }
+        },
+        "pairwise": {
+          "accuracy": 0.6291779584462511,
+          "pairs": 1107.0
+        },
+        "corpus_macro": {
+          "selected": "stanza",
+          "oracle": "sat",
+          "regret": 0.022724936042400334,
+          "fixed_regret": 0.0,
+          "selected_minus_fixed": -0.022724936042400334,
+          "kendall_tau": 0.3333333333333333
+        },
+        "domains": {
+          "academic": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.0592528947562041,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.0592528947562041,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8387304746265662
+          },
+          "bio": {
+            "documents": 16,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.044190839486506595,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.044190839486506595,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8603173735894405
+          },
+          "conversation": {
+            "documents": 11,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.005097770230658605,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.005097770230658605,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.7036269764811117
+          },
+          "court": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.012137254283768328,
+            "fixed_regret": 0.0034374330412425547,
+            "selected_minus_fixed": -0.008699821242525774,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.7795367294284079
+          },
+          "essay": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.05795157814856089,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.05795157814856089,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8579768080384937
+          },
+          "fiction": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03152750037100749,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03152750037100749,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8670188617898108
+          },
+          "interview": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03866366340963534,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03866366340963534,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8399100882844797
+          },
+          "letter": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.050818641752496396,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.050818641752496396,
+            "kendall_tau": -0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.7700499230271973
+          },
+          "news": {
+            "documents": 20,
+            "selected": "sat",
+            "oracle": "sat",
+            "regret": 0.0,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8776523713941359
+          },
+          "podcast": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.01039023280146778,
+            "fixed_regret": 0.016730385440733575,
+            "selected_minus_fixed": 0.006340152639265795,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8022062676408792
+          },
+          "speech": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.015610397076704308,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.015610397076704308,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8984136860111911
+          },
+          "textbook": {
+            "documents": 11,
+            "selected": "sat",
+            "oracle": "sat",
+            "regret": 0.0,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8710743958733626
+          },
+          "vlog": {
+            "documents": 11,
+            "selected": "sat",
+            "oracle": "stanza",
+            "regret": 0.0008943814366264569,
+            "fixed_regret": 0.0008943814366264569,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.7794311296804687
+          },
+          "voyage": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.05738789465222194,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.05738789465222194,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8244003238010382
+          },
+          "whow": {
+            "documents": 15,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.03149113499475387,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03149113499475387,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8360474507154518
+          }
+        },
+        "corpus_micro": {
+          "selected": "stanza",
+          "oracle": "sat",
+          "regret": 0.01665735704104976,
+          "fixed_regret": 0.0,
+          "selected_minus_fixed": -0.01665735704104976,
+          "kendall_tau": 0.3333333333333333
+        },
+        "domain_mean": {
+          "regret": 0.027694278893374138,
+          "fixed_regret": 0.0014041466612401724,
+          "selected_minus_fixed": -0.026290132232133966,
+          "kendall_tau": 0.28888888888888886,
+          "selected_is_oracle": 0.13333333333333333
+        }
+      },
+      "neg_bce": {
+        "systems": {
+          "punkt": {
+            "macro_quality": -0.0610284279033977,
+            "macro_gold_f1": 0.9142182442730764,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.926412614980289
+          },
+          "sat": {
+            "macro_quality": -0.07216803498391723,
+            "macro_gold_f1": 0.9714120340640913,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.9732839748450114
+          },
+          "stanza": {
+            "macro_quality": -0.06040484002535796,
+            "macro_gold_f1": 0.9486870980216909,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.9566266178039616
+          },
+          "wtp": {
+            "macro_quality": -0.09809429495575113,
+            "macro_gold_f1": 0.9020938424805588,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.8966676992521131
+          }
+        },
+        "pairwise": {
+          "accuracy": 0.559620596205962,
+          "pairs": 1107.0
+        },
+        "corpus_macro": {
+          "selected": "stanza",
+          "oracle": "sat",
+          "regret": 0.022724936042400334,
+          "fixed_regret": 0.0,
+          "selected_minus_fixed": -0.022724936042400334,
+          "kendall_tau": 0.3333333333333333
+        },
+        "domains": {
+          "academic": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.0592528947562041,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.0592528947562041,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8387304746265662
+          },
+          "bio": {
+            "documents": 16,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.044190839486506595,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.044190839486506595,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8603173735894405
+          },
+          "conversation": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.02750276918277772,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.02750276918277772,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.7036269764811117
+          },
+          "court": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.012137254283768328,
+            "fixed_regret": 0.0034374330412425547,
+            "selected_minus_fixed": -0.008699821242525774,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.7795367294284079
+          },
+          "essay": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.05795157814856089,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.05795157814856089,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8579768080384937
+          },
+          "fiction": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03152750037100749,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03152750037100749,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8670188617898108
+          },
+          "interview": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03866366340963534,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03866366340963534,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8399100882844797
+          },
+          "letter": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.050818641752496396,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.050818641752496396,
+            "kendall_tau": -0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.7700499230271973
+          },
+          "news": {
+            "documents": 20,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.07343059867984947,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.07343059867984947,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8776523713941359
+          },
+          "podcast": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.01039023280146778,
+            "fixed_regret": 0.016730385440733575,
+            "selected_minus_fixed": 0.006340152639265795,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8022062676408792
+          },
+          "speech": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.015610397076704308,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.015610397076704308,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8984136860111911
+          },
+          "textbook": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.07252742434360682,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.07252742434360682,
+            "kendall_tau": -0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8710743958733626
+          },
+          "vlog": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.004011982384367729,
+            "fixed_regret": 0.0008943814366264569,
+            "selected_minus_fixed": -0.0031176009477412725,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.7794311296804687
+          },
+          "voyage": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.05738789465222194,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.05738789465222194,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8244003238010382
+          },
+          "whow": {
+            "documents": 15,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.03149113499475387,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03149113499475387,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8360474507154518
+          }
+        },
+        "domain_mean": {
+          "regret": 0.03912632042159525,
+          "fixed_regret": 0.0014041466612401724,
+          "selected_minus_fixed": -0.037722173760355075,
+          "kendall_tau": 0.04444444444444444,
+          "selected_is_oracle": 0.0
+        }
+      },
+      "normalized_soft_f1": {
+        "systems": {
+          "punkt": {
+            "macro_quality": 0.8991935764213905,
+            "macro_gold_f1": 0.9142182442730764,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.926412614980289
+          },
+          "sat": {
+            "macro_quality": 0.894559572199429,
+            "macro_gold_f1": 0.9714120340640913,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.9732839748450114
+          },
+          "stanza": {
+            "macro_quality": 0.9081374611867381,
+            "macro_gold_f1": 0.9486870980216909,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.9566266178039616
+          },
+          "wtp": {
+            "macro_quality": 0.8517480481429134,
+            "macro_gold_f1": 0.9020938424805588,
+            "micro_quality": NaN,
+            "micro_gold_f1": 0.8966676992521131
+          }
+        },
+        "pairwise": {
+          "accuracy": 0.6291779584462511,
+          "pairs": 1107.0
+        },
+        "corpus_macro": {
+          "selected": "stanza",
+          "oracle": "sat",
+          "regret": 0.022724936042400334,
+          "fixed_regret": 0.0,
+          "selected_minus_fixed": -0.022724936042400334,
+          "kendall_tau": 0.3333333333333333
+        },
+        "domains": {
+          "academic": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.0592528947562041,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.0592528947562041,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8387304746265662
+          },
+          "bio": {
+            "documents": 16,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.044190839486506595,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.044190839486506595,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8603173735894405
+          },
+          "conversation": {
+            "documents": 11,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.005097770230658605,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.005097770230658605,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.7036269764811117
+          },
+          "court": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.012137254283768328,
+            "fixed_regret": 0.0034374330412425547,
+            "selected_minus_fixed": -0.008699821242525774,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.7795367294284079
+          },
+          "essay": {
+            "documents": 10,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.028545491100692044,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.028545491100692044,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8579768080384937
+          },
+          "fiction": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03152750037100749,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03152750037100749,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8670188617898108
+          },
+          "interview": {
+            "documents": 15,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.03866366340963534,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03866366340963534,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8399100882844797
+          },
+          "letter": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.050818641752496396,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.050818641752496396,
+            "kendall_tau": -0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.7700499230271973
+          },
+          "news": {
+            "documents": 20,
+            "selected": "sat",
+            "oracle": "sat",
+            "regret": 0.0,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8776523713941359
+          },
+          "podcast": {
+            "documents": 10,
+            "selected": "punkt",
+            "oracle": "stanza",
+            "regret": 0.01039023280146778,
+            "fixed_regret": 0.016730385440733575,
+            "selected_minus_fixed": 0.006340152639265795,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8022062676408792
+          },
+          "speech": {
+            "documents": 11,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.015610397076704308,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.015610397076704308,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8984136860111911
+          },
+          "textbook": {
+            "documents": 11,
+            "selected": "sat",
+            "oracle": "sat",
+            "regret": 0.0,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.8710743958733626
+          },
+          "vlog": {
+            "documents": 11,
+            "selected": "sat",
+            "oracle": "stanza",
+            "regret": 0.0008943814366264569,
+            "fixed_regret": 0.0008943814366264569,
+            "selected_minus_fixed": 0.0,
+            "kendall_tau": 0.6666666666666666,
+            "direct_internal_macro_gold_f1": 0.7794311296804687
+          },
+          "voyage": {
+            "documents": 14,
+            "selected": "punkt",
+            "oracle": "sat",
+            "regret": 0.05738789465222194,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.05738789465222194,
+            "kendall_tau": 0.0,
+            "direct_internal_macro_gold_f1": 0.8244003238010382
+          },
+          "whow": {
+            "documents": 15,
+            "selected": "stanza",
+            "oracle": "sat",
+            "regret": 0.03149113499475387,
+            "fixed_regret": 0.0,
+            "selected_minus_fixed": -0.03149113499475387,
+            "kendall_tau": 0.3333333333333333,
+            "direct_internal_macro_gold_f1": 0.8360474507154518
+          }
+        },
+        "domain_mean": {
+          "regret": 0.025733873090182883,
+          "fixed_regret": 0.0014041466612401724,
+          "selected_minus_fixed": -0.02432972642894271,
+          "kendall_tau": 0.31111111111111106,
+          "selected_is_oracle": 0.13333333333333333
+        }
+      }
+    },
+    "direct_internal": {
+      "macro_gold_f1": 0.8309771961274744,
+      "micro_gold_f1": 0.818104346179339
+    }
+  },
+  "bootstrap": {
+    "gold_win_rate": {
+      "point": 0.16243654822335024,
+      "low": 0.1116751269035533,
+      "high": 0.2131979695431472,
+      "draws": 2000.0
+    },
+    "soft_f1.pairwise_accuracy": {
+      "point": 0.6291779584462511,
+      "low": 0.596136567834681,
+      "high": 0.6618049225159526,
+      "draws": 2000.0
+    },
+    "soft_f1.corpus_macro_regret": {
+      "point": 0.022724936042400334,
+      "low": 0.01866940683593299,
+      "high": 0.02733788524608527,
+      "draws": 2000.0
+    },
+    "soft_f1.corpus_macro_selected_minus_fixed": {
+      "point": -0.022724936042400334,
+      "low": -0.027351097808673508,
+      "high": -0.018697614479884495,
+      "draws": 2000.0
+    },
+    "soft_f1.domain_mean_regret": {
+      "point": 0.027694278893374138,
+      "low": 0.022616115488559144,
+      "high": 0.03812211241865746,
+      "draws": 2000.0
+    },
+    "soft_f1.domain_mean_selected_minus_fixed": {
+      "point": -0.026290132232133966,
+      "low": -0.036741648817833775,
+      "high": -0.02104303532107056,
+      "draws": 2000.0
+    },
+    "soft_f1.domain_mean_kendall_tau": {
+      "point": 0.28888888888888886,
+      "low": 0.15555555555555553,
+      "high": 0.3777777777777777,
+      "draws": 2000.0
+    },
+    "neg_bce.pairwise_accuracy": {
+      "point": 0.559620596205962,
+      "low": 0.5259090909090909,
+      "high": 0.5908248378127896,
+      "draws": 2000.0
+    },
+    "neg_bce.corpus_macro_regret": {
+      "point": 0.022724936042400334,
+      "low": 0.01909038181111833,
+      "high": 0.05868129859043103,
+      "draws": 2000.0
+    },
+    "neg_bce.corpus_macro_selected_minus_fixed": {
+      "point": -0.022724936042400334,
+      "low": -0.05871371441161599,
+      "high": -0.019096397334107507,
+      "draws": 2000.0
+    },
+    "neg_bce.domain_mean_regret": {
+      "point": 0.03912632042159525,
+      "low": 0.03227374092097361,
+      "high": 0.04430347315613157,
+      "draws": 2000.0
+    },
+    "neg_bce.domain_mean_selected_minus_fixed": {
+      "point": -0.037722173760355075,
+      "low": -0.04277460444873132,
+      "high": -0.030676137360725015,
+      "draws": 2000.0
+    },
+    "neg_bce.domain_mean_kendall_tau": {
+      "point": 0.04444444444444444,
+      "low": -0.02222222222222222,
+      "high": 0.15555555555555553,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.pairwise_accuracy": {
+      "point": 0.6291779584462511,
+      "low": 0.596136567834681,
+      "high": 0.6618049225159526,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.corpus_macro_regret": {
+      "point": 0.022724936042400334,
+      "low": 0.01866940683593299,
+      "high": 0.027351097808673508,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.corpus_macro_selected_minus_fixed": {
+      "point": -0.022724936042400334,
+      "low": -0.027358373519754897,
+      "high": -0.018697614479884495,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.domain_mean_regret": {
+      "point": 0.025733873090182883,
+      "low": 0.022468991627814388,
+      "high": 0.037931804767764886,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.domain_mean_selected_minus_fixed": {
+      "point": -0.02432972642894271,
+      "low": -0.0366798227519815,
+      "high": -0.020899470409851607,
+      "draws": 2000.0
+    },
+    "normalized_soft_f1.domain_mean_kendall_tau": {
+      "point": 0.31111111111111106,
+      "low": 0.15555555555555553,
+      "high": 0.3777777777777777,
+      "draws": 2000.0
+    }
+  },
+  "n_documents": 197,
+  "n_domains": 15,
+  "fixed_system": "sat",
+  "direct_internal_threshold": 0.5,
+  "scorers": [
+    "soft_f1",
+    "neg_bce",
+    "normalized_soft_f1"
+  ],
+  "protocol_version": "gum-real-splitters-v1.1",
+  "mask_protocol": "surface_v1.1_terminal_unit_incl_reference_markers_else_insert_gap",
+  "split": "UD_English-GUM/train",
+  "n_folds": 5
+}

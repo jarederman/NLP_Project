@@ -1,0 +1,163 @@
+{
+  "documents": 30,
+  "documents_with_distinct_gold_f1": 29,
+  "documents_with_distinct_soft_f1": 29,
+  "documents_with_all_system_outputs_identical": 1,
+  "within_document_spearman_eligible": 29,
+  "within_document_spearman_mean": 0.31103039375022307,
+  "within_document_spearman_median": 0.39999999999999997,
+  "pairwise": {
+    "punkt--sat": {
+      "correct": 12,
+      "ties": 0,
+      "total": 29,
+      "accuracy_half_ties": 0.41379310344827586,
+      "strict_accuracy": 0.41379310344827586
+    },
+    "punkt--stanza": {
+      "correct": 12,
+      "ties": 0,
+      "total": 27,
+      "accuracy_half_ties": 0.4444444444444444,
+      "strict_accuracy": 0.4444444444444444
+    },
+    "punkt--wtp": {
+      "correct": 22,
+      "ties": 0,
+      "total": 29,
+      "accuracy_half_ties": 0.7586206896551724,
+      "strict_accuracy": 0.7586206896551724
+    },
+    "sat--stanza": {
+      "correct": 11,
+      "ties": 0,
+      "total": 23,
+      "accuracy_half_ties": 0.4782608695652174,
+      "strict_accuracy": 0.4782608695652174
+    },
+    "sat--wtp": {
+      "correct": 22,
+      "ties": 0,
+      "total": 25,
+      "accuracy_half_ties": 0.88,
+      "strict_accuracy": 0.88
+    },
+    "stanza--wtp": {
+      "correct": 19,
+      "ties": 0,
+      "total": 26,
+      "accuracy_half_ties": 0.7307692307692307,
+      "strict_accuracy": 0.7307692307692307
+    },
+    "ALL": {
+      "correct": 98,
+      "ties": 0,
+      "total": 159,
+      "accuracy_half_ties": 0.6163522012578616,
+      "strict_accuracy": 0.6163522012578616,
+      "identical_output_pairs": 18
+    }
+  },
+  "selection": {
+    "systems": {
+      "punkt": {
+        "documents": 30.0,
+        "macro_quality": 0.7576188201862881,
+        "macro_gold_f1": 0.9130608988860037,
+        "micro_quality": 0.7365601597064101,
+        "micro_gold_f1": 0.930953182889862,
+        "micro_gold_precision": 0.9705056179775281,
+        "micro_gold_recall": 0.8944983818770227,
+        "non_gap_false_positives": 2.0
+      },
+      "sat": {
+        "documents": 30.0,
+        "macro_quality": 0.7552857818976814,
+        "macro_gold_f1": 0.9719787550341461,
+        "micro_quality": 0.7346790371344918,
+        "micro_gold_f1": 0.974176888315042,
+        "micro_gold_precision": 0.9716677398583387,
+        "micro_gold_recall": 0.9766990291262136,
+        "non_gap_false_positives": 0.0
+      },
+      "stanza": {
+        "documents": 30.0,
+        "macro_quality": 0.7655612763070286,
+        "macro_gold_f1": 0.9561400573796824,
+        "micro_quality": 0.7428349603662306,
+        "micro_gold_f1": 0.9655172413793104,
+        "micro_gold_precision": 0.9898028552005439,
+        "micro_gold_recall": 0.9423948220064725,
+        "non_gap_false_positives": 0.0
+      },
+      "wtp": {
+        "documents": 30.0,
+        "macro_quality": 0.7199744197830081,
+        "macro_gold_f1": 0.9094365303818724,
+        "micro_quality": 0.6912478923986396,
+        "micro_gold_f1": 0.8992297817715019,
+        "micro_gold_precision": 0.8917886696371737,
+        "micro_gold_recall": 0.9067961165048544,
+        "non_gap_false_positives": 4.0
+      }
+    },
+    "macro": {
+      "predicted_ranking": [
+        "stanza",
+        "punkt",
+        "sat",
+        "wtp"
+      ],
+      "gold_ranking": [
+        "sat",
+        "stanza",
+        "punkt",
+        "wtp"
+      ],
+      "selected": "stanza",
+      "oracle": "sat",
+      "selection_regret": 0.015838697654463663,
+      "oracle_headroom_over_fixed": 0.0,
+      "fixed_system": "sat",
+      "fixed_system_regret": 0.0,
+      "selected_minus_fixed": -0.015838697654463663
+    },
+    "micro_sensitivity": {
+      "predicted_ranking": [
+        "stanza",
+        "punkt",
+        "sat",
+        "wtp"
+      ],
+      "gold_ranking": [
+        "sat",
+        "stanza",
+        "punkt",
+        "wtp"
+      ],
+      "selected": "stanza",
+      "oracle": "sat",
+      "selection_regret": 0.008659646935731624,
+      "fixed_system_regret": 0.0,
+      "selected_minus_fixed": -0.008659646935731624
+    },
+    "within_document_pairwise": {
+      "accuracy": 0.6163522012578616,
+      "strict_accuracy": 0.6163522012578616,
+      "tie_rate": 0.0,
+      "pairs": 159.0,
+      "correct": 98.0,
+      "ties": 0.0
+    }
+  },
+  "direct_internal": {
+    "threshold": 0.5,
+    "documents": 30.0,
+    "macro_gold_f1": 0.8476819554408382,
+    "micro_gold_f1": 0.8316566063044937,
+    "micro_gold_precision": 0.8629088378566457,
+    "micro_gold_recall": 0.8025889967637541
+  },
+  "protocol_version": "gum-real-splitters-v1.1",
+  "mask_protocol": "surface_v1.1_terminal_unit_incl_reference_markers_else_insert_gap"
+}

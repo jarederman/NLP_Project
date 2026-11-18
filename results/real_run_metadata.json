@@ -1,0 +1,14 @@
+{
+  "status": "REAL_FORMAL_COMPLETE",
+  "job_id": "21774374",
+  "gpu": "6",
+  "versions": {
+    "nltk": "3.10.4",
+    "stanza": "1.15.0",
+    "wtpsplit": "2.2.2",
+    "torch": "2.10.0",
+    "transformers": "5.7.0",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3"
+  }
+}

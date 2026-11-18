@@ -1,0 +1,12 @@
+{
+  "slope": 0.6944045762700862,
+  "intercept": 0.08503703279918619,
+  "method": "Platt scaling on official GUM train",
+  "fit_split": "UD_English-GUM/train",
+  "target_split_read": false,
+  "training_positions": 168917,
+  "training_boundaries": 11117,
+  "model_name": "google-bert/bert-base-uncased",
+  "mask_protocol": "surface_v1_replace_visible_terminal_else_insert_gap",
+  "gpu": "NVIDIA H200"
+}
