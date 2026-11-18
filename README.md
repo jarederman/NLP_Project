@@ -382,6 +382,23 @@ BLAS 浮点差异使 GUM S1 差 1e-4，判定都相同，存档于 `results/a8_o
   本来的被低估（−0.104 → −0.048），加入 E1 后 SaT 仍被低估；GENTLE、LinES 上不触发。GENTLE 上去掉 E1 后语料级第一名变成 Punkt（错）。
 - **8.7 文档长度**：S1 全局 Spearman 短/中/长 0.809 / 0.780 / 0.870；Stack 识别率（混合，r = 0.10）0.977 / 0.990 / 0.998，短文档略差。
 
+**SaT 分析与大小写试验**（修订 9，2026-11-18；用户决定：证据可以看大小写，原文段落换行可作为输入；目标仍是评估器）。
+SaT 源码放在 `third_party/wtpsplit`（gitignored，commit 记录在 `third_party/wtpsplit.COMMIT`，`scripts/fetch_wtpsplit.slurm`），
+设计分析见 `reports/sat_analysis_2026-11-18.md`。测试集复用规则写在修订 9（复用的数字标 R，取舍只看 GUM 开发集）。
+9.1：`src/a9_casing.py`，GPU 作业 23615880（L40S，2.6 分钟）+ CPU 作业 23615881；完整表 `results/a9/casing_summary.md`。
+sat-3l-sm 在原文大小写、阈值 0.25 下与被评 SaT 系统逐空隙一致（GUM 上 168,917 个空隙中只差 1 个），stack 逐值复现修订 6。
+
+- **按预先写定的判定采用 cased 证据**（GUM LOGO）：Stack-cased（stack 中 E1 换成看大小写的 sat-12l）− Stack =
+  全局 Spearman +0.059 [+0.039, +0.080]（0.877 vs 0.818），文档内配对 +0.056；“合并-其他”盲区斜率 0.238 → 0.463（+0.225 [+0.191, +0.259]）。
+  **共同盲区造成的偏差几乎消失**：Punkt 秩残差 +0.067 → +0.017，SaT −0.048 → −0.006。
+- 复用的测试集（R）：GENTLE Stack-cased 0.903 vs 0.883（+0.020 [−0.026, +0.072]），文档之内 0.692 → 0.806，盲区斜率 +0.171 显著，
+  Punkt 残差 +0.046 → −0.007；LinES +0.017（n.s.，盲区来自标注规范，大小写没有帮助）；EWT 上单一 SaT 证据看大小写后 +0.05 到 +0.06（显著），
+  但 EWT 的绝对值仍低（sat-12l-sm cased 0.496，共识 0.657）。
+- sat-12l-sm（cased）单独作证据最强（GUM dev 0.897，GENTLE 0.884），但它与被评的 sat-3l-sm 同族、同训练数据（GUM train）：
+  GUM dev 上 SaT 秩残差 +0.078（被高估），GUM train 上被污染，因此不放进主证据。
+- 诊断（证据当切分器用，R）：Stack-cased 在 GENTLE / LinES 上显著优于被评的 SaT 系统（+0.043 [+0.003, +0.088] / +0.013 [+0.003, +0.024]）；
+  sat-12l-sm cased 在 GENTLE 上 0.888 vs 0.818（+0.070 [+0.025, +0.118]）。
+
 ## GitHub 持续同步
 
 本环境的系统 `.git` 是只读空挂载，因此仓库元数据持久保存在被忽略的 `.gitdata/`。使用以下包装命令代替普通 `git`：
