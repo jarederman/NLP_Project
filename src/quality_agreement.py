@@ -183,6 +183,8 @@ def evaluate(items: Items, n_resamples: int, seed: int, baseline: str = "soft_f1
 
     def interval(values):
         v = np.array([x for x in values if x == x])
+        if not len(v):                                 # statistic undefined in every draw
+            return [float("nan"), float("nan")]
         return [float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5))]
     result = {"point": point, "detail": detail, "ci": {}, "baseline": baseline, "paired_vs_baseline": {}}
     for name in items.scores:
