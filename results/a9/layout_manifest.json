@@ -1,0 +1,22 @@
+{
+  "gum": {
+    "documents": 197,
+    "paragraph_breaks": 4353,
+    "unchanged_documents": 5
+  },
+  "gentle": {
+    "documents": 26,
+    "paragraph_breaks": 652,
+    "unchanged_documents": 1
+  },
+  "lines": {
+    "documents": 9,
+    "paragraph_breaks": 0,
+    "unchanged_documents": 9
+  },
+  "ewt": {
+    "documents": 316,
+    "paragraph_breaks": 538,
+    "unchanged_documents": 112
+  }
+}

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.metadata
 import os
+import warnings
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -60,6 +61,21 @@ def segment_offsets(text: str, segments: Iterable[str]) -> tuple[int, ...]:
             boundary -= 1
         offsets.append(boundary)
     return tuple(sorted(set(offsets)))
+
+
+def with_input_newlines(text: str, offsets: Iterable[int]) -> tuple[int, ...]:
+    """Add a boundary at every input newline (SaT's split_on_input_newlines), using the same
+    convention as ``segment_offsets``: the end offset with trailing whitespace stripped."""
+    found = set(offsets)
+    for i, char in enumerate(text):
+        if char != "\n":
+            continue
+        boundary = i
+        while boundary > 0 and text[boundary - 1].isspace():
+            boundary -= 1
+        if boundary > 0:
+            found.add(boundary)
+    return tuple(sorted(found))
 
 
 def canonicalize_offsets(
@@ -160,12 +176,25 @@ class RealSplitterSuite:
             return outputs
         if system in {"wtp", "sat"}:
             model = self._load_wtp() if system == "wtp" else self._load_sat()
-            split_outputs = list(model.split(texts))
+            # SaT's default split_on_input_newlines=True makes every input newline a hard boundary
+            # but drops the newline characters, so its segments no longer reconstruct the text.
+            # On text with newlines (amendment 9.3) we switch that post-processing off and add the
+            # newline boundaries on offsets instead: the same boundaries, since the flag does not
+            # change the model's probabilities. Text without newlines takes the original call.
+            newline_mode = system == "sat" and any("\n" in text for text in texts)
+            kwargs = {"split_on_input_newlines": False} if newline_mode else {}
+            with warnings.catch_warnings():
+                if newline_mode:
+                    warnings.filterwarnings("ignore", message="split_on_input_newlines=False")
+                split_outputs = list(model.split(texts, **kwargs))
             if len(split_outputs) != len(texts):
                 raise RuntimeError(
                     f"{system} returned {len(split_outputs)} documents for {len(texts)} inputs"
                 )
-            return [segment_offsets(text, segments) for text, segments in zip(texts, split_outputs)]
+            offsets = [segment_offsets(text, segments) for text, segments in zip(texts, split_outputs)]
+            if newline_mode:
+                offsets = [with_input_newlines(text, found) for text, found in zip(texts, offsets)]
+            return offsets
         raise ValueError(f"Unknown splitter: {system}")
 
     @staticmethod

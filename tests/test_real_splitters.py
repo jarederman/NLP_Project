@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 
 from src.contracts import RawDocument
-from src.real_splitters import canonicalize_offsets, segment_offsets
+from src.real_splitters import canonicalize_offsets, segment_offsets, with_input_newlines
 
 
 class RealSplitterAlignmentTest(unittest.TestCase):
@@ -15,6 +15,13 @@ class RealSplitterAlignmentTest(unittest.TestCase):
     def test_normalized_output_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "does not reconstruct input exactly"):
             segment_offsets("One  two.", ["One ", "two."])
+
+    def test_input_newlines_become_boundaries(self):
+        text = "Title\nFirst sentence. Second\nThird."
+        found = segment_offsets(text, ["Title\nFirst sentence. ", "Second\nThird."])
+        self.assertEqual(found, (21,))
+        self.assertEqual(with_input_newlines(text, found), (5, 21, 28))
+        self.assertEqual(with_input_newlines("No newline here.", (2,)), (2,))
 
     def test_noncanonical_boundary_is_logged_not_silently_moved(self):
         document = RawDocument.create(
