@@ -38,6 +38,7 @@ from .a8_supplement import TYPES, DocCtx, candidates, category_codes, hard_f1, o
 from .a9_casing import A9, SLOPE_TYPES, corpus_items
 from .a9_layout import EWT_E0, NL, bootstrap, break_mask, contrast, design, e1_logit, e2_logit, scenario_items
 from .meta_eval import max_soft_f1
+from .quality_agreement import TIE_DECIMALS, tie_exact  # noqa: F401  (re-exported)
 
 RESULTS = ROOT / "results/a10"
 SETTINGS = {"T1": {"e1": "lower", "e2": "lower", "layout": "flat", "label": "修订 6 基线（lower-flat，系统无换行）"},
@@ -51,7 +52,6 @@ MAX_ITER = 200
 TOL = 0.01
 SLOPE_GAP = 0.05
 TEST = ("gentle", "lines", "ewt")
-TIE_DECIMALS = 10
 CURRENT: dict = {}                  # setting of this run (file names)
 ALIGNMENT_ITEMS: dict = {}          # (corpus, layout) -> items whose Gold F1 includes unaligned boundaries
 
@@ -303,12 +303,6 @@ def logloss(p: np.ndarray, y: np.ndarray) -> float:
 
 
 # ------------------------------------------------------------------ evaluation
-def tie_exact(v: np.ndarray) -> np.ndarray:
-    """Round to TIE_DECIMALS so that mathematically equal scores (e.g. two systems with identical
-    boundaries in one document) tie exactly instead of being ordered by floating-point noise."""
-    return np.round(np.asarray(v, float), TIE_DECIMALS)
-
-
 def evaluate(data: Data, scores: dict, n_boot: int, s2_name: str) -> dict:
     scores = {n: tie_exact(v) for n, v in scores.items()}
     np.savez_compressed(RESULTS / f"scores_{CURRENT['setting']}_{data.name}.npz", f1=data.f1,

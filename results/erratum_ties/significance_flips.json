@@ -1,0 +1,87 @@
+{
+ "a6/dev_report.json": [],
+ "a6/test_report.json": [
+  [
+   "/corpora/gentle/evidence/paired_vs_baseline/ev:E1sm/global_spearman",
+   [
+    -0.0002,
+    0.2804
+   ],
+   [
+    0.0001,
+    0.2804
+   ]
+  ]
+ ],
+ "a7/posthoc_report.json": [],
+ "a7/seeds_report.json": [],
+ "a8/report.json": [],
+ "a9/casing_report.json": [],
+ "a9/layout_report.json": [
+  [
+   "/corpora/ewt/scenarios/flat/effects/stack|global_spearman/layout @cased",
+   [
+    0.0214,
+    -0.0142,
+    0.0598
+   ],
+   [
+    0.0414,
+    0.0044,
+    0.0815
+   ]
+  ],
+  [
+   "/corpora/ewt/scenarios/flat/stack_minus_M0/cased-nl",
+   [
+    -0.1275,
+    -0.2514,
+    -0.0135
+   ],
+   [
+    -0.0935,
+    -0.2193,
+    0.0233
+   ]
+  ],
+  [
+   "/corpora/ewt/scenarios/flat/stack_minus_M0/lower-nl",
+   [
+    -0.1215,
+    -0.2427,
+    -0.0125
+   ],
+   [
+    -0.0967,
+    -0.2197,
+    0.0174
+   ]
+  ],
+  [
+   "/corpora/ewt/scenarios/nl/effects/stack|global_spearman/layout @cased",
+   [
+    0.0192,
+    -0.0106,
+    0.0514
+   ],
+   [
+    0.0348,
+    0.0051,
+    0.065
+   ]
+  ],
+  [
+   "/corpora/gentle/scenarios/flat/effects/stack|global_spearman/case @nl",
+   [
+    0.0515,
+    -0.0006,
+    0.1053
+   ],
+   [
+    0.0543,
+    0.0007,
+    0.1084
+   ]
+  ]
+ ]
+}
