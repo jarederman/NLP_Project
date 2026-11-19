@@ -1,9 +1,22 @@
 {
-  "note": "post-hoc (P/R); stack p >= 0.5 vs SaT system in the matching layout scenario",
+  "note": "post-hoc (P/R); stack p >= 0.5 vs SaT segmenters (3l-sm system, 12l-sm, 12l) in the matching layout scenario",
   "corpora": {
     "gum": {
+      "check": {
+        "sat12l_nl_gap_mismatch": 1,
+        "gaps": 168917
+      },
+      "opponents": {
+        "sat-3l-sm|flat": 0.9715882265646221,
+        "sat-3l-sm|nl": 0.9797034592313197,
+        "sat-12l-sm|flat": 0.9847149506640369,
+        "sat-12l-sm|nl": 0.9882956546035835,
+        "sat-12l|flat": 0.9345652925172884,
+        "sat-12l|nl": 0.9490268943160949
+      },
       "lower-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9647084776133887,
         "sat_f1": 0.9715882265646221,
         "diff": [
@@ -14,8 +27,35 @@
         "better": 54,
         "worse": 103
       },
+      "lower-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9647084776133887,
+        "sat_f1": 0.9847149506640369,
+        "diff": [
+          -0.020006473050648118,
+          -0.02402745083476148,
+          -0.01624713144109843
+        ],
+        "better": 27,
+        "worse": 128
+      },
+      "lower-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9647084776133887,
+        "sat_f1": 0.9345652925172884,
+        "diff": [
+          0.030143185096100533,
+          0.023063838006965622,
+          0.03828788352863371
+        ],
+        "better": 129,
+        "worse": 46
+      },
       "cased-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.975816795109198,
         "sat_f1": 0.9715882265646221,
         "diff": [
@@ -26,8 +66,35 @@
         "better": 85,
         "worse": 54
       },
+      "cased-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.975816795109198,
+        "sat_f1": 0.9847149506640369,
+        "diff": [
+          -0.008898155554839098,
+          -0.012552500154768132,
+          -0.005352487005654526
+        ],
+        "better": 36,
+        "worse": 90
+      },
+      "cased-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.975816795109198,
+        "sat_f1": 0.9345652925172884,
+        "diff": [
+          0.04125150259190955,
+          0.034864626119952696,
+          0.048737637521927286
+        ],
+        "better": 155,
+        "worse": 17
+      },
       "lower-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9841228925975253,
         "sat_f1": 0.9797034592313197,
         "diff": [
@@ -38,8 +105,35 @@
         "better": 82,
         "worse": 63
       },
+      "lower-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9841228925975253,
+        "sat_f1": 0.9882956546035835,
+        "diff": [
+          -0.004172762006058292,
+          -0.007399731044595357,
+          -0.0012830069998438706
+        ],
+        "better": 38,
+        "worse": 86
+      },
+      "lower-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9841228925975253,
+        "sat_f1": 0.9490268943160949,
+        "diff": [
+          0.035095998281430354,
+          0.02887093120355735,
+          0.042874300006039194
+        ],
+        "better": 149,
+        "worse": 21
+      },
       "cased-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9853668963668203,
         "sat_f1": 0.9797034592313197,
         "diff": [
@@ -50,8 +144,35 @@
         "better": 92,
         "worse": 48
       },
+      "cased-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9853668963668203,
+        "sat_f1": 0.9882956546035835,
+        "diff": [
+          -0.002928758236763148,
+          -0.006006354045350698,
+          6.188666552359014e-06
+        ],
+        "better": 42,
+        "worse": 70
+      },
+      "cased-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9853668963668203,
+        "sat_f1": 0.9490268943160949,
+        "diff": [
+          0.036340002050725496,
+          0.030355372861192307,
+          0.04425370206182341
+        ],
+        "better": 152,
+        "worse": 13
+      },
       "ref91": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9744147295604972,
         "sat_f1": 0.9715882265646221,
         "diff": [
@@ -61,11 +182,50 @@
         ],
         "better": 79,
         "worse": 66
+      },
+      "ref91 vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9744147295604972,
+        "sat_f1": 0.9847149506640369,
+        "diff": [
+          -0.010300221103539755,
+          -0.014010852905557238,
+          -0.007002481127616794
+        ],
+        "better": 33,
+        "worse": 103
+      },
+      "ref91 vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9744147295604972,
+        "sat_f1": 0.9345652925172884,
+        "diff": [
+          0.039849437043208896,
+          0.0333949452165531,
+          0.04754072115592313
+        ],
+        "better": 156,
+        "worse": 16
       }
     },
     "gentle": {
+      "check": {
+        "sat12l_nl_gap_mismatch": 0,
+        "gaps": 14970
+      },
+      "opponents": {
+        "sat-3l-sm|flat": 0.817899851893491,
+        "sat-3l-sm|nl": 0.8751262106188099,
+        "sat-12l-sm|flat": 0.8883119020376868,
+        "sat-12l-sm|nl": 0.9249071592886916,
+        "sat-12l|flat": 0.7879043049047577,
+        "sat-12l|nl": 0.84772680878801
+      },
       "lower-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.8404757676634314,
         "sat_f1": 0.817899851893491,
         "diff": [
@@ -76,8 +236,35 @@
         "better": 12,
         "worse": 13
       },
+      "lower-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.8404757676634314,
+        "sat_f1": 0.8883119020376868,
+        "diff": [
+          -0.04783613437425542,
+          -0.08564628294713718,
+          -0.006174091196340221
+        ],
+        "better": 6,
+        "worse": 18
+      },
+      "lower-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.8404757676634314,
+        "sat_f1": 0.7879043049047577,
+        "diff": [
+          0.05257146275867359,
+          0.01133172374228474,
+          0.09999079373364075
+        ],
+        "better": 16,
+        "worse": 8
+      },
       "cased-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.8468817706830951,
         "sat_f1": 0.817899851893491,
         "diff": [
@@ -88,8 +275,35 @@
         "better": 12,
         "worse": 11
       },
+      "cased-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.8468817706830951,
+        "sat_f1": 0.8883119020376868,
+        "diff": [
+          -0.04143013135459154,
+          -0.05747639011490931,
+          -0.0230620498401798
+        ],
+        "better": 6,
+        "worse": 19
+      },
+      "cased-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.8468817706830951,
+        "sat_f1": 0.7879043049047577,
+        "diff": [
+          0.058977465778337464,
+          0.03888369142869605,
+          0.0784351047975367
+        ],
+        "better": 19,
+        "worse": 5
+      },
       "lower-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.8959419984927817,
         "sat_f1": 0.8751262106188099,
         "diff": [
@@ -100,8 +314,35 @@
         "better": 13,
         "worse": 10
       },
+      "lower-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.8959419984927817,
+        "sat_f1": 0.9249071592886916,
+        "diff": [
+          -0.028965160795909932,
+          -0.059905547906993886,
+          0.0037946507079559457
+        ],
+        "better": 9,
+        "worse": 12
+      },
+      "lower-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.8959419984927817,
+        "sat_f1": 0.84772680878801,
+        "diff": [
+          0.0482151897047716,
+          0.013353583367269644,
+          0.08416975932026831
+        ],
+        "better": 18,
+        "worse": 7
+      },
       "cased-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9530523684081993,
         "sat_f1": 0.8751262106188099,
         "diff": [
@@ -112,8 +353,35 @@
         "better": 19,
         "worse": 6
       },
+      "cased-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9530523684081993,
+        "sat_f1": 0.9249071592886916,
+        "diff": [
+          0.02814520911950771,
+          0.004125623452726341,
+          0.056182613300585084
+        ],
+        "better": 12,
+        "worse": 7
+      },
+      "cased-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9530523684081993,
+        "sat_f1": 0.84772680878801,
+        "diff": [
+          0.10532555962018925,
+          0.07521982409487325,
+          0.13684219026634967
+        ],
+        "better": 23,
+        "worse": 1
+      },
       "ref91": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.8611694640364581,
         "sat_f1": 0.817899851893491,
         "diff": [
@@ -123,11 +391,50 @@
         ],
         "better": 13,
         "worse": 11
+      },
+      "ref91 vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.8611694640364581,
+        "sat_f1": 0.8883119020376868,
+        "diff": [
+          -0.027142438001228585,
+          -0.04581992109164614,
+          -0.007207158217722652
+        ],
+        "better": 5,
+        "worse": 17
+      },
+      "ref91 vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.8611694640364581,
+        "sat_f1": 0.7879043049047577,
+        "diff": [
+          0.07326515913170042,
+          0.05091760837373643,
+          0.09616702599081098
+        ],
+        "better": 17,
+        "worse": 5
       }
     },
     "lines": {
+      "check": {
+        "sat12l_nl_gap_mismatch": 1,
+        "gaps": 17371
+      },
+      "opponents": {
+        "sat-3l-sm|flat": 0.9560704560362079,
+        "sat-3l-sm|nl": 0.9560704560362079,
+        "sat-12l-sm|flat": 0.9741578796729533,
+        "sat-12l-sm|nl": 0.9741578796729533,
+        "sat-12l|flat": 0.9493226591239906,
+        "sat-12l|nl": 0.9493226591239906
+      },
       "lower-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9642866454113865,
         "sat_f1": 0.9560704560362079,
         "diff": [
@@ -138,8 +445,35 @@
         "better": 5,
         "worse": 2
       },
+      "lower-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9642866454113865,
+        "sat_f1": 0.9741578796729533,
+        "diff": [
+          -0.009871234261567156,
+          -0.017868575806250293,
+          -0.002858327661695347
+        ],
+        "better": 0,
+        "worse": 5
+      },
+      "lower-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9642866454113865,
+        "sat_f1": 0.9493226591239906,
+        "diff": [
+          0.014963986287395654,
+          -0.008836786613411144,
+          0.043259176105717265
+        ],
+        "better": 6,
+        "worse": 3
+      },
       "cased-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9714718141782542,
         "sat_f1": 0.9560704560362079,
         "diff": [
@@ -150,8 +484,35 @@
         "better": 5,
         "worse": 0
       },
+      "cased-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9714718141782542,
+        "sat_f1": 0.9741578796729533,
+        "diff": [
+          -0.0026860654946991858,
+          -0.006967372014194636,
+          0.0028973225053384663
+        ],
+        "better": 1,
+        "worse": 5
+      },
+      "cased-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9714718141782542,
+        "sat_f1": 0.9493226591239906,
+        "diff": [
+          0.022149155054263625,
+          0.00027519572327446603,
+          0.04996906838336311
+        ],
+        "better": 6,
+        "worse": 3
+      },
       "lower-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9502423559637899,
         "sat_f1": 0.9560704560362079,
         "diff": [
@@ -162,8 +523,35 @@
         "better": 5,
         "worse": 4
       },
+      "lower-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9502423559637899,
+        "sat_f1": 0.9741578796729533,
+        "diff": [
+          -0.023915523709163538,
+          -0.0543979587171954,
+          -3.2114136730630915e-06
+        ],
+        "better": 2,
+        "worse": 6
+      },
+      "lower-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9502423559637899,
+        "sat_f1": 0.9493226591239906,
+        "diff": [
+          0.0009196968397992741,
+          -0.029771447300247684,
+          0.03225288084779608
+        ],
+        "better": 5,
+        "worse": 3
+      },
       "cased-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9644987719151694,
         "sat_f1": 0.9560704560362079,
         "diff": [
@@ -174,8 +562,35 @@
         "better": 6,
         "worse": 0
       },
+      "cased-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9644987719151694,
+        "sat_f1": 0.9741578796729533,
+        "diff": [
+          -0.009659107757784176,
+          -0.024014405854723753,
+          0.004077808467725167
+        ],
+        "better": 2,
+        "worse": 4
+      },
+      "cased-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9644987719151694,
+        "sat_f1": 0.9493226591239906,
+        "diff": [
+          0.015176112791178635,
+          -0.009429953266039872,
+          0.04336098970523813
+        ],
+        "better": 5,
+        "worse": 4
+      },
       "ref91": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9690377602277815,
         "sat_f1": 0.9560704560362079,
         "diff": [
@@ -185,11 +600,50 @@
         ],
         "better": 6,
         "worse": 1
+      },
+      "ref91 vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9690377602277815,
+        "sat_f1": 0.9741578796729533,
+        "diff": [
+          -0.005120119445172038,
+          -0.010175167281087564,
+          0.0008190939319990291
+        ],
+        "better": 1,
+        "worse": 5
+      },
+      "ref91 vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9690377602277815,
+        "sat_f1": 0.9493226591239906,
+        "diff": [
+          0.019715101103790773,
+          -0.00011696353530166845,
+          0.04514779407142992
+        ],
+        "better": 6,
+        "worse": 2
       }
     },
     "ewt": {
+      "check": {
+        "sat12l_nl_gap_mismatch": 0,
+        "gaps": 21205
+      },
+      "opponents": {
+        "sat-3l-sm|flat": 0.8996046693938359,
+        "sat-3l-sm|nl": 0.9354632255119903,
+        "sat-12l-sm|flat": 0.9195026216049658,
+        "sat-12l-sm|nl": 0.9389614879162941,
+        "sat-12l|flat": 0.8580172540885946,
+        "sat-12l|nl": 0.8878024828836517
+      },
       "lower-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9308214068784024,
         "sat_f1": 0.8996046693938359,
         "diff": [
@@ -200,8 +654,35 @@
         "better": 71,
         "worse": 36
       },
+      "lower-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9308214068784024,
+        "sat_f1": 0.9195026216049658,
+        "diff": [
+          0.011318785273436922,
+          -0.012081278574655864,
+          0.03570493695940874
+        ],
+        "better": 49,
+        "worse": 54
+      },
+      "lower-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9308214068784024,
+        "sat_f1": 0.8580172540885946,
+        "diff": [
+          0.07280415278980785,
+          0.04765489952414767,
+          0.09949100281333709
+        ],
+        "better": 113,
+        "worse": 30
+      },
       "cased-flat": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9512492821319285,
         "sat_f1": 0.8996046693938359,
         "diff": [
@@ -212,8 +693,35 @@
         "better": 84,
         "worse": 17
       },
+      "cased-flat vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9512492821319285,
+        "sat_f1": 0.9195026216049658,
+        "diff": [
+          0.0317466605269629,
+          0.01031928092792779,
+          0.05247682287421819
+        ],
+        "better": 57,
+        "worse": 36
+      },
+      "cased-flat vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9512492821319285,
+        "sat_f1": 0.8580172540885946,
+        "diff": [
+          0.09323202804333383,
+          0.07117905217691295,
+          0.11706640992441446
+        ],
+        "better": 121,
+        "worse": 20
+      },
       "lower-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9554754291938502,
         "sat_f1": 0.9354632255119903,
         "diff": [
@@ -224,8 +732,35 @@
         "better": 58,
         "worse": 41
       },
+      "lower-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9554754291938502,
+        "sat_f1": 0.9389614879162941,
+        "diff": [
+          0.016513941277556014,
+          -7.388645005894545e-05,
+          0.034731934752805546
+        ],
+        "better": 51,
+        "worse": 45
+      },
+      "lower-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9554754291938502,
+        "sat_f1": 0.8878024828836517,
+        "diff": [
+          0.06767294631019853,
+          0.044818714548159666,
+          0.08877854337937845
+        ],
+        "better": 106,
+        "worse": 39
+      },
       "cased-nl": {
         "scenario": "nl",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9632335296520814,
         "sat_f1": 0.9354632255119903,
         "diff": [
@@ -236,8 +771,35 @@
         "better": 59,
         "worse": 35
       },
+      "cased-nl vs sat-12l-sm": {
+        "scenario": "nl",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9632335296520814,
+        "sat_f1": 0.9389614879162941,
+        "diff": [
+          0.024272041735787304,
+          0.008676142561122362,
+          0.041866912222668265
+        ],
+        "better": 52,
+        "worse": 43
+      },
+      "cased-nl vs sat-12l": {
+        "scenario": "nl",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9632335296520814,
+        "sat_f1": 0.8878024828836517,
+        "diff": [
+          0.07543104676842981,
+          0.053700795007840314,
+          0.09730529943955778
+        ],
+        "better": 112,
+        "worse": 33
+      },
       "ref91": {
         "scenario": "flat",
+        "opponent": "sat-3l-sm",
         "stack_f1": 0.9481475882580632,
         "sat_f1": 0.8996046693938359,
         "diff": [
@@ -246,6 +808,32 @@
           0.070260436078573
         ],
         "better": 82,
+        "worse": 22
+      },
+      "ref91 vs sat-12l-sm": {
+        "scenario": "flat",
+        "opponent": "sat-12l-sm",
+        "stack_f1": 0.9481475882580632,
+        "sat_f1": 0.9195026216049658,
+        "diff": [
+          0.02864496665309766,
+          0.007522840782714078,
+          0.05092407548659292
+        ],
+        "better": 58,
+        "worse": 36
+      },
+      "ref91 vs sat-12l": {
+        "scenario": "flat",
+        "opponent": "sat-12l",
+        "stack_f1": 0.9481475882580632,
+        "sat_f1": 0.8580172540885946,
+        "diff": [
+          0.09013033416946861,
+          0.06770489548039588,
+          0.11458454470965411
+        ],
+        "better": 118,
         "worse": 22
       }
     }

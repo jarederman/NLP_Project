@@ -429,8 +429,14 @@ LinES（无段落，阴性对照）上系统输出完全相同，sat-12l 证据�
 - **诊断：证据当切分器**（p ≥ 0.5，与同一场景下被评的 sat-3l-sm 比 macro F1，配对 CI；事后分析，P/R；`src/a9_segmenter.py`，
   `results/a9/segmenter_ci.md`）：cased-nl 在四个语料上都显著优于 SaT：GENTLE 0.953 vs 0.875（+0.078 [+0.040, +0.115]，19 篇更好 / 6 篇更差），
   EWT 0.963 vs 0.935（+0.028 [+0.012, +0.045]），LinES +0.008 [+0.003, +0.015]，GUM +0.006 [+0.003, +0.009]（被污染）。
-  lower-nl：EWT +0.020 显著，GENTLE +0.021 与 LinES −0.006 不显著。限定：这里比的是被评的 3 层 SaT，stack 内部用了 sat-12l，
-  没有与 SaT 最强的 sat-12l-sm（加换行切分）比较；stack 的权重在 GUM Gold 上有监督地拟合，GENTLE 沿用 GUM 的标注规范。
+  lower-nl：EWT +0.020 显著，GENTLE +0.021 与 LinES −0.006 不显著。stack 的权重在 GUM Gold 上有监督地拟合，GENTLE 沿用 GUM 的标注规范。
+- **与 12 层 SaT 比**（同一文件；原文大小写、wtpsplit 默认阈值；看到换行时在换行处强制切开。用 sat-12l 在换行文本上直接算的概率核对过，
+  四个语料中决定不同的空隙为 0–1 个）。SaT 本身：sat-12l-sm 是最强的 SaT（GENTLE 0.888 → 看到换行 0.925，EWT 0.920 → 0.939，
+  LinES 0.974，GUM 0.988 被污染），sat-12l（只有换行预训练）较弱（GENTLE 0.848，EWT 0.888，看到换行时）。
+  stack 当切分器 vs **sat-12l-sm**：cased-nl 在 GENTLE +0.028 [+0.004, +0.056]、EWT +0.024 [+0.009, +0.042] 上显著更好，
+  LinES −0.010 [−0.024, +0.004]、GUM −0.003 不显著；lower-nl 在 LinES 显著更差（−0.024），GENTLE −0.029 不显著，EWT +0.017 接近显著；
+  无换行的格在 GENTLE / GUM 上显著更差，EWT 上显著更好（ref91 +0.029）。vs **sat-12l**：除 LinES 外各格都显著更好（stack 本身以 sat-12l 为组件）。
+  结论：看大小写和换行的 stack 已经与最强的 SaT 持平或更好（GENTLE、EWT 显著），但两者都用了 GUM 的监督，GENTLE 又沿用 GUM 的标注规范。
 - 注意：UD 的段落标记是清洗过的理想版式，版式条件下的数字是乐观上限。
 
 ## GitHub 持续同步
