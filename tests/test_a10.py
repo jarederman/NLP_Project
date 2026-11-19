@@ -87,6 +87,13 @@ class A10Tests(unittest.TestCase):
         lq = lambda t: float(prob.losses(torch.tensor(t, dtype=torch.float64))[0])
         self.assertLessEqual(lq(moved), lq(theta) + 1e-12)
 
+    def test_tie_exact_rounding(self):
+        from src.a10_quality import tie_exact
+        a = 0.1 + 0.2
+        b = 0.3
+        self.assertNotEqual(a, b)
+        self.assertEqual(tie_exact(np.array([a]))[0], tie_exact(np.array([b]))[0])
+
     def test_item_rows_and_residual(self):
         self.assertEqual(item_rows([1, 3], [0, 2]).tolist(), [4, 6, 12, 14])
         x = np.array([[0.0], [1.0], [2.0], [3.0]])

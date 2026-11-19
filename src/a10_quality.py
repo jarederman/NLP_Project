@@ -51,6 +51,8 @@ MAX_ITER = 200
 TOL = 0.01
 SLOPE_GAP = 0.05
 TEST = ("gentle", "lines", "ewt")
+TIE_DECIMALS = 10
+CURRENT: dict = {}                  # setting of this run (file names)
 ALIGNMENT_ITEMS: dict = {}          # (corpus, layout) -> items whose Gold F1 includes unaligned boundaries
 
 
@@ -123,10 +125,9 @@ def load(name: str, setting: dict, ctx: dict) -> Data:
     cmat = [np.array([[o in preds[(d.doc_id, s)] for o in d.candidate_offsets] for s in SYSTEMS], dtype=bool) for d in docs]
     f1_gaps = np.concatenate([hard_f1(c, np.array([o in gold[d.doc_id] for o in d.candidate_offsets])) if len(d.candidate_offsets)
                               else np.ones(len(SYSTEMS)) for d, c in zip(docs, cmat)])
-    # the evaluation items also count unaligned (non-gap) system boundaries as false positives, so they
-    # can only be lower than the gap-only F1; the items' Gold F1 is the target everywhere
-    if np.any(items.gold > f1_gaps + 1e-9):
-        raise RuntimeError(f"Item Gold F1 above the gap-only F1 in {name}")
+    # the evaluation items also count unaligned (non-gap) system boundaries and non-gap Gold boundaries
+    # (e.g. SpaceAfter=No in EWT), so they can differ from the gap-only F1; the items' Gold F1 (the
+    # evaluation target of every amendment) is the target everywhere; the count is reported
     ALIGNMENT_ITEMS[(name, layout)] = int(np.sum(np.abs(f1_gaps - items.gold) > 1e-9))
     stab = stability_scores(CORPORA[name], docs, preds) if layout == "flat" and name in CORPORA else None
     out = Data(name, docs, x, terminal_mask(docs), cmat, items.gold.astype(float), items,
@@ -302,7 +303,17 @@ def logloss(p: np.ndarray, y: np.ndarray) -> float:
 
 
 # ------------------------------------------------------------------ evaluation
+def tie_exact(v: np.ndarray) -> np.ndarray:
+    """Round to TIE_DECIMALS so that mathematically equal scores (e.g. two systems with identical
+    boundaries in one document) tie exactly instead of being ordered by floating-point noise."""
+    return np.round(np.asarray(v, float), TIE_DECIMALS)
+
+
 def evaluate(data: Data, scores: dict, n_boot: int, s2_name: str) -> dict:
+    scores = {n: tie_exact(v) for n, v in scores.items()}
+    np.savez_compressed(RESULTS / f"scores_{CURRENT['setting']}_{data.name}.npz", f1=data.f1,
+                        doc=np.asarray(data.items.doc).astype(str), system=np.asarray(data.items.system).astype(str),
+                        **{n.replace(":", "__"): v for n, v in scores.items()})
     point, draws, names = bootstrap(scores, data.f1, data.genres, n_boot)
     table = {}
     with warnings.catch_warnings():
@@ -424,6 +435,8 @@ def run(args) -> None:
     import torch
     torch.set_num_threads(args.threads)
     setting = SETTINGS[args.setting]
+    CURRENT["setting"] = args.setting
+    RESULTS.mkdir(parents=True, exist_ok=True)
     started = time.time()
     gum_docs = surfaces(CORPORA["gum"])
     ev_gum, extras = dev_evidence(CORPORA["gum"], gum_docs, gold_sets(CORPORA["gum"]))
@@ -482,6 +495,7 @@ def run(args) -> None:
     gum_out["slopes"] = slopes(gum, scorers)
     gum_out["decision"] = decide(gum_out, s2_name) if args.setting in ("T2", "T3") else None
     report["corpora"]["gum"] = gum_out
+    save(report)
     print(json.dumps({"status": "A10_GUM_DONE", "setting": args.setting, "seconds": round(time.time() - started, 1),
                       "decision": gum_out["decision"] and gum_out["decision"]["adopted"]}), flush=True)
 
@@ -506,13 +520,19 @@ def run(args) -> None:
         for b, th in final_theta.items():
             sc[b] = qnorm_items(data, prob(final_stack, th, data.x), idx)
         report["corpora"][name] = {"eval": evaluate(data, sc, args.bootstrap, ref), "s2_reference": ref}
+        save(report)
         print(json.dumps({"status": "A10_TEST_DONE", "setting": args.setting, "corpus": name}), flush=True)
-    report["items_with_unaligned_boundaries"] = {f"{k[0]}|{k[1]}": v for k, v in ALIGNMENT_ITEMS.items()}
-    RESULTS.mkdir(parents=True, exist_ok=True)
-    (RESULTS / f"report_{args.setting}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
-    (RESULTS / f"summary_{args.setting}.md").write_text(render(report))
+    save(report)
     print(json.dumps({"status": "A10_COMPLETE", "setting": args.setting, "seconds": round(time.time() - started, 1)}), flush=True)
 
+
+
+def save(report: dict) -> None:
+    """Write the report so far (after GUM and after every test corpus)."""
+    report["items_with_unaligned_boundaries"] = {f"{k[0]}|{k[1]}": v for k, v in ALIGNMENT_ITEMS.items()}
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    (RESULTS / f"report_{report['setting']}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+    (RESULTS / f"summary_{report['setting']}.md").write_text(render(report))
 
 # ------------------------------------------------------------------ rendering
 def _ci(v, sign=True) -> str:
@@ -528,6 +548,7 @@ LABELS = {"S1": "S1 BCE stack → Q_norm（现行）", "S2": "S2 岭回归 QE（
 def render(r: dict) -> str:
     L = [f"# 修订 10：面向质量的融合 vs 事后质量回归（{r['setting']}：{r['label']}）", "",
          "控制变量：同一设计矩阵、同一 LOGO 折、同一批条目与同一个 Q_norm；只改训练目标或第二阶段。CI：领域内按文档重采样。"
+         "分数在评估前四舍五入到 1e-10（数学上相等的分数严格并列，不由浮点噪声决定先后）。"
          f"与 S2 的比较以 {r['s2_reference']} 为准（换行场景与 EWT 没有稳定性数据）。", "",
          "核对：" + json.dumps(r.get("checks", {})) + "；Gold F1 含未对齐边界的条目数：" + json.dumps(r.get("items_with_unaligned_boundaries", {})), ""]
     for name, c in r["corpora"].items():
