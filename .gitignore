@@ -28,3 +28,8 @@ logs/
 .DS_Store
 .idea/
 .vscode/
+third_party/
+data/real_system_nl/
+data/real_system_gentle_nl/
+data/real_system_lines_nl/
+data/real_system_ewt_nl/

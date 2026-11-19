@@ -137,10 +137,10 @@ class Tagger:
         return ids.cuda(), attention.cuda(), labels.cuda()
 
 
-def training_rows(tagger: Tagger, docs, gold, rng: random.Random):
+def training_rows(tagger: Tagger, docs, gold, rng: random.Random, transform=safe_lower):
     rows = []
     for d in docs:
-        text = safe_lower(d.text)
+        text = transform(d.text)
         spans = word_spans(text)
         labels = [int(o in gold[d.doc_id]) for o in d.candidate_offsets]
         if not labels:
@@ -155,12 +155,12 @@ def training_rows(tagger: Tagger, docs, gold, rng: random.Random):
     return rows
 
 
-def train(torch, model_name: str, docs, gold, seed: int) -> Tagger:
+def train(torch, model_name: str, docs, gold, seed: int, transform=safe_lower) -> Tagger:
     random.seed(seed)
     torch.manual_seed(seed)
     tagger = Tagger(torch, model_name)
     rng = random.Random(seed)
-    steps_per_epoch = math.ceil(len(training_rows(tagger, docs, gold, random.Random(seed))) / BATCH)
+    steps_per_epoch = math.ceil(len(training_rows(tagger, docs, gold, random.Random(seed), transform)) / BATCH)
     total = steps_per_epoch * EPOCHS
     optimizer = torch.optim.AdamW(tagger.parameters(), lr=LR, weight_decay=DECAY)
     warm = max(1, int(WARMUP * total))
@@ -169,7 +169,7 @@ def train(torch, model_name: str, docs, gold, seed: int) -> Tagger:
     tagger.encoder.train()
     step = 0
     for _ in range(EPOCHS):
-        rows = training_rows(tagger, docs, gold, rng)
+        rows = training_rows(tagger, docs, gold, rng, transform)
         for start in range(0, len(rows), BATCH):
             ids, attention, labels = tagger.batch(rows[start:start + BATCH])
             logits = tagger.forward(ids, attention)
@@ -187,12 +187,12 @@ def train(torch, model_name: str, docs, gold, seed: int) -> Tagger:
     return tagger
 
 
-def predict(tagger: Tagger, docs) -> np.ndarray:
+def predict(tagger: Tagger, docs, transform=safe_lower) -> np.ndarray:
     """Per-gap logit; each token is predicted by the window where it is most central."""
     torch = tagger.torch
     out = []
     for d in docs:
-        text = safe_lower(d.text)
+        text = transform(d.text)
         spans = word_spans(text)
         n_gaps = len(d.candidate_offsets)
         if n_gaps == 0:
