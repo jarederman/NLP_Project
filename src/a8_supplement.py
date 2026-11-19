@@ -31,7 +31,7 @@ from .a6_data import CORPORA, ROOT, SEED, SYSTEMS, doc_slices, gold_sets, jsonl,
 from .a6_signals import dawid_skene, fit_logistic_np, length_prior, predict_logistic_np
 from .analyze_evidence_gaps import left_context_category
 from .meta_eval import max_soft_f1
-from .quality_agreement import Items, statistics
+from .quality_agreement import Items, statistics, tie_exact
 
 
 RESULTS = ROOT / "results/a8"
@@ -434,12 +434,12 @@ def perturbation_report(cc: CorpusCtx, n_boot: int) -> dict:
 def cross_document(stats, genres, present, plan) -> dict:
     sizes = [len(s["mixed_true"]) for s in stats]
     doc_of = np.repeat(np.arange(len(stats)), sizes)
-    true = np.concatenate([s["mixed_true"] for s in stats])
+    true = tie_exact(np.concatenate([s["mixed_true"] for s in stats]))
     out = {}
     offsets = np.concatenate([[0], np.cumsum(sizes)])
     rows_of = [np.arange(offsets[i], offsets[i + 1]) for i in range(len(stats))]
     for name in present:
-        score = np.concatenate([s["mixed_scores"][name] for s in stats])
+        score = tie_exact(np.concatenate([s["mixed_scores"][name] for s in stats]))
         draws = []
         for idx in plan[:200]:                         # 200 resamples: ~16k candidates per draw on GUM
             rows = np.concatenate([rows_of[i] for i in idx])
@@ -449,8 +449,8 @@ def cross_document(stats, genres, present, plan) -> dict:
         rs = score - ms[doc_of]
         rg = true - mg[doc_of]
         out[name] = {"global_spearman": [float(spearmanr(score, true).statistic), *ci(draws)],
-                     "between_doc": float(spearmanr(ms, mg).statistic),
-                     "within_doc": float(spearmanr(rs, rg).statistic)}
+                     "between_doc": float(spearmanr(tie_exact(ms), tie_exact(mg)).statistic),
+                     "within_doc": float(spearmanr(tie_exact(rs), tie_exact(rg)).statistic)}
     return out
 
 

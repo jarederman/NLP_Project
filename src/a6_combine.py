@@ -29,7 +29,7 @@ from .a6_signals import KneserNeyTrigram, NGRAM_NAMES, RULE_NAMES, dawid_skene, 
     gold_sentences, hsmm_posterior, length_prior, ngram_features, predict_logistic_np, predict_ridge, rule_features
 from .analyze_evidence_gaps import left_context_category
 from .meta_eval import max_soft_f1
-from .quality_agreement import Items, evaluate, load_items, statistics
+from .quality_agreement import TIE_DECIMALS, Items, evaluate, load_items, statistics, tie_exact
 from .scoring import soft_fbeta
 
 
@@ -306,7 +306,8 @@ def with_scores(items: Items, scores: dict, names) -> Items:
 
 
 def fairness(items: Items, score: np.ndarray) -> dict:
-    pct_s, pct_g = rankdata(score) / len(score), rankdata(items.gold) / len(score)
+    score = tie_exact(score)
+    pct_s, pct_g = rankdata(score) / len(score), rankdata(tie_exact(items.gold)) / len(score)
     bias = {s: float(np.mean((pct_s - pct_g)[items.system == s])) for s in SYSTEMS}
     mean_s = {s: float(score[items.system == s].mean()) for s in SYSTEMS}
     mean_g = {s: float(items.gold[items.system == s].mean()) for s in SYSTEMS}
@@ -316,12 +317,14 @@ def fairness(items: Items, score: np.ndarray) -> dict:
 
 
 def decomposition(items: Items, score: np.ndarray) -> dict:
+    score = tie_exact(score)
     docs = sorted(set(items.doc.tolist()))
     ms = np.array([score[items.doc == d].mean() for d in docs])
     mg = np.array([items.gold[items.doc == d].mean() for d in docs])
     rs = score - np.array([ms[docs.index(d)] for d in items.doc])
     rg = items.gold - np.array([mg[docs.index(d)] for d in items.doc])
-    return {"between_doc": float(spearmanr(ms, mg).statistic), "within_doc": float(spearmanr(rs, rg).statistic)}
+    return {"between_doc": float(spearmanr(tie_exact(ms), tie_exact(mg)).statistic),
+            "within_doc": float(spearmanr(tie_exact(rs), tie_exact(rg)).statistic)}
 
 
 def evidence_quality(ev: dict, y: np.ndarray, terminal: np.ndarray) -> dict:
@@ -443,16 +446,29 @@ def dev(args) -> None:
         "S_star": s_star, "M_star": m_star, "checks": checks, "dev_success": all(checks.values()),
         "evidence": ev_result, "S": s_res, "M": m_res, "fairness": fair,
         "decomposition": {n: decomposition(items, scores[n]) for n in S_TRACK + M_REPORT},
-        "robustness": {n: {k: float(spearmanr(scores[n], v).statistic) for k, v in alt.items()}
+        "robustness": {n: {k: float(spearmanr(tie_exact(scores[n]), tie_exact(v)).statistic) for k, v in alt.items()}
                        for n in S_TRACK + M_REPORT},
         "evidence_quality": evidence_quality(ev, extras["y"], terminal),
         "error_overlap": {n: error_overlap(docs, preds, ev[n], extras["y"]) for n in ("E0", selected)},
         "dawid_skene": info, "system_gold_macro_f1": {s: float(items.gold[items.system == s].mean()) for s in SYSTEMS},
-        "stability_spearman_vs_gold": float(spearmanr(scores["stability"], items.gold).statistic),
+        "stability_spearman_vs_gold": float(spearmanr(tie_exact(scores["stability"]), tie_exact(items.gold)).statistic),
     }
+    if args.erratum:
+        # tie-exact re-evaluation (erratum 2026-11-19): the frozen components are never rewritten;
+        # the pre-registered selection must be unchanged
+        with FINAL.open("rb") as handle:
+            frozen_sel = pickle.load(handle)["selection"]
+        now = {"selected_evidence": selected, "S_star": s_star, "M_star": m_star}
+        report["erratum"] = {"tie_exact_decimals": TIE_DECIMALS, "frozen_selection": frozen_sel, "selection_now": now,
+                             "selection_unchanged": frozen_sel == now}
     RESULTS.mkdir(parents=True, exist_ok=True)
     (RESULTS / "dev_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     (RESULTS / "dev_summary.md").write_text(render(report, "GUM train（LOGO，开发集）", args.bootstrap))
+    if args.erratum:
+        print(json.dumps({"status": "A6_DEV_ERRATUM", **report["erratum"]}), flush=True)
+        if not report["erratum"]["selection_unchanged"]:
+            raise RuntimeError("Tie-exact evaluation changes the amendment-6 selection; final components left untouched")
+        return
 
     # 3. components for the one-shot test, fitted once on all of GUM train
     final = fit_final(corpus, docs, gold, ev, extras)
@@ -535,7 +551,7 @@ def corpus_report(corpus, docs, gold, items, scores, preds, y, ev, sel, args) ->
         "test_success": {"S": ci_positive(s_res, s_star) if s_star != "S0" else False, "M": ci_positive(m_res, m_star)},
         "S": s_res, "M": m_res, "evidence": ev_res, "fairness": fair,
         "decomposition": {n: decomposition(items, scores[n]) for n in S_TRACK + M_REPORT},
-        "robustness": {n: {k: float(spearmanr(scores[n], v).statistic) for k, v in alt.items()} for n in S_TRACK + M_REPORT},
+        "robustness": {n: {k: float(spearmanr(tie_exact(scores[n]), tie_exact(v)).statistic) for k, v in alt.items()} for n in S_TRACK + M_REPORT},
         "evidence_quality": evidence_quality(ev, y, terminal),
         "error_overlap": {n: error_overlap(docs, preds, ev[n], y) for n in ("E0", sel["selected_evidence"])},
         "system_gold_macro_f1": {s: float(items.gold[items.system == s].mean()) for s in SYSTEMS},
@@ -628,6 +644,8 @@ def main() -> None:
     parser.add_argument("--corpora", nargs="*", default=["gentle", "lines"])
     parser.add_argument("--bootstrap", type=int, default=1000)
     parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument("--erratum", action="store_true",
+                        help="dev: tie-exact re-evaluation only; never rewrite the frozen final components")
     args = parser.parse_args()
     {"dev": dev, "freeze": freeze, "analyze": analyze}[args.stage](args)
 

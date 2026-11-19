@@ -37,6 +37,14 @@ from .selection import ScoredSegmentation, non_gap_counts
 ROOT = Path(__file__).resolve().parents[1]
 GAP_BINS = ((0.0, 0.02), (0.02, 0.05), (0.05, 0.10), (0.10, math.inf))
 LARGE_GAP = 0.05
+TIE_DECIMALS = 10
+
+
+def tie_exact(values) -> np.ndarray:
+    """Round to TIE_DECIMALS so that mathematically equal values (e.g. two systems with identical
+    boundaries in one document) tie exactly instead of being ordered by floating-point noise
+    (erratum 2026-11-19; the noise had lowered global Spearman, most on EWT)."""
+    return np.round(np.asarray(values, float), TIE_DECIMALS)
 
 
 def _neg_bce(record: ScoredSegmentation) -> float:
@@ -109,12 +117,12 @@ def cell_spearman(score: np.ndarray, gold: np.ndarray, domain: np.ndarray, syste
 def statistics(items: Items, idx: np.ndarray | None = None, doc_key: np.ndarray | None = None) -> dict:
     """Key statistics for every scorer on the item subset ``idx`` (resampled copies allowed)."""
     idx = np.arange(len(items.gold)) if idx is None else idx
-    gold = items.gold[idx]
+    gold = tie_exact(items.gold[idx])
     keys = items.doc[idx] if doc_key is None else doc_key
     same_doc = keys[:, None] == keys[None, :]
     out = {}
     for name, values in items.scores.items():
-        score = values[idx]
+        score = tie_exact(values[idx])
         all_pairs = pairwise_bins(score, gold)
         out[name] = {
             "global_spearman": float(spearmanr(score, gold).statistic),
@@ -166,7 +174,7 @@ def evaluate(items: Items, n_resamples: int, seed: int, baseline: str = "soft_f1
     """Point estimates, stratified-bootstrap CIs, and paired differences vs ``baseline``.
     The resampling plan depends only on ``seed``, so results do not depend on ``workers``."""
     point = statistics(items)
-    detail = {name: {"cross_document_bins": pairwise_bins(values, items.gold)}
+    detail = {name: {"cross_document_bins": pairwise_bins(tie_exact(values), tie_exact(items.gold))}
               for name, values in items.scores.items()}
     plan = _resample_plan(items, n_resamples, seed)
     if workers > 1:

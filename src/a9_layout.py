@@ -36,7 +36,7 @@ from .a9_casing import A9, CANDIDATES, corpus_items, gap_probabilities, logo_sta
     SLOPE_TYPES, thresholded
 from .contracts import text_sha256
 from .layout_data import paragraph_break_offsets
-from .quality_agreement import Items, load_items
+from .quality_agreement import Items, load_items, tie_exact
 from .surface_data import load_surface_jsonl
 
 
@@ -215,6 +215,7 @@ def design(e0, e1z, e2z, rules, ngrams, nl=None) -> np.ndarray:
 def fast_stats(scores: np.ndarray, gold: np.ndarray, n_sys: int = len(SYSTEMS)) -> np.ndarray:
     """(k, 2): global Spearman and within-document pairwise accuracy for k scorers. Items are
     grouped document-major in blocks of ``n_sys`` (as in every amendment-6 artifact)."""
+    scores, gold = tie_exact(scores), tie_exact(gold)
     rg = rankdata(gold)
     out = np.zeros((len(scores), 2))
     g = gold.reshape(-1, n_sys)

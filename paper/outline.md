@@ -171,13 +171,14 @@ All evidence is computed on lower-cased raw text (no casing features, by design)
 
 ### 5.3 RQ1: cross-document agreement on four corpora (main table)
 
-**Table 2 — global Spearman (normalized Soft F1 unless stated); [95% CI] for test cells.**
+**Table 2 — global Spearman (normalized Soft F1 unless stated); [95% CI] for test cells.** Tie-exact values (erratum 2026-11-19:
+scores rounded to 1e-10 before ranking; only the LinES Stack cells changed in Tables 2–5).
 
 | Scorer | GUM (D) | EWT | GENTLE | LinES |
 |---|---:|---:|---:|---:|
 | PuncEv | 0.355 | 0.338 (T, baseline) | — | — |
 | Probe = S0 | 0.574 | **0.411** (T) | 0.672 [0.544, 0.775] (T, baseline) | 0.868 [0.556, 0.974] (T, baseline) |
-| Stack = S1 | 0.818 | — | **0.883** [0.826, 0.920] (T) | **0.815** [0.533, 0.921] (T) |
+| Stack = S1 | 0.818 | — | **0.883** [0.826, 0.920] (T) | **0.818** [0.540, 0.920] (T) |
 | H(Stack) | 0.810 | — | 0.896 (P) | 0.824 (P) |
 | Consensus M0 | 0.733 | 0.657 (P) | 0.830 [0.757, 0.873] (T) | 0.861 [0.583, 0.932] (T) |
 | QE ridge M3 | 0.861 | — | 0.900 [0.851, 0.939] (T) | 0.793 [0.425, 0.961] (T) |
@@ -192,7 +193,7 @@ All evidence is computed on lower-cased raw text (no casing features, by design)
 | Comparison | GUM (D) | EWT (T) | GENTLE | LinES | Pooled GENTLE+LinES |
 |---|---:|---:|---:|---:|---:|
 | Probe − PuncEv | +0.219 | +0.074 [+0.023, +0.126] | — | — | — |
-| Stack − Probe (S1 − S0) | +0.244 [+0.186, +0.309] | — | **+0.212 [+0.101, +0.326]** (T) | −0.053 [−0.177, +0.065] (T) | +0.155 [+0.078, +0.243] |
+| Stack − Probe (S1 − S0) | +0.244 [+0.186, +0.309] | — | **+0.212 [+0.101, +0.326]** (T) | −0.050 [−0.178, +0.081] (T) | +0.156 [+0.078, +0.243] |
 | M3 − M0 | +0.127 [+0.090, +0.165] | — | +0.070 [+0.010, +0.137] (T) | −0.068 (T) | +0.011 n.s. |
 | Stack − M0 | +0.085 [+0.042, +0.128] | — | +0.053 [−0.016, +0.124] (P) | — | +0.001 (P) |
 | Stack − H(Stack) | +0.008 [−0.008, +0.026] | — | −0.013 [−0.037, +0.010] (P) | −0.008 (P) | — |
