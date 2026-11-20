@@ -13,6 +13,7 @@
 set -euo pipefail
 source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
+OMP_NUM_THREADS=4 .venv/bin/python -m unittest discover -s tests
 bash scripts/fetch_gum.sh
 PY=/scratch/wj2301/conda_envs/jit/bin/python
 "$PY" -m src.run_experiment --mode formal --config configs/preliminary.json

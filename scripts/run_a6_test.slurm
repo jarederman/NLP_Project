@@ -20,8 +20,8 @@ export HF_HUB_OFFLINE=1
 python=.venv/bin/python
 "$python" -c "import json,sys; sys.exit(0 if json.load(open('results/a6/dev_report.json'))['dev_success'] else 1)" \
     || { echo "Development criteria not met; the test is not run" >&2; exit 1; }
-OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a6_test_tests_${SLURM_JOB_ID}.log" 2>&1 &
-tests_pid=$!
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a6_test_tests_${SLURM_JOB_ID}.log" 2>&1 \
+    || { echo "Unit tests failed; see logs/a6_test_tests_${SLURM_JOB_ID}.log" >&2; exit 1; }
 for corpus in gentle lines; do
     root="data/real_system_${corpus}"
     "$python" -m src.a6_test prepare --corpus "$corpus"
@@ -32,10 +32,6 @@ for corpus in gentle lines; do
     "$python" -m src.a6_gpu finetune --corpus "$corpus"
     "$python" -m src.a6_gpu stability --corpus "$corpus"
 done
-if ! wait "$tests_pid"; then
-    echo "Unit tests failed; see logs/a6_test_tests_${SLURM_JOB_ID}.log" >&2
-    exit 1
-fi
 for corpus in gentle lines; do
     "$python" -m src.a6_combine freeze --corpus "$corpus"
 done

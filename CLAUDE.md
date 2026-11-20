@@ -17,7 +17,8 @@ This sets `HOME`, all HF/Torch/NLTK/Stanza/pip/tmp caches to paths inside the pr
 - Real-splitter pipeline interpreter: `.venv/bin/python`. This venv uses `--system-site-packages` on top of `/scratch/wj2301/conda_envs/jit`; set it up via `scripts/setup_real_environment.slurm`.
 - Preliminary Qwen/BERT-comparison code: `/scratch/wj2301/conda_envs/jit/bin/python` (PyTorch 2.10, Transformers 5.7).
 - Don't modify the shared conda env.
-- GPU work runs through Slurm (`h200_tandon` partition, account `torch_pr_676_tandon_advanced`). CPU jobs use `cpu_short` with account `torch_pr_676_general`; 16 CPUs / 32G is accepted, while 36 CPUs / 96G is rejected. Logs go to `logs/`.
+- GPU work runs through Slurm. Long or memory-heavy GPU jobs: `h200_tandon` partition, account `torch_pr_676_tandon_advanced`. Short GPU jobs (user decision, 2026-11-18): account `torch_pr_676_general` with `--gres=gpu:1` and **no** `--partition` (the scheduler picks an L40S/H200 public node). When the queue is congested, the same script may be submitted under both accounts; a lock directory in `.runtime/` lets the first job that starts cancel its pending twin, and stops both from running at once (see `scripts/run_a9_layout.slurm`, `scripts/run_a12_test_gpu.slurm`). CPU jobs use `cpu_short` with account `torch_pr_676_general`; 16 CPUs / 32G is accepted, while 36 CPUs / 96G is rejected. Logs go to `logs/`.
+- Every experiment script runs the unit tests in the foreground as its first step, before any artifact is written (`scripts/run_smoke.slurm` is a debugging script and the only exception).
 
 ## Tests
 

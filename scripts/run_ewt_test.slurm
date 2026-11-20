@@ -24,17 +24,13 @@ nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader,nounits
 smi_pid=$!
 trap 'kill $smi_pid 2>/dev/null || true' EXIT
 
-# Unit tests on CPU, concurrently with the gold-free GPU stages; checked before anything is frozen.
-OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/ewt_test_tests_${SLURM_JOB_ID}.log" 2>&1 &
-tests_pid=$!
+# Unit tests first, in the foreground: a broken tree fails before any artifact is written.
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/ewt_test_tests_${SLURM_JOB_ID}.log" 2>&1 \
+    || { echo "Unit tests failed; see logs/ewt_test_tests_${SLURM_JOB_ID}.log" >&2; exit 1; }
 
 "$python" -m src.ewt_test prepare
 "$python" -m src.run_real_splitters --split test --data-root data/real_system_ewt
 "$python" -m src.ewt_test evidence --variant raw
-if ! wait "$tests_pid"; then
-    echo "Unit tests failed; see logs/ewt_test_tests_${SLURM_JOB_ID}.log" >&2
-    exit 1
-fi
 "$python" -m src.ewt_test score --variant raw
 "$python" -m src.ewt_test layout
 "$python" -m src.ewt_test evidence --variant para

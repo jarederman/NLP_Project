@@ -17,12 +17,8 @@ source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
 export HF_HUB_OFFLINE=1
 python=.venv/bin/python
-OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a7_seeds_tests_${SLURM_JOB_ID}.log" 2>&1 &
-tests_pid=$!
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a7_seeds_tests_${SLURM_JOB_ID}.log" 2>&1 \
+    || { echo "Unit tests failed; see logs/a7_seeds_tests_${SLURM_JOB_ID}.log" >&2; exit 1; }
 for k in 1 2 3; do
     "$python" -m src.a6_gpu finetune --corpus gum --models ft-modernbert --seed-offset "$k"
 done
-if ! wait "$tests_pid"; then
-    echo "Unit tests failed; see logs/a7_seeds_tests_${SLURM_JOB_ID}.log" >&2
-    exit 1
-fi

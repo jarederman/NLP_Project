@@ -11,7 +11,7 @@
 #SBATCH --output=/scratch/wj2301/NLP_Project/logs/a6_dev_%j.out
 #SBATCH --error=/scratch/wj2301/NLP_Project/logs/a6_dev_%j.err
 # PREREGISTRATION amendment 6, development on GUM train (LOGO). Gold-free GPU stages first
-# (SaT zero-shot, stability), the unit tests on CPU concurrently; then the fine-tuning (GUM-train
+# (SaT zero-shot, stability) after the unit tests; then the fine-tuning (GUM-train
 # labels) and the CPU combination / selection, which also fits the components for the test.
 set -euo pipefail
 source /scratch/wj2301/NLP_Project/scripts/env.sh
@@ -23,13 +23,9 @@ nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader,nounits
 smi_pid=$!
 trap 'kill $smi_pid 2>/dev/null || true' EXIT
 
-OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a6_dev_tests_${SLURM_JOB_ID}.log" 2>&1 &
-tests_pid=$!
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/a6_dev_tests_${SLURM_JOB_ID}.log" 2>&1 \
+    || { echo "Unit tests failed; see logs/a6_dev_tests_${SLURM_JOB_ID}.log" >&2; exit 1; }
 "$python" -m src.a6_gpu sat --corpus gum
 "$python" -m src.a6_gpu stability --corpus gum
-if ! wait "$tests_pid"; then
-    echo "Unit tests failed; see logs/a6_dev_tests_${SLURM_JOB_ID}.log" >&2
-    exit 1
-fi
 "$python" -m src.a6_gpu finetune --corpus gum
 "$python" -m src.a6_combine dev --bootstrap 1000 --workers 16

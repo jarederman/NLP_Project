@@ -14,6 +14,7 @@ set -euo pipefail
 source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
 python=.venv/bin/python
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests
 "$python" -m src.a12_test freeze --threads 16
 "$python" -m src.a12_test gold
 "$python" -m src.a12_test analyze --bootstrap 1000
