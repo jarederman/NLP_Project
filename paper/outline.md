@@ -1,4 +1,4 @@
-# Paper outline (v5.2, 2026-11-19)
+# Paper outline (v5.3, 2026-11-19)
 
 **Structure (since v5):** the final evaluator is the main character; the main text compares it with the evaluators a
 reader would naturally try (heuristics, language models, an off-the-shelf segmenter turned into an evaluator, system
@@ -7,7 +7,11 @@ control. Our own earlier versions are in the appendix.
 **v5.2 (fact revision after an external review):** the training objective is stated as implemented; flat text is the
 default reference-free setting and paragraph layout a controlled "structure given" condition; T/R/P status is stated per
 corpus for the final evaluator; the SaT soft-vs-hard claim rests on a controlled comparison; claims are worded to what
-the statistics support; T2/T3 in the main text are trimmed (full tables in the appendix). v1–v5.1 are in git history.
+the statistics support; T2/T3 in the main text are trimmed (full tables in the appendix).
+**v5.3:** the document-end claim is stated exactly (non-degenerate, not "scores 1"); the GUM agreement of the two
+scoring forms is given with measured numbers; the control is described as a procedural sanity check; §5.1 reports key
+paired differences with CIs instead of blanket statements. The structure is final; next step is writing. v1–v5.2 are in
+git history.
 
 Format: ACL template, **8 pages main text**; references and appendix do not count. Markers: **[M#]** math to write
 (planned, not written); **[F#]** figure; **[T#]** table. Status: **D** = GUM development (leave-one-genre-out);
@@ -150,9 +154,11 @@ target gold. Validity: how well s orders candidates by true quality F1(y, g). **
 ### 3.2 Scoring a candidate
 **[M2]** Q(y, p) = 2(Σ y_i p_i + 1) / (Σ y_i + Σ p_i + 2) — a soft boundary F1 in which the evidence p plays the
 reference and the document end (always a boundary) is counted; **Q̃ = Q / max_y' Q(y', p)** (closed form: the best y'
-cuts at the k most probable gaps, k = 0..n). Why: comparable across documents (the attainable maximum varies), and the
-correct "no split" of a one-sentence document scores 1 (without the end term it scores 0). Q̃ = 1: as good as the
-evidence allows.
+cuts at the k most probable gaps, k = 0..n). Why: comparable across documents (the attainable maximum varies); and
+counting the document-final boundary prevents a degenerate score for candidates without internal boundaries — without
+it the correct "no split" of a one-sentence document always scores 0; with it, it scores 2/(Σp + 2) relative to the
+best candidate (e.g. 0.95 when two internal gaps have p = 0.4; 1 when the evidence puts little mass inside). Q̃ = 1: as
+good as the evidence allows.
 ### 3.3 Boundary evidence
 Small inline table: source → what it captures → course topic.
 - Regular-expression rules (abbreviations, initials, numbering, quotes) — L2.
@@ -168,7 +174,8 @@ Small inline table: source → what it captures → course topic.
 (Q̃⁰(y, p_θ) − F1(y, g))² and L_BCE the boundary log loss (each term scaled by its value at the BCE solution; gradients
 pass through the top-k sort). **As implemented, the training objective uses the normalized Soft F1 without the
 document-end term (Q̃⁰); evaluation uses Q̃ with it (§3.2).** On GUM, where the fusion is trained, no document is a
-single sentence and the two scores agree to three decimals; we keep the frozen models rather than retrain. Intuition:
+single sentence; the two scores differ per item by 0.001–0.002 on average (at most 0.04) and give the same global
+Spearman to three decimals (0.903 flat, 0.948 with paragraphs). We keep the frozen models rather than retrain. Intuition:
 the boundary loss treats all gaps alike; the quality loss focuses on the gaps that decide which candidate is better.
 One sentence: in a controlled comparison on GUM this beats boundary-only training and post-hoc QE regression, which
 overfits to the four seen systems (App. B).
@@ -203,7 +210,10 @@ our scoring). In the layout condition baselines also see the paragraph breaks. S
   over genres (and documents).
 - **V3 Controlled sensitivity** **[M7]**: inject exactly one error of a type into the gold segmentation; **detection
   rate** = probability that the score drops (ties ½). **Control**: move one false boundary to another random non-boundary
-  position — true quality unchanged, so every evaluator should sit at 0.5. "Detected" = 95% CI above 0.5. Why V3: V1 can
+  position — true quality unchanged. Because the two positions are exchangeable, every evaluator sits at 0.5 in
+  expectation, so the control is a sanity check of the procedure (no directional bias, correct tie handling), not
+  evidence that the responses to injected errors are driven by quality; how large a response is compared with the
+  reaction to such neutral moves is reported as a standardized z in App. D. "Detected" = 95% CI above 0.5. Why V3: V1 can
   be high without any sensitivity (B7 never reacts to any error yet has ρ = 0.51–0.77).
 ### 4.4 Protocol and status of the numbers
 Gold isolation (scores frozen before gold is loaded); all method decisions on GUM by leave-one-genre-out, written down
@@ -230,15 +240,19 @@ ranking; protocol history in App. H.
 (Status letters refer to Ours; baseline rows are P. GUM (D) and B2/B3/B7/B9 in App. C.)
 
 Text:
-- **Against simple and classic baselines and consensus**: large, significant margins on every held-out split except the
-  9-document LinES test (EWT dev: +0.42 over the rule, +0.33 over the masked LM, +0.74 over GPT-2 perplexity, +0.14 over
-  consensus, +0.18 over Dawid–Skene). With paragraph structure given, the rule becomes strong (0.796) and ours stays ahead
-  (+0.055 [+0.033, +0.083]); over consensus +0.227 [+0.158, +0.298] (the pre-registered primary test).
+- **Key paired differences (ours − baseline, 95% CI).** EWT dev, flat: consensus +0.141 [+0.075, +0.213], Dawid–Skene
+  +0.179 [+0.113, +0.249], masked LM +0.333 [+0.256, +0.414], rule +0.419 [+0.334, +0.503], GPT-2 +0.735 [+0.640, +0.838].
+  EWT dev with paragraphs given: consensus +0.227 [+0.158, +0.298] (the pre-registered primary test), rule +0.055
+  [+0.033, +0.083] (the rule becomes strong, 0.796, once paragraph breaks are given). GENTLE: consensus +0.077 [+0.021,
+  +0.141]. LinES train+dev: consensus +0.095 [+0.007, +0.210], masked LM +0.124 [−0.061, +0.369] (n.s.); LinES test:
+  consensus +0.011 (n.s.). So ours is clearly better than simple, classic and consensus-based evaluators on EWT and
+  GENTLE, and only partly on LinES.
 - GPT-2 perplexity separates candidates within a document (pairwise 0.71) but not across documents: its likelihood
   mostly reflects what a document is about — the confound that normalization removes from Soft F1.
-- **Against the strong segmenter**: ours is comparable to SaT-12l-sm probabilities in our scoring on every held-out
-  split (EWT dev +0.035 [−0.014, +0.088]; GENTLE +0.015; LinES train+dev −0.066; all n.s.) and better than SaT's own
-  segmentation as reference on web text (EWT dev +0.060 [+0.008, +0.112]).
+- **Against the strong segmenter**: no significant difference from SaT-12l-sm probabilities in our scoring on any
+  held-out split (EWT dev +0.035 [−0.014, +0.088]; GENTLE +0.015 [−0.035, +0.064]; LinES train+dev −0.066 [−0.236, +0.095]
+  — there SaT is ahead, 0.630 vs 0.563); better than SaT's own segmentation as reference on web text (EWT dev +0.060
+  [+0.008, +0.112]), not elsewhere.
 - One sentence each (App. C): system ranking — ours and B5 rank the four segmenters almost perfectly (EWT dev genre-mean
   τ 1.0 given paragraphs), consensus does not (0.47); SaT-based evaluators slightly overrate the SaT candidate (rank
   residual +0.02 to +0.03); an unfitted average of ours and B5 is best on web text (EWT dev 0.808) but not on LinES.
@@ -260,8 +274,8 @@ all error types, severities and corpora in App. D).
 | Ours (paragraphs given) | 0.99* | 1.00* | 0.31 | 0.69* | 1.00* | 0.49 |
 
 Text:
-- Errors marked by punctuation are noticed by every evaluator that reads the text; the control sits at 0.50 for all, so
-  these are responses to quality, not to change.
+- Errors marked by punctuation are noticed by every evaluator that reads the text (the control sits at 0.50 for all, as
+  the procedure requires).
 - Two error types separate the evaluators: **missing boundaries without terminal punctuation** and **false splits after
   abbreviations/numbering**. The rule ignores the first entirely; consensus (and Dawid–Skene) is near chance on both —
   aggregating systems cannot reveal an error that most of them make. (One-sided heuristics in App. D: the length prior
