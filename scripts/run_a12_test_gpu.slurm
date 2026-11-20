@@ -14,6 +14,17 @@
 set -euo pipefail
 source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
+# Twin submission (GPU queue congestion): the same script may be queued under the general and the
+# tandon_advanced account; the first twin to start cancels the other pending one, and the lock directory
+# stops both from running if they start at the same moment.
+lock="$PROJECT_ROOT/.runtime/a12_gpu.lock"
+if ! mkdir "$lock" 2>/dev/null; then
+    echo "A12_TWIN: $lock is held by job $(cat "$lock/job" 2>/dev/null); exiting" >&2
+    exit 1
+fi
+echo "${SLURM_JOB_ID:-local}" > "$lock/job"
+trap 'rm -rf "$lock"' EXIT
+scancel --user="$(id -un)" --name="${SLURM_JOB_NAME:-seg-a12-gpu}" --state=PENDING || true
 export HF_HUB_OFFLINE=1
 python=.venv/bin/python
 OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests
