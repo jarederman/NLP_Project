@@ -211,19 +211,28 @@ def system_means(v: np.ndarray, rows: np.ndarray) -> np.ndarray:
     return m.mean(0)
 
 
+def top1_hit(score_means: np.ndarray, gold_means: np.ndarray) -> float:
+    """Tie-aware top-1 agreement (review fix 2026-11-20; before: np.argmax, i.e. ties settled by SYSTEMS order):
+    the expected hit when a tie among the top-scored systems is broken uniformly at random; any Gold-best
+    system counts as a hit."""
+    a, b = tie_exact(score_means), tie_exact(gold_means)
+    picked = np.flatnonzero(a == a.max())
+    return float(np.mean(b[picked] == b.max()))
+
+
 def ranking_stats(score: np.ndarray, f1: np.ndarray, genre: np.ndarray, idx: np.ndarray) -> np.ndarray:
     """(corpus tau, genre-mean tau, corpus top-1 match, genre top-1 rate) on the resampled documents idx."""
     rows = (idx[:, None] * len(SYSTEMS) + np.arange(len(SYSTEMS))).ravel()
     ms, mg = system_means(score, rows), system_means(f1, rows)
     t_c = tau(ms, mg)
-    top_c = float(np.argmax(tie_exact(ms)) == np.argmax(tie_exact(mg)))
+    top_c = top1_hit(ms, mg)
     taus, tops = [], []
     for g in sorted(set(genre[idx].tolist())):
         sub = idx[genre[idx] == g]
         r = (sub[:, None] * len(SYSTEMS) + np.arange(len(SYSTEMS))).ravel()
         a, b = system_means(score, r), system_means(f1, r)
         taus.append(tau(a, b))
-        tops.append(float(np.argmax(tie_exact(a)) == np.argmax(tie_exact(b))))
+        tops.append(top1_hit(a, b))
     return np.array([t_c, np.nanmean(taus) if np.any(np.isfinite(taus)) else np.nan, top_c, np.mean(tops)])
 
 
@@ -364,7 +373,9 @@ PERTURB_EVIDENCE = {"PuncEv": "PuncEv", "Probe": "Probe", "Stack": "Stack", "+ca
                     "final (flat)": "final_flat", "final (layout)": "final_layout"}
 
 
-def perturbation(c: Corpus, n_boot: int) -> dict:
+def perturbation(c: Corpus, n_boot: int, kind: str = "Q_end") -> dict:
+    """Controlled error injection. Soft scorers use ``kind``: "Q_end" (adopted scorer, amendment 11 addendum;
+    review fix 2026-11-20 — before, this test always used Q without the document-end term) or "Q"."""
     scen = "nl" if "nl" in c.scen else "flat"
     names = [n for n in PERTURB_SCORERS if n in ("H(final)", "Consensus") or PERTURB_EVIDENCE[n] in c.ev]
     if "lines" == c.name:
@@ -386,7 +397,7 @@ def perturbation(c: Corpus, n_boot: int) -> dict:
                 s = hard_f1(cand, c.ev[hfinal][sl] >= 0.5)
             else:
                 q = c.ev[PERTURB_EVIDENCE[n]][sl]
-                s = soft_f1(cand, q) / max_soft_f1(tuple(q))
+                s = soft_f1_end(cand, q) if kind == "Q_end" else soft_f1(cand, q) / max_soft_f1(tuple(q))
             s = tie_exact(s)
             for t in range(len(TYPES2)):
                 rows_t = np.flatnonzero(t_idx == t)
@@ -402,7 +413,7 @@ def perturbation(c: Corpus, n_boot: int) -> dict:
     slo = boot_mean(slope.reshape(len(c.doc), -1), plan)
     shape_d, shape_s = (len(names), len(TYPES2), len(LEVELS)), (len(names), len(TYPES2))
     pack = lambda b, shape: {k: np.asarray(b[k]).reshape(shape).tolist() for k in ("point", "lo", "hi")}
-    return {"scenario_for_consensus": scen, "scorers": names, "types": list(TYPES2), "levels": list(LEVELS),
+    return {"scenario_for_consensus": scen, "soft_scorer": kind, "scorers": names, "types": list(TYPES2), "levels": list(LEVELS),
             "documents_with_type": dict(zip(TYPES2, np.isfinite(slope[:, 0, :]).sum(0).astype(int).tolist())),
             "detect": pack(det, shape_d), "slope": pack(slo, shape_s)}
 

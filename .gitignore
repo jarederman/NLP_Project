@@ -37,3 +37,5 @@ data/UD_candidates/
 data/real_system_ewtdev/
 data/real_system_ewtdev_nl/
 data/real_system_linesx/
+results/a11/evidence/
+.tmp_review_scope.txt

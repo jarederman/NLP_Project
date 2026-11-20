@@ -13,4 +13,5 @@
 set -euo pipefail
 source /scratch/wj2301/NLP_Project/scripts/env.sh
 cd "$PROJECT_ROOT"
+OMP_NUM_THREADS=4 .venv/bin/python -m unittest discover -s tests
 /scratch/wj2301/conda_envs/jit/bin/python -m src.run_bert_comparison

@@ -27,14 +27,10 @@ nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader,nounits
 smi_pid=$!
 trap 'kill $smi_pid 2>/dev/null || true' EXIT
 
+OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/boundary_probe_tests_${SLURM_JOB_ID}.log" 2>&1 \
+    || { echo "Unit tests failed; see logs/boundary_probe_tests_${SLURM_JOB_ID}.log" >&2; exit 1; }
 "$python" -m src.layout_data
-OMP_NUM_THREADS=4 "$python" -m unittest discover -s tests > "logs/boundary_probe_tests_${SLURM_JOB_ID}.log" 2>&1 &
-tests_pid=$!
 
 "$python" -m src.boundary_probe --stop-after-extraction
-if ! wait "$tests_pid"; then
-    echo "Unit tests failed; see logs/boundary_probe_tests_${SLURM_JOB_ID}.log" >&2
-    exit 1
-fi
 "$python" -m src.boundary_probe --from-features
 "$python" -m src.boundary_probe_eval --workers 16 --gpu-log "$gpu_log"

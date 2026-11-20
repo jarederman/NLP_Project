@@ -35,7 +35,9 @@ from .quality_agreement import Items, statistics, tie_exact
 
 
 RESULTS = ROOT / "results/a8"
-PUNCEV_GUM = ROOT / "data/real_system/train_cv/evidence_cv.jsonl"
+# Review fix (2026-11-20): leave-one-genre-out Platt calibration (was the genre-stratified 5-fold file
+# data/real_system/train_cv/evidence_cv.jsonl, whose calibration had seen each document's own genre).
+PUNCEV_GUM = ROOT / "data/real_system/train_cv/boundary_probe/raw/platt_lam1e-06/logo.jsonl"
 TERMINAL, PUNCT, NOPUNCT = 0, 1, 2
 PUNCT_CATEGORIES = {"comma", "colon", "semicolon", "dash"}
 BASE_TYPES = ("merge_terminal", "merge_other", "split_terminal", "split_punct", "split_nopunct", "shift")

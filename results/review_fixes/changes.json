@@ -1,0 +1,1149 @@
+{
+  "a8/report.json": {
+    "numeric_changed": 461,
+    "max_abs_change": 0.6010787645830398,
+    "categorical": [],
+    "missing": [],
+    "largest": [
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/miss_other_over_miss_terminal/1",
+        -22.636862527228065,
+        -23.237941291811104
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.1/2",
+        0.6666666666666666,
+        0.4444444444444444
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.2/2",
+        0.6666666666666666,
+        0.4444444444444444
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.4/2",
+        0.6666666666666666,
+        0.4444444444444444
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.1/0",
+        0.2857142857142857,
+        0.14285714285714285
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.2/0",
+        0.2857142857142857,
+        0.14285714285714285
+      ],
+      [
+        "/corpora/lines/perturbation/per_scorer/DS/detect/split_terminal/0.4/0",
+        0.2857142857142857,
+        0.14285714285714285
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/miss_other_over_miss_terminal/0",
+        -4.403953926531565,
+        -4.266386010036043
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/per_system/wtp/miss_other",
+        0.4539993218964281,
+        0.32519913623711794
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/wtp/fp_punct",
+        0.42334643459020554,
+        0.5512236733382824
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/wtp/fp_terminal",
+        -0.22519412459617055,
+        -0.3488004636014004
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/pooled/fp_punct/2",
+        0.739400235076408,
+        0.8382209710916527
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/pooled/fp_punct/0",
+        0.17438148862468902,
+        0.26192500081862347
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/pooled/fp_punct/1",
+        -0.09346043884709176,
+        -0.010587394040475056
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/pooled/fp_punct/2",
+        0.5165495551543383,
+        0.595481803976154
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/per_system/sat/fp_punct",
+        -0.4533550769383704,
+        -0.5318352309541066
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/stanza/fp_terminal",
+        -1.431335909395206,
+        -1.5066492274749543
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/per_system/wtp/miss_other",
+        0.4996865817767748,
+        0.43083792025124135
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/per_system/wtp/fp_punct",
+        0.6642258385035404,
+        0.7301659555428901
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/per_system/wtp/fp_nopunct",
+        0.7487682635414047,
+        0.812525361858465
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/per_system/wtp/fp_punct",
+        0.5080916183056439,
+        0.5670318618348201
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/pooled/fp_nopunct/2",
+        0.7381354692782663,
+        0.7917382831367992
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/wtp/miss_other",
+        0.2707023248401383,
+        0.217148748532898
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/pooled/fp_nopunct/1",
+        0.5175124532250795,
+        0.5698350658150443
+      ],
+      [
+        "/corpora/lines/perturbation/cross_document/DS/between_doc",
+        0.7666666666666667,
+        0.7166666666666667
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/pooled/fp_punct/2",
+        0.3924056251290045,
+        0.4407798493162336
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/wtp/fp_nopunct",
+        0.22497080119330948,
+        0.2729394480900777
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/stanza/miss_terminal",
+        0.862309505049654,
+        0.9098889171022498
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/pooled/fp_nopunct/0",
+        0.6306989923952082,
+        0.6775129397898515
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/miss_other_over_miss_terminal/2",
+        0.6905913352688252,
+        0.6442832262179463
+      ],
+      [
+        "/corpora/lines/error_pricing/reward_ratio/DS/pooled/fp_punct/0",
+        0.48610535911297115,
+        0.5310965157449814
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/sat/miss_other",
+        0.07964744281463779,
+        0.03479414123135804
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/pooled/fp_terminal/1",
+        -0.5498249248070588,
+        -0.5922971905700954
+      ],
+      [
+        "/corpora/gentle/perturbation/per_scorer/DS/asymmetry/1",
+        0.48939792192204357,
+        0.44802130036828947
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/per_system/punkt/miss_terminal",
+        0.7283826088697177,
+        0.768377057917212
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/pooled/fp_punct/0",
+        0.26937481565563604,
+        0.30880225922894394
+      ],
+      [
+        "/corpora/gentle/perturbation/per_scorer/DS/slope/merge_other/1",
+        0.5127881864356495,
+        0.47343244369590765
+      ],
+      [
+        "/corpora/gentle/error_pricing/reward_ratio/DS/pooled/fp_nopunct/2",
+        0.41062601034334595,
+        0.44975945469202405
+      ],
+      [
+        "/corpora/gentle/gold_candidate/DS/win_vs/wtp",
+        0.8076923076923077,
+        0.7692307692307693
+      ],
+      [
+        "/corpora/gum/error_pricing/reward_ratio/DS/per_system/sat/fp_nopunct",
+        -0.016646949341294362,
+        -0.05472319330383893
+      ]
+    ]
+  },
+  "a11/report.json": {
+    "numeric_changed": 1713,
+    "max_abs_change": 0.44311952276800215,
+    "categorical": [],
+    "missing": [
+      "/corpora/ewt/perturbation/soft_scorer",
+      "/corpora/gentle/perturbation/soft_scorer",
+      "/corpora/gum/perturbation/soft_scorer",
+      "/corpora/lines/perturbation/soft_scorer"
+    ],
+    "largest": [
+      [
+        "/corpora/ewt/perturbation/slope/hi/0/0",
+        1.007557083179642,
+        0.56443756041164
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/0/0",
+        0.9605478768779829,
+        0.5218285952741983
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/0/0",
+        0.9182459135765689,
+        0.48221265392189827
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/2/0",
+        1.1029055052413486,
+        0.716657434211367
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/2/0",
+        1.1302114016820914,
+        0.7471496549138739
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/2/0",
+        1.1589118557015679,
+        0.7760976825356468
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/0/6",
+        0.7447156921639133,
+        0.3749651027503003
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/0/6",
+        0.7783420844084067,
+        0.40890198937068645
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/0/6",
+        0.8123279211471974,
+        0.4439024847940579
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/3/0",
+        1.0640242479509414,
+        0.6983904785960318
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/3/0",
+        1.0866196823152074,
+        0.7241797096787331
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/3/0",
+        1.1127717887237343,
+        0.7509217602291591
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/4/0",
+        1.1036142434662815,
+        0.7447190652654887
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/6/0",
+        1.086250604367602,
+        0.7278952486742062
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/4/0",
+        1.073186115878956,
+        0.7157165075195725
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/4/0",
+        1.0448789165064702,
+        0.6883631280036635
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/6/0",
+        1.0544496137351498,
+        0.6989742891827198
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/6/0",
+        1.023389379668078,
+        0.6708500608931408
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/2/6",
+        0.9518818440246289,
+        0.6054365545926457
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/5/0",
+        1.0144599981869402,
+        0.6698078534602908
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/5/0",
+        1.0359805030862719,
+        0.693611776362631
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/5/0",
+        1.0592720147012955,
+        0.7178422968852807
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/3/6",
+        0.9607974835978301,
+        0.6234279562661467
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/2/6",
+        0.9650164288969425,
+        0.6308474039248537
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/1/0",
+        0.9910939779423417,
+        0.6575688325370144
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/1/0",
+        0.9573261944342703,
+        0.6241870600118599
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/1/0",
+        0.922786339894919,
+        0.5917492774974704
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/6/6",
+        0.9450088444338349,
+        0.6158754760616899
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/4/6",
+        0.946946738024274,
+        0.6184705744939429
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/5/6",
+        0.950998114567218,
+        0.6253872847115313
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/3/6",
+        0.9719213046232217,
+        0.6472815140374604
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/2/6",
+        0.9787272667364352,
+        0.6557754970138142
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/6/6",
+        0.9601800975634162,
+        0.6394401962324202
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/4/6",
+        0.9619919614462042,
+        0.6426191166849207
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/point/5/6",
+        0.9631019818694105,
+        0.6483588032650492
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/6/6",
+        0.9743692421822386,
+        0.6615270194591074
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/lo/1/6",
+        0.866659792385611,
+        0.5548715760335999
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/4/6",
+        0.9763514511683296,
+        0.6652021033479708
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/3/6",
+        0.9829096651730466,
+        0.6718145516064574
+      ],
+      [
+        "/corpora/ewt/perturbation/slope/hi/6/7",
+        1.2221650348568212,
+        0.9143810741283082
+      ]
+    ]
+  },
+  "a12/report.json": {
+    "numeric_changed": 790,
+    "max_abs_change": 0.3558335180273512,
+    "categorical": [],
+    "missing": [
+      "/corpora/ewtdev/perturbation/soft_scorer",
+      "/corpora/linesx/perturbation/soft_scorer"
+    ],
+    "largest": [
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/1/0",
+        1.0782049433180287,
+        0.7223714252906775
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/1/0",
+        1.1231694756100006,
+        0.7713349601866658
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/1/0",
+        1.0984141930741962,
+        0.7468533273780625
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/3/0",
+        1.1093799104846036,
+        0.7645923438595056
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/5/0",
+        1.0923973824917945,
+        0.7488097175634503
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/3/0",
+        1.078378177729225,
+        0.7349344587356578
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/3/0",
+        1.0525619663766965,
+        0.7098940483524878
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/5/0",
+        1.0622653563104727,
+        0.7201043874172869
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/5/0",
+        1.0370113916223413,
+        0.696317699729306
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/2/0",
+        1.0456711343765868,
+        0.7064346924309406
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/1/6",
+        0.9679443085088228,
+        0.6302663012019021
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/2/0",
+        1.0617814871952242,
+        0.7286025485184913
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/2/0",
+        1.0808688394712131,
+        0.7510823982771997
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/2/6",
+        0.9745645039335229,
+        0.6491444404363417
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/1/6",
+        0.9802314832765437,
+        0.6560260290045176
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/4/0",
+        1.0084397001007048,
+        0.6850765425970792
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/5/6",
+        0.9536994826166643,
+        0.6350241060302888
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/3/6",
+        0.9552687469320509,
+        0.6373780459654582
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/4/0",
+        1.0214613425011454,
+        0.7059221452339061
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/2/6",
+        0.985869906047521,
+        0.6706056876895592
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/0/0",
+        0.8959893847466872,
+        0.5827732906174198
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/5/6",
+        0.9692379695497563,
+        0.6570941973792306
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/0/0",
+        0.9257024136781702,
+        0.6140825660900664
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/3/6",
+        0.9710557361736625,
+        0.6599313740764519
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/4/6",
+        0.9623452647143745,
+        0.6514915499230872
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/1/6",
+        0.9922882726790427,
+        0.6815768311367413
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/5/7",
+        1.1155416073372937,
+        0.8054113036489587
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/0/0",
+        0.9549835585939214,
+        0.6457912917152283
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/4/0",
+        1.0346364487611932,
+        0.7266662046806395
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/2/6",
+        0.9977962288047839,
+        0.6938460849839
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/5/7",
+        1.1626875653891546,
+        0.8588884559349954
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/3/7",
+        1.0885463160323678,
+        0.7854708373419009
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/4/6",
+        0.9743798419111235,
+        0.6716731314124723
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/5/6",
+        0.9835331592972695,
+        0.680969894360657
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/3/6",
+        0.9863102574483735,
+        0.6840091184714595
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/point/3/7",
+        1.1357578792665568,
+        0.8365235502826779
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/5/7",
+        1.2167110170858673,
+        0.9180625789362176
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/lo/0/6",
+        0.8350071014335017,
+        0.5386467588890393
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/3/7",
+        1.1904091380322068,
+        0.8958313491817611
+      ],
+      [
+        "/corpora/ewtdev/perturbation/slope/hi/4/6",
+        0.9868242249332365,
+        0.6939314150781938
+      ]
+    ]
+  },
+  "a13/report.json": {
+    "numeric_changed": 98,
+    "max_abs_change": 0.030690521115950276,
+    "categorical": [],
+    "missing": [],
+    "largest": [
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/shift/selectivity_ci/1",
+        30.788784091397083,
+        30.819474612513034
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/shift/selectivity_ci/0",
+        21.979735368964523,
+        21.949762071487516
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Masked LM (PuncEv)/genre_tau/1",
+        0.15555555555555556,
+        0.13333333333333336
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Masked LM (PuncEv)/genre_tau/2",
+        0.3777777777777778,
+        0.3555555555555557
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_punct/selectivity_ci/1",
+        14.565565268941011,
+        14.584989858865747
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_inpar/2",
+        0.5333802816901408,
+        0.5512820512820513
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_other_par/selectivity_ci/0",
+        -3.6012388845585326,
+        -3.6177809750864225
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_nopunct/selectivity_ci/1",
+        14.414999304104834,
+        14.42913783576214
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_inpar/0",
+        0.4266666666666667,
+        0.44
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/detect/Masked LM (PuncEv)/merge_other_inpar/2",
+        0.49003040540540543,
+        0.5032500438750439
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/detect/Masked LM (PuncEv)/merge_other_inpar/1",
+        0.3058369408369409,
+        0.3186508248232522
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/detect/Masked LM (PuncEv)/merge_other_inpar/0",
+        0.3953333333333333,
+        0.40599999999999997
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_terminal/z",
+        -6.4212406477849955,
+        -6.410676161909668
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_terminal/z",
+        16.318829984268426,
+        16.30861430396598
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_other_inpar/selectivity_ci/0",
+        -1.7818722205545203,
+        -1.7716790306717523
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_nopunct/selectivity_ci/0",
+        10.339745087762493,
+        10.329723178490697
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_other_par/selectivity_ci/1",
+        -2.001951820197662,
+        -2.011446484391574
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_terminal/selectivity_ci/1",
+        -5.178381645599581,
+        -5.169163106597974
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_inpar/1",
+        0.32908920094936706,
+        0.3378293918918919
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_punct/selectivity_ci/0",
+        10.427263306599242,
+        10.418795559068426
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_other_par/z",
+        -2.7078516113434454,
+        -2.7161042994903966
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/split_terminal/selectivity_ci/0",
+        -8.119049338317124,
+        -8.111280147293488
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/z/Masked LM (PuncEv)/merge_terminal/selectivity_ci/1",
+        4.374621411997954,
+        4.381484125135908
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_par/1",
+        0.25565213227783445,
+        0.24908636083743835
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_terminal/selectivity_ci/1",
+        19.52178980586226,
+        19.528129839653968
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_par/0",
+        0.30862068965517236,
+        0.3022988505747127
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/detect/Masked LM (PuncEv)/merge_other_par/2",
+        0.36754414828141263,
+        0.3614559659090909
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/detect/Masked LM (PuncEv)/merge_other_par/1",
+        0.2468750000000001,
+        0.25279329608938556
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/merge_terminal/selectivity_ci/0",
+        13.962707441438967,
+        13.956892145239266
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/detect/Masked LM (PuncEv)/merge_other_par/0",
+        0.28534482758620694,
+        0.2902298850574713
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/z/Masked LM (PuncEv)/shift/selectivity_ci/0",
+        5.0649020745311715,
+        5.060229335161748
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/z/Masked LM (PuncEv)/split_nopunct/selectivity_ci/1",
+        3.4487415354923656,
+        3.4534002599243894
+      ],
+      [
+        "/corpora/gum/scenarios/nl/ranking/Masked LM (PuncEv)/doc_tau/1",
+        0.8182978563044951,
+        0.8139538984051691
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Masked LM (PuncEv)/doc_tau/1",
+        0.19078939334815778,
+        0.18654001463723044
+      ],
+      [
+        "/corpora/gum/sensitivity/0.10/z/Masked LM (PuncEv)/shift/z",
+        25.696316116287274,
+        25.69229574011245
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Masked LM (PuncEv)/doc_tau/2",
+        0.3216061068697565,
+        0.31765055762642924
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Masked LM (PuncEv)/doc_tau/0",
+        0.25818048529380183,
+        0.25477912474958414
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/z/Masked LM (PuncEv)/shift/selectivity_ci/1",
+        7.136745597713922,
+        7.133358522095033
+      ],
+      [
+        "/corpora/gum/scenarios/nl/ranking/Masked LM (PuncEv)/doc_tau/0",
+        0.8495864136510419,
+        0.8462023188963887
+      ],
+      [
+        "/corpora/gum/sensitivity/k=1/z/Masked LM (PuncEv)/merge_other_inpar/z",
+        -0.5421119926258838,
+        -0.5389314817882843
+      ]
+    ]
+  },
+  "a13/extra.json": {
+    "numeric_changed": 0,
+    "max_abs_change": 0.0,
+    "categorical": [],
+    "missing": [
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_inpar",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_par",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_terminal",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/shift",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_nopunct",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_punct",
+      "/ewtdev/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_terminal",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/merge_other_inpar",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/merge_other_par",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/merge_terminal",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/shift",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/split_nopunct",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/split_punct",
+      "/ewtdev/nl/sensitivity_k1/Ours/_detected/split_terminal",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_inpar",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_par",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_terminal",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/shift",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_nopunct",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_punct",
+      "/ewtdev/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_terminal",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_inpar",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_par",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_terminal",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/shift",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_nopunct",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_punct",
+      "/gentle/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_terminal",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/merge_other_inpar",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/merge_other_par",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/merge_terminal",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/shift",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/split_nopunct",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/split_punct",
+      "/gentle/nl/sensitivity_k1/Ours/_detected/split_terminal",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_inpar",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_par",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_terminal",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/shift",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_nopunct",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_punct",
+      "/gentle/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_terminal",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_inpar",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_par",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_terminal",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/shift",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_nopunct",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_punct",
+      "/gum/nl/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_terminal",
+      "/gum/nl/sensitivity_k1/Ours/_detected/merge_other_inpar",
+      "/gum/nl/sensitivity_k1/Ours/_detected/merge_other_par",
+      "/gum/nl/sensitivity_k1/Ours/_detected/merge_terminal",
+      "/gum/nl/sensitivity_k1/Ours/_detected/shift",
+      "/gum/nl/sensitivity_k1/Ours/_detected/split_nopunct",
+      "/gum/nl/sensitivity_k1/Ours/_detected/split_punct",
+      "/gum/nl/sensitivity_k1/Ours/_detected/split_terminal",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_inpar",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_par",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_terminal",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/shift",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_nopunct",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_punct",
+      "/gum/nl/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_terminal",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_inpar",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_other_par",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/merge_terminal",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/shift",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_nopunct",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_punct",
+      "/linesx/flat/sensitivity_k1/Ensemble (ours + SaT-12l-sm, average)/_detected/split_terminal",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/merge_other_inpar",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/merge_other_par",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/merge_terminal",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/shift",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/split_nopunct",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/split_punct",
+      "/linesx/flat/sensitivity_k1/Ours/_detected/split_terminal",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_inpar",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_other_par",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/merge_terminal",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/shift",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_nopunct",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_punct",
+      "/linesx/flat/sensitivity_k1/SaT-12l-sm probabilities/_detected/split_terminal"
+    ],
+    "largest": []
+  },
+  "a13/classic.json": {
+    "numeric_changed": 145,
+    "max_abs_change": 0.6666666666666665,
+    "categorical": [],
+    "missing": [],
+    "largest": [
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/corpus_tau",
+        1.0,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/genre_tau/0",
+        0.6141088661469096,
+        0.23910886614690963
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/genre_tau/0",
+        0.5307755328135764,
+        0.19346531968814581
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/corpus_tau",
+        0.6666666666666669,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/ewtdev/scenarios/flat/ranking/Dawid-Skene/corpus_tau",
+        0.6666666666666669,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/corpus_tau",
+        0.6666666666666669,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/gum/scenarios/nl/ranking/Dawid-Skene/corpus_tau",
+        0.6666666666666669,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/linesx/scenarios/flat/ranking/Dawid-Skene/genre_tau/2",
+        1.0,
+        0.6666666666666669
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/genre_tau/1",
+        0.41666666666666674,
+        0.11410886614690963
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/genre_tau/2",
+        0.625,
+        0.33333333333333337
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/genre_tau/1",
+        0.2807755328135763,
+        0.02679865302147913
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/genre_tau/2",
+        0.7916666666666667,
+        0.5416666666666667
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/doc_tau/1",
+        0.29691184445754176,
+        0.11681370050185672
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/doc_tau/1",
+        0.4489846100015415,
+        0.28146732243722206
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/doc_tau/0",
+        0.585488664167594,
+        0.4200456528215725
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/doc_tau/1",
+        0.43561119471995546,
+        0.2721462445174701
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ranking/Dawid-Skene/doc_tau/2",
+        0.7158518465437361,
+        0.5577201757385704
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/doc_tau/0",
+        0.3945149847977901,
+        0.24241622447527372
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/doc_tau/0",
+        0.5180250784031388,
+        0.36653968099369355
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/doc_tau/2",
+        0.6033051952849386,
+        0.462869637452414
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/ranking/Dawid-Skene/doc_tau/2",
+        0.497387297689334,
+        0.36551043272463285
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Dawid-Skene/genre_tau/0",
+        0.7555555555555556,
+        0.6444444444444445
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/table/Dawid-Skene/within_doc_pairwise",
+        0.7540733197556008,
+        0.6634419551934827
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Dawid-Skene/genre_tau/2",
+        0.7777777777777779,
+        0.6888888888888889
+      ],
+      [
+        "/corpora/gum/scenarios/flat/ranking/Dawid-Skene/genre_tau/1",
+        0.6,
+        0.5111111111111112
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/table/Dawid-Skene/within_doc_pairwise",
+        0.7919463087248322,
+        0.7046979865771812
+      ],
+      [
+        "/corpora/ewtdev/scenarios/flat/ranking/Dawid-Skene/doc_tau/1",
+        0.35983961290538474,
+        0.2738134824168334
+      ],
+      [
+        "/corpora/ewtdev/scenarios/flat/ranking/Dawid-Skene/doc_tau/0",
+        0.44819079873287676,
+        0.3669007538181696
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/table/Dawid-Skene/global_spearman/2",
+        0.91974929854871,
+        0.83920199467863
+      ],
+      [
+        "/corpora/ewtdev/scenarios/flat/ranking/Dawid-Skene/doc_tau/2",
+        0.5290629834187333,
+        0.4490130722980995
+      ],
+      [
+        "/corpora/gentle/scenarios/flat/table/Dawid-Skene/within_doc_pairwise",
+        0.6944444444444444,
+        0.6180555555555556
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ours_minus/Ours - Dawid-Skene/1",
+        -0.031451658320258376,
+        0.036478020990906225
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/genre_tau/1",
+        0.2666666666666667,
+        0.20000000000000004
+      ],
+      [
+        "/corpora/ewt/scenarios/nl/ranking/Dawid-Skene/genre_tau/1",
+        0.20000000000000004,
+        0.13333333333333336
+      ],
+      [
+        "/corpora/ewt/scenarios/flat/ranking/Dawid-Skene/genre_tau/2",
+        0.7333333333333335,
+        0.6666666666666669
+      ],
+      [
+        "/corpora/ewt/scenarios/nl/ranking/Dawid-Skene/genre_tau/0",
+        0.4000000000000001,
+        0.3333333333333334
+      ],
+      [
+        "/corpora/ewt/scenarios/nl/ranking/Dawid-Skene/genre_tau/2",
+        0.6000000000000001,
+        0.5333333333333334
+      ],
+      [
+        "/corpora/ewtdev/scenarios/flat/ranking/Dawid-Skene/genre_tau/2",
+        0.7333333333333334,
+        0.6666666666666667
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/ours_minus/Ours - Dawid-Skene/0",
+        0.03477463346407195,
+        0.09992951281823415
+      ],
+      [
+        "/corpora/gentle/scenarios/nl/table/Dawid-Skene/global_spearman/0",
+        0.8681143343322465,
+        0.8029594549780843
+      ]
+    ]
+  },
+  "a13/softhard.json": {
+    "numeric_changed": 0,
+    "max_abs_change": 0.0,
+    "categorical": [],
+    "missing": [],
+    "largest": []
+  }
+}

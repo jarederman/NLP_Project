@@ -9,7 +9,9 @@ chunk and gap k is the whitespace right after it.
 from __future__ import annotations
 
 import json
+import os
 import re
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -107,9 +109,14 @@ def jsonl(path: Path) -> list[dict]:
         return [json.loads(line) for line in handle if line.strip()]
 
 
+def unique_temporary(path: Path) -> Path:
+    """Per-writer temporary file next to ``path`` (concurrent jobs writing the same destination must not share it)."""
+    return path.with_name(f".{path.name}.{os.getpid()}.{uuid.uuid4().hex[:8]}.part")
+
+
 def write_jsonl(rows, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".part")
+    temporary = unique_temporary(path)
     with temporary.open("w", encoding="utf-8") as out:
         for row in rows:
             out.write(json.dumps(row, ensure_ascii=False) + "\n")

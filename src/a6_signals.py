@@ -210,7 +210,16 @@ def dawid_skene(votes: np.ndarray, strata: np.ndarray, prior: np.ndarray | None,
     """votes (S, G) in {0,1}; strata (G,) in {0,1}; prior (G,) fixed per-gap P(z=1), or None to
     learn a base rate (single, or one per stratum with ``per_stratum_rate``; amendment 6a).
     Returns per-system/stratum sensitivity and specificity, the full posterior and the
-    leave-one-system-out posteriors."""
+    leave-one-system-out posteriors. Review fix (2026-11-20): the posterior for system s is a separate
+    EM fit on the other systems' votes only (before, EM used all systems and only s's term was dropped)."""
+    fit = _ds_em(votes, strata, prior, iterations, per_stratum_rate)
+    s_n = len(votes)
+    loo = np.array([_ds_em(np.delete(votes, s, axis=0), strata, prior, iterations, per_stratum_rate)["posterior"]
+                    for s in range(s_n)])
+    return {**fit, "leave_one_out": loo}
+
+
+def _ds_em(votes, strata, prior, iterations, per_stratum_rate) -> dict:
     s_n, _ = votes.shape
     q = votes.mean(0)                                  # majority-style initialisation
     learn_prior = prior is None
@@ -237,11 +246,9 @@ def dawid_skene(votes: np.ndarray, strata: np.ndarray, prior: np.ndarray | None,
         q = _sigmoid(base + log_odds.sum(0))
     rate, learned = learned_base(q)
     base = learned if learn_prior else _logit(prior)
-    log_odds = _vote_log_odds(votes, strata, sens, spec)
-    total = log_odds.sum(0)
-    loo = np.array([_sigmoid(base + total - log_odds[s]) for s in range(s_n)])
+    total = _vote_log_odds(votes, strata, sens, spec).sum(0)
     return {"sensitivity": sens, "specificity": spec, "base_rate": rate, "posterior": _sigmoid(base + total),
-            "leave_one_out": loo}
+            "base_log_odds": base}
 
 
 def _vote_log_odds(votes, strata, sens, spec):

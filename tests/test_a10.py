@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.util
 import unittest
 from types import SimpleNamespace
 
@@ -10,6 +11,9 @@ from src.a10_quality import QualityProblem, Data, _init_worker, fit_quality, fol
 from src.a6_combine import qe_features
 from src.a6_data import SYSTEMS
 from src.a6_signals import fit_logistic_np
+
+# Without torch the spawn-pool workers die on import and Pool keeps respawning them (hang), so skip.
+HAS_TORCH = importlib.util.find_spec("torch") is not None
 
 
 def toy(seed: int = 0, n_docs: int = 5):
@@ -59,6 +63,7 @@ class A10Tests(unittest.TestCase):
         self.assertAlmostEqual(h[0, 3], 0.1 / 4)                        # missed mass per word
         self.assertAlmostEqual(h[1, 4], (0.9 + 0.1 + 0.6) / 3)          # mean |y - p|
 
+    @unittest.skipUnless(HAS_TORCH, "needs torch")
     def test_torch_qnorm_matches_numpy(self):
         import torch
         data = toy(1)
@@ -75,6 +80,7 @@ class A10Tests(unittest.TestCase):
         _, _, _, q3 = sub.losses(torch.tensor(theta, dtype=torch.float64))
         np.testing.assert_allclose(q3.detach().numpy().ravel(), qnorm_items(data, p, idx, keep), atol=1e-10)
 
+    @unittest.skipUnless(HAS_TORCH, "needs torch")
     def test_bce_only_objective_stays_at_stack_solution(self):
         import torch
         data = toy(2, 8)
@@ -102,6 +108,7 @@ class A10Tests(unittest.TestCase):
         np.testing.assert_allclose(regress("R", x, f, q, x[:2], q[:2]), [0.6, 0.6], atol=1e-9)
 
 
+    @unittest.skipUnless(HAS_TORCH, "needs torch")
     def test_fold_jobs_cover_every_item_in_a_spawn_pool(self):
         import multiprocessing as mp
         data = toy(3, 9)
