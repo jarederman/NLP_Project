@@ -1,0 +1,17 @@
+{
+  "ewtdev": {
+    "file": "data/UD_candidates/UD_English-EWT/en_ewt-ud-dev.conllu",
+    "file_sha256": "39239e0a60db3ae68f4b7036189f11b6692741d10ff8240dd91f74f2760d90f8",
+    "documents": 318,
+    "gaps": 21281,
+    "gold_materialized": false,
+    "paragraph_breaks": 432
+  },
+  "linesx": {
+    "file": "data/UD_candidates/UD_English-LinES/en_lines-ud-traindev.conllu",
+    "file_sha256": "6f31368e6385cf848b586419b061112efcf7d65a5ee40aadb4946f27d17a9b3c",
+    "documents": 18,
+    "gaps": 75209,
+    "gold_materialized": false
+  }
+}

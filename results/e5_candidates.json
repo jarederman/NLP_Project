@@ -1,0 +1,127 @@
+{
+  "UD_English-CTeTex/en_ctetex-ud-test.conllu": {
+    "sentences": 276,
+    "tokens": 9273,
+    "newdoc": 196,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 1,
+    "docs_with_2plus_sentences": 50,
+    "genre_prefixes": {
+      "?": 196
+    }
+  },
+  "UD_English-ESLSpok/en_eslspok-ud-dev.conllu": {
+    "sentences": 232,
+    "tokens": 2167,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 232,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  },
+  "UD_English-ESLSpok/en_eslspok-ud-test.conllu": {
+    "sentences": 232,
+    "tokens": 2266,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 232,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  },
+  "UD_English-ESLSpok/en_eslspok-ud-train.conllu": {
+    "sentences": 1856,
+    "tokens": 16879,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 1856,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  },
+  "UD_English-EWT/en_ewt-ud-dev.conllu": {
+    "sentences": 2001,
+    "tokens": 25148,
+    "newdoc": 318,
+    "newpar": 750,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 4,
+    "docs_with_2plus_sentences": 278,
+    "genre_prefixes": {
+      "reviews": 192,
+      "answers": 61,
+      "newsgroup": 36,
+      "email": 15,
+      "weblog": 14
+    }
+  },
+  "UD_English-LinES/en_lines-ud-dev.conllu": {
+    "sentences": 1118,
+    "tokens": 21639,
+    "newdoc": 9,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 120,
+    "docs_with_2plus_sentences": 9,
+    "genre_prefixes": {
+      "?": 9
+    }
+  },
+  "UD_English-LinES/en_lines-ud-train.conllu": {
+    "sentences": 3457,
+    "tokens": 64684,
+    "newdoc": 9,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 363,
+    "docs_with_2plus_sentences": 9,
+    "genre_prefixes": {
+      "?": 9
+    }
+  },
+  "UD_English-PUD/en_pud-ud-test.conllu": {
+    "sentences": 1000,
+    "tokens": 21180,
+    "newdoc": 397,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 2,
+    "docs_with_2plus_sentences": 298,
+    "genre_prefixes": {
+      "n": 215,
+      "w": 182
+    }
+  },
+  "UD_English-ParTUT/en_partut-ud-dev.conllu": {
+    "sentences": 156,
+    "tokens": 2716,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 156,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  },
+  "UD_English-ParTUT/en_partut-ud-test.conllu": {
+    "sentences": 153,
+    "tokens": 3403,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 153,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  },
+  "UD_English-ParTUT/en_partut-ud-train.conllu": {
+    "sentences": 1781,
+    "tokens": 43359,
+    "newdoc": 0,
+    "newpar": 0,
+    "tokens_without_form": 0,
+    "sentences_per_doc_median": 1781,
+    "docs_with_2plus_sentences": 1,
+    "genre_prefixes": {}
+  }
+}
