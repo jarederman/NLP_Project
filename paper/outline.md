@@ -1,425 +1,353 @@
-# Paper outline (v4, 2026-11-19)
+# Paper outline (v5, 2026-11-19)
 
-Framing: **"we built a working reference-free evaluator, made it substantially more reliable, and analyzed what
-determines its reliability and where its limits are."** v4 adds the amendment-12 results: the scoring function now
-counts the document-final boundary (Q̃_end), and the final evaluators were tested once on two fresh corpora (EWT dev,
-LinES train+dev) with pre-registered hypotheses; all numbers below use Q̃_end unless marked. v1–v3.1 are in git history.
+**What changed from v4 (user feedback):** this is a new task with no prior evaluator, so the main text compares the
+evaluator with the evaluators a reader would naturally try (simple heuristics, a language model, an off-the-shelf
+segmenter turned into an evaluator, system consensus) — not with our own earlier versions, which move to the appendix.
+Agreement with true quality (Spearman) is reported together with a **controlled sensitivity test** that shows which
+error types each evaluator notices (with a quality-neutral control). The main text keeps only what a reader needs to see
+that the idea is clear, the experiments are complete and the conclusions are careful; everything else is one sentence
+plus an appendix. v1–v4 are in git history.
 
-Format: ACL template, **8 pages main text**; references and appendix do not count.
-Markers: **[M#]** math block to write (planned, not written); **[F#]** figure slot; **[T#]** table slot;
-**D** = GUM-train development (leave-one-genre-out, LOGO); **T** = pre-registered one-shot test (scores frozen before
-gold was loaded); **R** = re-used test set (reported only, never used for a decision); **P** = post-hoc analysis.
-All numbers are tie-exact (erratum 2026-11-19) and checked against `results/` on 2026-11-19.
+Format: ACL template, **8 pages main text**; references and appendix do not count. Markers: **[M#]** math to write
+(planned, not written); **[F#]** figure; **[T#]** table. Status: **D** = GUM development (leave-one-genre-out);
+**T** = pre-registered one-shot test; **R** = re-used test; **P** = post-hoc analysis. All numbers: tie-exact, scoring
+Q̃_end, checked against `results/a12`, `results/a13` on 2026-11-19.
 
 ---
 
 ## 0 For the team (not part of the paper)
 
-### 0.1 Central question and the five-sentence spine
-**Central question:** *Can we estimate the quality of a sentence segmentation without gold boundaries in the target
-domain, and what determines how reliable such an evaluator is?*
+### 0.1 The story in five sentences
+1. **Problem.** On a new domain there are no gold boundaries, so nobody can tell how good a segmenter's output is; there
+   is also no established way to evaluate such a reference-free evaluator.
+2. **Method.** The evaluator predicts a boundary probability at every gap (evidence fused from course methods and neural
+   taggers, trained for quality estimation) and scores a segmentation by its normalized Soft F1 against these probabilities.
+3. **How we test it.** Three views on held-out corpora: agreement with true quality on real outputs of four segmenters,
+   agreement on the ranking of the segmenters, and a controlled sensitivity test with a quality-neutral control; all
+   under gold isolation, with pre-registered one-shot tests on fresh data.
+4. **Results.** It tracks true quality closely on held-out text (Spearman 0.80–0.91; 0.851 on fresh web text, T), far
+   above heuristics, a masked LM and system consensus, and on par with the strongest supervised segmenter (SaT-12l-sm)
+   plugged into the same scoring; the two have different blind spots.
+5. **What limits it.** Evidence, not the formula: every evaluator misses some boundaries without terminal punctuation and
+   some false splits after abbreviations, extra cues (layout) move rather than remove these blind spots, consensus cannot
+   see errors that all systems share, and different annotation conventions (LinES) break the transfer; selection cannot
+   beat always using SaT.
 
-1. **Problem.** On a new domain there are no gold boundaries, so we cannot tell how good a segmenter's output is.
-2. **Method.** Our evaluator predicts a boundary probability at every whitespace gap and scores a candidate segmentation
-   by its normalized Soft F1 against these probabilities (counting the document end) — no target-domain gold is needed.
-3. **Experiments.** We score the outputs of four real segmenters (Punkt, Stanza, WtP, SaT) on English corpora under a
-   gold-isolated, pre-registered protocol: develop on GUM, test each frozen version once on held-out corpora, and test the
-   final evaluator once more on two fresh corpora; we compare against hard pseudo-references and system consensus.
-4. **Results.** The evaluator works and can be made much more reliable: heterogeneous boundary evidence raises agreement
-   with true quality from 0.67 to 0.88 on the GENTLE test (T); on fresh web text (EWT dev, T) the final evaluator reaches
-   0.851, against 0.656 for the initial probe and 0.625 for system consensus, and it ranks the four systems correctly.
-5. **What determines reliability.** The boundary evidence, not the scoring formula (apart from one fixable failure on
-   single-sentence documents): controlled perturbations show which errors the evaluator notices — all evidence misses
-   unpunctuated boundaries and false splits after abbreviations, and casing/layout move rather than remove these blind
-   spots; evidence ranks systems far better than consensus; on text with different annotation conventions (LinES, twice)
-   the improvements do not transfer, and selection cannot beat always using SaT.
-
-### 0.2 Requirement map (proposal / progress report / course → where the paper answers)
+### 0.2 Requirement map (proposal / progress report / course → paper)
 
 | Requirement | Answer | Where |
 |---|---|---|
-| Proposal question: can a reference-free evaluator select a better splitter than Always-SaT (Macro Selection Regret)? | Not shown: SaT is the best system on every corpus (near-oracle), so there is almost no headroom. The evaluator *does* identify SaT as best (system-level ranking), which is the useful part of the selection question. | §5.1, §5.3-D, App. F |
-| Required baselines: Always-SaT, Direct Internal Splitter (DIS) | Both reported. The first DIS (F1 0.831) is below every system; the case + layout evidence used as DIS later beats SaT-3l-sm on all four corpora (P/R). | §5.1, §6.1, App. G |
-| Held-out evaluation: develop on GUM, freeze, test once on EWT | Done (T); extended to GENTLE and LinES (T), and a final one-shot test of the final evaluator on fresh EWT dev and LinES train+dev (T, amendment 12). | §4.3, T2 |
-| Supporting outcomes: within-document pairwise accuracy, domain-level ranking | Reported (T2 columns; per-genre best-system identification). | §5.1, §5.3-D |
-| Course: apply course methods | Regex rules (L2), Kneser–Ney n-gram (L5), logistic regression / MaxEnt (L6–L7), BIO tagging (L7), P/R/F (L6); B-cubed and HMM length prior in the appendix. | §3.3 |
-| Course: related work with ≥ 5 published NLP papers | Yes (≈15 references). | §2 |
-| Course: honest limitations, presentation | §6.2; slides from F1, T2, F4. | — |
-| Team-size / contribution statement | **To confirm with the instructor** (we are two); contribution statement in the end matter. | end matter |
+| Proposal question: select a better splitter than Always-SaT? | Not shown: SaT is the best system on every corpus (no headroom). The evaluator does rank the systems correctly, which is the useful part of selection. | §5.1, §5.3, App. F |
+| Required baselines: Always-SaT, Direct Internal Splitter | Reported (selection); DIS = our evidence used as a segmenter (App. G). | §5.3, App. F–G |
+| Held-out evaluation (develop on GUM, freeze, test once) | EWT test, GENTLE, LinES (T); final evaluator once more on fresh EWT dev and LinES train+dev (T). | §4.4, T2 |
+| Supporting outcomes: within-document pairwise, domain-level ranking | Reported for all evaluators. | §5.1, App. C |
+| Course methods | Regex rules (L2), Kneser–Ney n-gram (L5), logistic regression / MaxEnt (L6–L7), BIO tagging (L7), P/R/F (L6). | §3.3 |
+| Related work ≥ 5 published NLP papers; limitations; presentation | §2 (≈15); §6.2; slides from F1, T2, T3. | — |
+| Team-size / contribution statement | To confirm with the instructor (two members). | end matter |
 
-### 0.3 Main text vs appendix: where every experiment goes
-Rule: an experiment is in the main text only if a results subsection cannot make its claim without it; otherwise it
-gets **at most one sentence** in the main text and its full content in the appendix.
+### 0.3 Main text vs appendix
+Rule: main text = the evaluator, the baselines, the three evaluation views, and the analysis needed to explain them.
 
-| Experiment (repo label) | Main text | Appendix |
+| Material | Main text | Appendix |
 |---|---|---|
-| Synthetic-perturbation pilot, Qwen vs BERT, BCE vs Soft F1 (preliminary) | 1 sentence in §5.1 (why we moved to real splitters) | A |
-| Real-splitter selection v1, train CV, oracle headroom (proposal question) | §5.1, one paragraph | F |
-| P2 calibration search; candidate-conditioned context; paragraph-[SEP] control | 1 sentence each at most (§3.3, §5.2) | A |
-| Normalization vs raw Soft F1 | §5.3-A, one number | B |
-| Probe (amendment 3) + EWT one-shot test (amendment 4) | §5.1 (initial evaluator), T2 | B |
-| Evidence stack + GENTLE/LinES one-shot tests (amendment 6) | §5.2, T2 | B |
-| Dawid–Skene M1/M2, HSMM length prior | none | C |
-| Multi-system QE regression M3 / S2 | one row of T2; §5.2 (post-hoc QE vs quality-oriented training) | C |
-| Robustness: unstratified bootstrap, leave-one-genre-out, 4 seeds | 1 sentence in §5.2 | D |
-| Hard pseudo-reference H(E) | §5.3-A | C |
-| Controlled perturbations (8.2) | **§5.3-B, F4** | C |
-| Error pricing on real outputs (8.3) | §5.3-B, 1–2 sentences | C |
-| Gold as a 5th candidate (8.1), document length (8.7) | 1 sentence / none | C |
-| Selection regret with final methods (8.4) | §5.1, numbers in one sentence | F |
-| Trivial baselines: DocAgree, punctuation rule, length prior (8.5) | rows of T2; DocAgree in §5.3-C | C |
-| Leave-one-evidence-out ablation, same-family check (8.6) | 1 sentence in §5.2 | C |
-| Casing trial, SaT design analysis (9.1) | casing rows of T2 | D |
-| Case × layout factorial (9.2+9.3) | layout block of T2 + 2 sentences in §5.2 | D |
-| Evidence as a segmenter vs SaT-3l / 12l / 12l-sm | §6.1, 1 sentence | G |
-| Quality-oriented fusion vs post-hoc QE (amendment 10) | **§5.2, T3** | E |
-| System-level ranking / best-system identification (new, P) | **§5.3-D (or a column of T2)** | C |
-| Tie-exact erratum | footnote in §4.2 | H |
-| Document-final boundary in the scoring (Q̃_end) | §3.2 (definition), §5.3-A (why) | B |
-| Final one-shot tests on EWT dev and LinES train+dev (amendment 12) | **T2 columns, §5.2, §5.3** | H (hypotheses table) |
+| Final evaluator (evidence, fusion, scoring Q̃_end) | §3 (method, F1, F2) | B (details, hyperparameters) |
+| Evaluators we tried on the way (PuncEv-only, Probe-only, HSMM length prior, Dawid–Skene, QE regression, LLM pilot) | §3.5, one paragraph | A, B |
+| Development ladder (Probe → stack → +casing → +layout → +quality training) and controlled training-objective comparison (amendment 10) | one sentence each (§3.4, §5.3) | B |
+| Baselines B1–B7 and the agreement table (amendment 13) | **§4.2, §5.1, T2** | C |
+| Controlled sensitivity with control (amendments 11, 13) | **§5.2, T3** | D (all levels, slopes, z, real-error pricing, other corpora) |
+| One-shot tests and hypotheses (amendments 4, 6, 12) | T2 status labels; §5.1 text | H |
+| Scoring-formula analysis (normalization, document end, soft vs hard) | §5.3, three sentences | C |
+| Evidence vs consensus decomposition; same-family bias; unfitted ensemble | §5.1 / §5.3, one sentence each | C |
+| Case × layout factorial, evidence by left context, oracle ceiling | one sentence (§5.2) | E |
+| Selection regret | §5.3, one paragraph | F |
+| SaT analysis, evidence as a segmenter | one sentence (§6) | G |
+| Protocol history (13 amendments), tie-exact erratum, reproducibility | footnote §4.4 | H |
 
 ### 0.4 Page budget (8 pages)
-§1 0.9 · §2 0.6 · §3 1.5 · §4 1.0 · §5 3.0 · §6 0.8 · §7 0.2. Floats: F1 (full width, top of p. 2–3), F3–F5 (one column
-each), T1 (small), T2 (full width), T3 (one column). F2 optional (merge into F1 as panel b if space is short).
-
-### 0.5 Status of the additional experiments
-- Amendment 11 (post-hoc, `results/a11/`): system-ranking agreement (E1), scoring formula (E2), real-error pricing (E3),
-  discordant examples (E4, `results/a11/examples.md`), perturbation test v2 (F4) — all in §5.3.
-- **Amendment 12 (one-shot tests, `results/a12/summary.md`)**, pre-registered hypotheses:
-
-| Hypothesis | Estimate [95% CI] | Outcome |
-|---|---:|---|
-| H1 (primary) EWT dev, layout: final − consensus | +0.227 [+0.158, +0.298] | confirmed |
-| H2 EWT dev: final − Probe (layout / flat) | +0.195 [+0.133, +0.256] / +0.202 [+0.146, +0.261] | confirmed |
-| H3 EWT dev: Q̃_end − Q̃ for the final evaluator | +0.348 [+0.251, +0.449] | confirmed |
-| H4 EWT dev: genre-mean system-ranking τ, final − consensus | +0.533 [+0.067, +0.600] | confirmed |
-| H5 LinES train+dev: final − Probe | −0.088 [−0.245, +0.075] | no improvement (LinES failure reproduced) |
-| H6 LinES: layout evaluator − flat evaluator (text without layout) | −0.095 [−0.299, +0.050] | expected direction, not significant |
+§1 0.9 · §2 0.6 · §3 1.4 · §4 1.2 · §5 2.8 · §6 0.8 · §7 0.2. Floats: F1 (full width), F2 (one column), F3 (one
+column), T1 (small), T2 (full width), T3 (full width or one column, small font). F4 optional.
 
 ---
 
 ## Title and abstract
+**Title:** *Cross-Domain Reference-Free Quality Estimation for Sentence Segmentation*
 
-**Title (proposal title):** *Cross-Domain Reference-Free Quality Estimation for Sentence Segmentation*
-
-**Abstract (draft, ~170 words; five sentences of §0.1, no list of model versions).** Sentence segmentation quality is
-hard to measure in a new domain because gold boundaries are missing. We develop a reference-free evaluator that predicts
-a boundary probability at every candidate position and scores a segmentation by its normalized Soft F1 against these
-probabilities. We evaluate the outputs of Punkt, Stanza, WtP and SaT under a gold-isolated, pre-registered protocol with
-one-shot tests on held-out corpora, and compare with hard pseudo-references and system consensus. Combining heterogeneous
-boundary evidence improves agreement with true quality from 0.67 to 0.88 (Spearman, held-out GENTLE test), and on fresh
-web text the final evaluator reaches 0.85, well above the initial evaluator (0.66) and system consensus (0.63), while
-ranking the segmenters correctly. Analysis shows that reliability is determined by the boundary evidence rather than the
-scoring formula, that a shared blind spot — boundaries without terminal punctuation — and different annotation
-conventions remain the main limits, and that evidence and consensus capture complementary information.
+**Abstract (draft, ~170 words).** Sentence segmentation quality is hard to measure in a new domain: gold boundaries are
+missing, and no reference-free evaluator exists. We build one: it predicts a boundary probability at every candidate
+position, combining rules, an n-gram model, a probe on a frozen BERT and neural boundary taggers, and scores a
+segmentation by its normalized Soft F1 against these probabilities. We evaluate it on the outputs of Punkt, Stanza, WtP
+and SaT on held-out English corpora, against simple and adapted baselines, with three views: agreement with true
+quality, agreement on the ranking of segmenters, and controlled error injection with a quality-neutral control. On fresh
+web text the evaluator reaches a Spearman correlation of 0.85 with true quality, far above heuristics, a masked language
+model and system consensus (0.63), and on par with the strongest supervised segmenter plugged into the same scoring.
+Error injection shows what limits every evaluator: boundaries without terminal punctuation, false splits after
+abbreviations, and annotation conventions that differ from the training corpus.
 
 ---
 
 ## 1 Introduction (0.9 page)
-*This section answers: why this project, and what problem does it solve?*
-
+*Why this project, what problem it solves, what we found.*
 ### 1.1 Motivation and problem
-- Sentence segmentation is a basic NLP step whose errors propagate (parsing, MT, retrieval). Segmenters (Punkt, Stanza,
-  WtP, SaT) differ across domains, but a new domain has no gold boundaries, so their outputs cannot be scored.
-- Goal: given raw text and one segmenter's output, score the output's quality **without** the target domain's gold.
-- Distinguish two tasks explicitly: **sentence splitting** (predict where boundaries are) vs **quality estimation**
-  (judge how good an existing segmentation is). We do the second; gold from a *source* corpus (GUM) may be used for
-  training, target gold only for validation.
-
-### 1.2 Our approach (points to F1)
-Predict a boundary probability per gap (boundary evidence), compare the candidate's boundaries with it (normalized Soft
-F1). Start from a BERT-based evaluator; guided by its errors on real systems, build an improved evaluator that combines
-several models and linguistic features, and train the combination for quality estimation.
-
+- Sentence segmentation is a basic step whose errors propagate (parsing, MT, retrieval); segmenters (Punkt, Stanza, WtP,
+  SaT) behave differently across domains, but a new domain has no gold boundaries.
+- Goal: given raw text and a segmenter's output, estimate the output's quality without the target domain's gold.
+  **Splitting** predicts boundaries; **quality estimation** judges an existing segmentation. We do the second; source-
+  corpus gold (GUM) may be used for training, target gold only to validate.
+- This is a new task: boundary F1, Pk and WindowDiff need a reference; reference-free QE exists for MT, not here. So we
+  also have to say how to evaluate such an evaluator (§4).
+### 1.2 Approach (F1)
+Boundary evidence per gap → normalized Soft F1 per candidate. The evidence model combines course methods and neural
+taggers and is trained so that its scores track true quality.
 ### 1.3 Research questions and contributions
-- **RQ1** Can boundary evidence provide reliable reference-free quality estimates for real sentence splitters across
-  domains, and how much can stronger evidence improve them? (§5.1–§5.2)
-- **RQ2** What determines the reliability of such an evaluator — the boundary evidence, the scoring formula, or the
-  information available from other systems — and where are its limits? (§5.3)
+- **RQ1** Can a reference-free score rank real segmentation outputs by their true quality on new domains, and how does it
+  compare with simple and adapted evaluators? (§5.1)
+- **RQ2** Which segmentation errors does it notice, and what limits its reliability? (§5.2–§5.3)
 
 **Contributions.**
-1. **A working reference-free evaluator, evaluated on real systems.** An end-to-end pipeline that scores the outputs of
-   four real segmenters without target gold, built from course methods (regular expressions, n-gram LM, MaxEnt, BIO
-   tagging), with a gold-isolated, pre-registered protocol: every frozen version tested once on held-out corpora, and the
-   final evaluator tested once more on two fresh corpora (§3–§4, §5.1).
-2. **A substantially more reliable evaluator.** Heterogeneous boundary evidence (+0.212 [+0.101, +0.326] Spearman over the
-   initial probe on the GENTLE test), casing, paragraph layout, a quality-oriented training objective that holds for
-   segmenters unseen in training (unlike post-hoc quality regression), and a corrected scoring function; on fresh EWT dev
-   the final evaluator beats the initial probe by +0.195 and system consensus by +0.227 (§3.2–§3.4, §5.2).
-3. **An analysis of what makes it reliable.** Normalization (and counting the document end) is all the formula needs;
-   evidence quality drives reliability; ~110k controlled perturbations show which error types the evaluator notices and
-   how casing/layout shift its blind spots; evidence and consensus measure different things (which system vs which
-   document); and we report where reliability ends (different annotation conventions, splitter selection) (§5.3, §6).
-→ *Link to §2: what exists for evaluating segmentation and for reference-free evaluation.*
+1. **A reference-free evaluator for sentence segmentation** (§3): a scoring rule that turns boundary probabilities into a
+   quality score (normalized Soft F1 counting the document end) and an evidence model built from course methods
+   (regular expressions, Kneser–Ney n-gram, MaxEnt probe, BIO tagger) fused by logistic regression trained for quality.
+2. **A way to evaluate such evaluators** (§4): seven natural baselines, three complementary views (agreement on real
+   outputs, system ranking, controlled error injection with a quality-neutral control), gold isolation, and pre-registered
+   one-shot tests including two fresh corpora.
+3. **Findings** (§5): on held-out text the evaluator reaches Spearman 0.80–0.91 (0.851 on fresh EWT dev, T), +0.23 over
+   consensus, +0.28–0.52 over heuristics and a masked LM on flat text (+0.05–0.20 with layout, where a punctuation +
+   newline rule becomes strong), and ties with the strongest supervised segmenter in the same scoring, with complementary blind spots; every evaluator misses some unpunctuated boundaries and post-abbreviation
+   splits; layout cues move this blind spot; consensus cannot see shared errors; transfer fails under different
+   annotation conventions.
+→ *§2: related work.*
 
 ## 2 Related work (0.6 page)
-*This section answers: what have others done, and how is our project different?* Two themes only.
 ### 2.1 Sentence segmentation
-Punkt (Kiss & Strunk 2006, unsupervised, abbreviation-aware); Stanza (Qi et al. 2020, neural tokenizer); WtP (Minixhofer
-et al. 2023) and SaT (Frohmann et al. 2024, newline-pretrained, punctuation-robust). Different mechanisms → good test of an evaluator.
-### 2.2 Evaluating without a reference
-Reference-based segmentation metrics (boundary F1; Pk, Beeferman et al. 1999; WindowDiff, Pevzner & Hearst 2002);
-reference-free QE for MT (Specia et al. 2018; COMET-QE, Rei et al. 2020); pseudo-references and consensus (Albrecht &
-Hwa 2007; Louis & Nenkova 2013); limits of reference-free metrics, incl. bias toward their own underlying models
-(Deutsch et al. 2022); reference-free evaluation of *topic* segmentation (SegReFree — **verify citation**).
-Difference (one sentence): we evaluate **sentence-boundary quality of existing splitter outputs**, not generated text or topic segments.
-→ *Link to §3.*
+Punkt (Kiss & Strunk 2006); Stanza (Qi et al. 2020); WtP (Minixhofer et al. 2023); SaT (Frohmann et al. 2024).
+### 2.2 Evaluating without a reference, and evaluating evaluators
+Reference-based segmentation metrics (P/R/F; Pk, Beeferman et al. 1999; WindowDiff, Pevzner & Hearst 2002); MT quality
+estimation and metric meta-evaluation by correlation with human judgments (Specia et al. 2018; Rei et al. 2020;
+WMT metrics tasks); pseudo-references and consensus (Albrecht & Hwa 2007; Louis & Nenkova 2013); behavioral /
+perturbation tests of metrics (Ribeiro et al. 2020, CheckList; Sai et al. 2021, perturbation checklists for NLG metrics —
+**verify**); reference-free metrics favor their own underlying models (Deutsch et al. 2022); reference-free evaluation of
+topic segmentation (**verify** citation). Difference: we evaluate sentence-boundary quality of existing splitter outputs.
+→ *§3.*
 
-## 3 Methodology (1.5 pages)
-*This section answers: what exactly does the evaluator do? (F1 + two formulas should suffice to understand it.)*
+## 3 Method (1.4 pages)
+*What the evaluator does; F1 + two formulas + F2 should be enough to understand it.*
 
-**[F1] Evaluator overview.** Raw document → gaps → boundary evidence sources → fusion → p_i; candidate segmentations of
-four segmenters → normalized Soft F1 → scores/ranking; a dashed box marks everything that never sees target gold.
+**[F1] Evaluator overview.** Raw document → gaps → evidence sources → fusion → p_i; candidate segmentations of four
+segmenters → normalized Soft F1 → score; dashed box = never sees target gold.
 
-### 3.1 Task formulation
-Input: raw document X and a candidate segmentation S from a splitter; output: a score Q(X, S) computed without target
-gold; validity = how well Q ranks candidates by their true boundary F1. **[M1]** gaps i = 1..n, candidate y ∈ {0,1}^n,
-gold g, true quality F1(y, g). Training may use GUM gold; target gold only for validation.
+**[F2] Worked example (one column).** A 3–4 sentence snippet (e.g. from EWT dev) with its gaps marked, a bar for p_i at
+each gap, two candidate segmentations (one missing an unpunctuated boundary, one with a false split after "Dr."), their
+Q̃ scores and their true F1. Purpose: a reader sees in five seconds how a score is computed and why it tracks quality.
 
-### 3.2 Scoring a candidate against boundary evidence
-**[M2]** Soft F1 with the document-final boundary counted, Q(y, p) = 2(Σ y_i p_i + 1) / (Σ y_i + Σ p_i + 2), and the
-**normalized** score Q̃ = Q / max_y' Q(y', p) (closed form: the best y' takes the k highest p_i, k = 0..n). Why: Q is a
-soft boundary F1 with p as a probabilistic reference; the per-document maximum varies (0.60–0.94) and would otherwise
-confound comparisons across documents; Q̃ = 1 means "as good as the evidence allows". The final boundary (always right)
-makes the correct "no split" of a one-sentence document score 1 instead of 0; for long documents it changes nothing (§5.3-A).
+### 3.1 Task
+Input: document X with gaps i = 1..n; a candidate y ∈ {0,1}^n from a segmenter. Output: a score s(X, y) computed without
+target gold. Validity: how well s orders candidates by true quality F1(y, g). **[M1]**
+### 3.2 Scoring a candidate
+**[M2]** Q(y, p) = 2(Σ y_i p_i + 1) / (Σ y_i + Σ p_i + 2) — a soft boundary F1 in which the evidence p plays the
+reference and the document end (always a boundary) is counted; **Q̃ = Q / max_y' Q(y', p)** (closed form: the best y'
+cuts at the k most probable gaps, k = 0..n). Why: comparable across documents (the attainable maximum varies), and the
+correct "no split" of a one-sentence document scores 1. Q̃ = 1: as good as the evidence allows.
+### 3.3 Boundary evidence
+Small inline table: source → what it captures → course topic.
+- Regular-expression rules (abbreviations, initials, numbering, quotes) — L2.
+- Kneser–Ney trigram: P(`</s>` | left context) — L5.
+- MaxEnt probe on frozen BERT `[MASK]` states + insertion likelihood ratio — L6/L7. **[M3]** p_i = σ(w·φ(h_i) + b).
+- Zero-shot SaT-12l probability; fine-tuned ModernBERT-large BIO-style boundary tagger (cased input) — L7.
+- Paragraph-break flag when the input has layout.
+### 3.4 Fusion trained for quality
+**[M4]** p_i = σ(θ·x_i); θ minimizes L = L_Q/L_Q⁰ + L_BCE/L_BCE⁰ + λ‖θ‖², with L_Q = mean over training candidates of
+(Q̃(y, p_θ) − F1(y, g))² and L_BCE the boundary log loss (each term scaled by its value at the BCE solution; gradients
+pass through the top-k sort). Intuition: the boundary loss treats all gaps alike; the quality loss focuses on the gaps
+that decide which candidate is better. One sentence: in a controlled comparison this beats boundary-only training and
+post-hoc QE regression, which overfits to the four seen systems (App. B).
+### 3.5 What we tried on the way (one paragraph)
+PuncEv (masked-LM punctuation probability) and the frozen probe alone (our first evaluators, tested once on EWT), an
+HSMM length prior, Dawid–Skene aggregation, post-hoc QE regression and an LLM pilot; why each was kept or dropped, one
+clause each (App. A–B).
+→ *§4: how to judge such scores.*
 
-### 3.3 Boundary evidence: from a single BERT signal to a heterogeneous stack
-- **Initial evaluator.** Frozen `bert-base-uncased`: probability of terminal punctuation at a `[MASK]` (PuncEv), then a
-  MaxEnt probe on the `[MASK]` hidden states (Probe). **[M3a]** p_i = σ(w·φ(h_i) + b).
-- **Improved evaluator (evidence stack).** Logistic regression over: Probe; zero-shot SaT-12l probability; fine-tuned
-  ModernBERT-large boundary tagger (BIO-style, punctuation dropout); regular-expression rules (abbreviations, initials,
-  numbering); Kneser–Ney trigram features (P(`</s>` | context)); and, when the input has paragraphs, a paragraph-break
-  flag. **[M3b]** p_i = σ(θ·x_i). One column "course topic" in a small inline table or the text.
-- Casing: evidence models read original casing in the final version (lower-cased in the frozen tests). Details,
-  hyperparameters and failed variants → App. B.
-### 3.4 Training the fusion for quality
-Standard: fit θ by boundary log loss **[M4a]**. Quality-oriented: add the squared error between Q̃(y, p_θ) and the true
-F1 of the training candidates, **[M4b]** L = L_Q/L_Q⁰ + L_BCE/L_BCE⁰ + λ‖θ‖² (terms scaled by their value at the BCE
-solution; gradients flow through the top-k sort). Intuition: the boundary loss treats all gaps alike; the quality loss
-focuses on the gaps that decide which candidate is better.
-### 3.5 Comparison methods
-Hard pseudo-reference H(E) (threshold p at 0.5, boundary F1); system consensus M0 (agreement with the other three
-segmenters); DocAgree (mean pairwise agreement of the four systems — document difficulty only); post-hoc QE regression
-(S2/M3, ridge on score and document features, ± consensus; supplementary, not our main algorithm); punctuation-rule
-reference and sentence-length prior; for selection, Always-SaT and the Direct Internal Splitter.
-→ *Link to §4: how we test whether the scores are trustworthy.*
+## 4 Evaluating an evaluator (1.2 pages)
+### 4.1 Data, segmenters and input conditions
+**[T1]** GUM train (D: training and development, 197 docs, 15 genres); held-out: EWT test (316), GENTLE (26, 8 genres),
+LinES test (9); fresh one-shot tests of the final evaluator: EWT dev (318, 5 genres) and LinES train+dev (18).
+Candidates: Punkt, Stanza, WtP, SaT-3l-sm → items = document × segmenter. Two input conditions: flat text, and text
+with paragraph breaks (UD `# newpar`, seen by segmenters and evaluators). Contamination: SaT-sm and Stanza saw GUM/EWT
+training data; GENTLE and LinES are unseen by all.
+### 4.2 Baselines (what a reader would try)
+B1 punctuation rule (pseudo-reference: cut after every terminal punctuation); B2 sentence-length prior; B3 masked LM
+(BERT probability of terminal punctuation, Platt-calibrated) with our scoring; B4 the strongest available segmenter,
+SaT-12l-sm, **its output as pseudo-reference**; B5 **its probabilities with our scoring** (the simplest way to turn a
+segmenter into an evaluator); B6 multi-system consensus (agreement with the majority of the other segmenters);
+B7 DocAgree (how much the four segmenters agree on the document — document difficulty only). With layout, baselines also
+see the paragraph breaks. SaT-12l-sm was trained on GUM train (its GUM numbers are inflated).
+### 4.3 Three views
+- **V1 Agreement with true quality** **[M5]**: global Spearman ρ between score and true F1 over all items; within-
+  document pairwise accuracy.
+- **V2 System ranking** **[M6]**: Kendall τ between the evaluator's and the true ranking of the four segmenters, averaged
+  over genres (and documents).
+- **V3 Controlled sensitivity** **[M7]**: inject exactly one error of a type into the gold segmentation (missing boundary
+  after terminal punctuation / without it at a paragraph break / without it inside a paragraph; false boundary after
+  terminal punctuation (abbreviation, numbering) / after a comma / without punctuation; shifted boundary); **detection
+  rate** = probability that the score drops (ties ½). **Control**: move one false boundary to another random non-boundary
+  position — true quality unchanged, so every evaluator should be at 0.5. "Detected" = 95% CI above 0.5. Why V3: V1 can
+  be high without any sensitivity (B7 never reacts to any error yet has ρ = 0.51–0.77).
+### 4.4 Protocol
+Gold isolation (scores frozen before gold is loaded); all decisions on GUM by leave-one-genre-out, written down before
+results; one-shot tests (EWT test for the probe, GENTLE/LinES for the stack, EWT dev and LinES train+dev for the final
+evaluator, with pre-registered hypotheses); genre-stratified document bootstrap (1000) for CIs. Baselines are fixed or
+fitted on GUM only. Footnote: tie-exact ranking; history in App. H.
+→ *§5.*
 
-## 4 Experimental setup (1.0 page)
-*This section answers: how do we show that the method works, and is the comparison fair?*
-### 4.1 Datasets and systems
-**[T1]** GUM train (D: training and development, 197 docs, 15 genres); EWT test (T: initial held-out evaluation, 316
-docs); GENTLE test (T: held-out evaluation of the evidence stack, 26 docs, 8 genres); LinES test (T: secondary, 9 docs; no
-paragraph layout); **EWT dev** (T: final one-shot test of the final evaluator, 318 docs, 5 genres, with layout) and
-**LinES train+dev** (T: final one-shot test, 18 docs, no layout). Candidates: Punkt, Stanza, WtP (wtp-bert-mini), SaT
-(sat-3l-sm) → items = document × system. Two input conditions: flat text, and text with paragraph layout (UD `# newpar` as
-`\n`, seen by systems and evaluator; idealized). Contamination: SaT-sm and Stanza saw GUM/EWT training data (not EWT dev
-itself); GENTLE and LinES are unseen by all systems.
-### 4.2 Evaluation metrics
-Ground truth = human-annotated UD sentence boundaries; quality of a candidate = its boundary F1. **[M5]** Primary: global
-Spearman ρ between Q̃ and true F1 over all items (higher = better ranking across documents and systems). Supporting:
-within-document pairwise accuracy; between/within-document decomposition; system-level ranking (best system per corpus
-and per genre) and selection regret vs Always-SaT; boundary F1 of the evidence itself; error-type sensitivity (**[M6]**
-perturbation slope, ideal 1). Footnote: identical candidates are tied exactly before ranking (erratum, App. H).
-### 4.3 Protocol
-LOGO development and all decisions on GUM, written down before results; freeze; score each test corpus before its gold is
-loaded (gold isolation); one test per frozen evaluator (EWT test for the Probe; GENTLE and LinES for the stack). Later
-improvements are decided on GUM only and reported on the used test sets as R; the **final evaluator** is then tested once
-on two fresh corpora with pre-registered hypotheses (amendment 12). Genre-stratified document bootstrap (1000) for CIs and
-paired differences. **[F2, optional]** timeline D → T → R → final T.
-→ *Link to §5.*
+## 5 Results (2.8 pages)
+### 5.1 RQ1: does the score track true quality?
+**[T2] Global Spearman with true F1** (flat text; † = trained on GUM; bold = best per column; status of "Ours": D on GUM,
+T on GENTLE/LinES test for the stack version and on the fresh corpora, R elsewhere; baselines P).
 
-## 5 Results and analysis (3.0 pages)
-*Three consecutive questions: does it work → can we make it more reliable → what determines its reliability.*
-
-### 5.1 Does the initial evaluator work on real splitters?
-- One sentence: a synthetic-perturbation pilot showed BERT + Soft F1 is promising (App. A), but real systems are the test.
-- Initial evaluator on real outputs: Probe beats PuncEv on the EWT one-shot test (0.411 vs 0.338, +0.074 [+0.023, +0.126],
-  T, scored with the original Q̃; 0.647 vs 0.508 with Q̃_end, P); GUM 0.568; GENTLE 0.672 and LinES 0.868 (T).
-- The original selection goal is not met: SaT is the best system on every corpus, Always-SaT is near-oracle (GUM regret
-  0.0014), and the initial evaluator's selection is worse than Always-SaT (−0.026 [−0.037, −0.021]); details App. F.
-- **Conclusion of 5.1:** reference-free evaluation of real splitters is feasible, but the initial evaluator's
-  reliability is moderate → can stronger evidence make it more reliable?
-
-### 5.2 Can stronger boundary evidence make the evaluator more reliable?
-**[T2] Global Spearman (Q̃_end) by evaluator version × corpus.** D = GUM LOGO; T = one-shot test of that version
-(T* = pre-registered test scored with the original Q̃ — values in the footnote); R = re-used test; **fresh** = the
-final one-shot tests (amendment 12). Best evaluator per column bold.
-
-*Flat text*
-
-| Evaluator | GUM (D) | GENTLE | LinES test | EWT test | **EWT dev (fresh, T)** | **LinES tr+dev (fresh, T)** |
+| Evaluator | GUM | GENTLE | LinES test | EWT test | **EWT dev (fresh)** | **LinES tr+dev (fresh)** |
 |---|---:|---:|---:|---:|---:|---:|
-| Initial: Probe | 0.568 | 0.661 T* | 0.868 T* | 0.647 T* | 0.595 | **0.651** |
-| Evidence stack | 0.817 | 0.881 T* | 0.818 T* | 0.772 R | 0.739 | 0.560 |
-| + casing | 0.877 | 0.901 R | 0.840 R | **0.814** R | **0.800** | 0.541 |
-| + quality-oriented training (final, flat) | **0.903** | **0.907** R | **0.873** R | 0.787 R | 0.797 | 0.563 |
-| *System consensus M0* | 0.733 | 0.830 T | 0.861 T | 0.657 | 0.657 | 0.468 |
-| *DocAgree (document difficulty only)* | 0.637 | 0.773 | 0.741 | 0.529 | 0.508 | 0.410 |
+| B1 Punctuation rule | 0.340 | 0.383 | 0.437 | 0.369 | 0.378 | 0.296 |
+| B2 Length prior | 0.048 | 0.037 | 0.079 | 0.161 | 0.157 | 0.267 |
+| B3 Masked LM | 0.349 | 0.542 | 0.758 | 0.508 | 0.464 | 0.440 |
+| B4 SaT-12l-sm output as reference | 0.931† | 0.880 | **0.888** | 0.754 | 0.738 | **0.630** |
+| B5 SaT-12l-sm probabilities | **0.936**† | 0.891 | 0.873 | 0.778 | 0.762 | **0.630** |
+| B6 Consensus | 0.733 | 0.830 | 0.861 | 0.657 | 0.657 | 0.468 |
+| B7 DocAgree | 0.637 | 0.773 | 0.741 | 0.529 | 0.508 | 0.410 |
+| **Ours** | 0.903 | **0.907** | 0.873 | **0.787** | **0.797** | 0.563 |
 
-Footnote: with the original Q̃ the pre-registered cells are Probe 0.672 / 0.868 / 0.411 and stack 0.883 / 0.818; Q̃_end
-changes GUM, GENTLE and LinES by ≤ 0.007 and EWT a lot (single-sentence documents, §5.3-A). Punctuation-rule and
-length-prior baselines (0.34–0.44 and ≈ 0.05) and M3 in App. C.
-
-*Text with paragraph layout (systems and evaluator see paragraph breaks)*
-
-| Evaluator | GUM (D) | GENTLE (R) | EWT test (R) | **EWT dev (fresh, T)** |
-|---|---:|---:|---:|---:|
-| Initial: Probe | 0.690 | 0.643 | 0.692 | 0.656 |
-| Evidence stack | 0.843 | 0.848 | 0.800 | 0.776 |
-| + casing | 0.897 | 0.867 | 0.845 | 0.831 |
-| + layout feature | 0.939 | 0.886 | 0.892 | 0.847 |
-| + quality-oriented training (final, layout) | **0.948** | **0.903** | **0.894** | **0.851** |
-| *System consensus M0 / DocAgree* | 0.675 / 0.475 | 0.795 / 0.747 | 0.590 / 0.482 | 0.625 / 0.509 |
+*With paragraph layout* (compact second block): EWT dev (fresh) ours **0.851** vs B1 rule + newlines 0.796, B3 0.698,
+B4 0.797, B5 0.835, B6 0.625, B7 0.509; GENTLE 0.903 vs B5 0.929; EWT test 0.894 vs B5 0.879.
 
 Text:
-- **Clean tests.** The evidence stack improves over the Probe on GENTLE, +0.212 [+0.101, +0.326] (T), robust to
-  unstratified bootstrap and to leaving out any GENTLE genre; the stack is stable across four fine-tuning seeds on GUM
-  (App. D). On fresh EWT dev every step of the ladder helps and the final evaluator beats the Probe by +0.195 [+0.133,
-  +0.256] (layout) and +0.202 [+0.146, +0.261] (flat), and consensus by +0.227 [+0.158, +0.298] / +0.141 [+0.075, +0.213]
-  (T, pre-registered H1–H2). On LinES the improvements do not transfer, on the test (−0.050, n.s.) nor on fresh LinES
-  train+dev (−0.088 [−0.245, +0.075], H5): "no improvement shown" twice — but the evaluator still beats consensus there
-  (+0.095 [+0.007, +0.210]).
-- Removing any evidence source hurts on GUM and GENTLE, SaT evidence most (App. C).
-- **Casing and layout** (decided on GUM): each gives a large gain; they are substitutes (interaction −0.059 [−0.078,
-  −0.043]) because both reveal the same boundaries (two sentences; factorial in App. D).
-- **[T3] Quality-oriented training vs post-hoc QE** (GUM LOGO, same features/folds/items; Δ vs the BCE stack; LOSO = scored segmenter unseen in training):
+- **Against simple baselines and consensus**: large, significant margins on every corpus except the 9-document LinES test
+  (EWT dev, flat: +0.42 over the rule, +0.33 over the masked LM, +0.14 over consensus; with layout +0.227 [+0.158, +0.298]
+  over consensus, the pre-registered primary test). With layout a punctuation + newline rule is already strong (0.80 on
+  EWT dev); ours is still ahead (+0.055 [+0.033, +0.083]).
+- **Against the strongest adapted segmenter** (B4/B5): ours beats using SaT-12l-sm's *output* as reference on web text
+  (EWT dev +0.060 [+0.008, +0.112] flat, +0.054 [+0.003, +0.105] with layout) and ties with its *probabilities in our
+  scoring* everywhere held out (EWT dev +0.035 [−0.014, +0.088], GENTLE +0.015, LinES train+dev −0.066, all n.s.). B5 > B4
+  shows that the scoring is itself what turns a segmenter into a good evaluator.
+- One sentence each (App. C): system ranking (V2) — ours and B5 rank the four segmenters almost perfectly (EWT dev
+  genre-mean τ 1.0 with layout), consensus does not (0.47); SaT-based evaluators slightly overrate the SaT candidate
+  (rank residual +0.02 to +0.03), ours less so with layout; an unfitted average of ours and B5 is best on web text
+  (EWT dev 0.808 / 0.862, P) but not on LinES.
+- LinES (fresh and test): no evaluator transfers well (≤ 0.63 on train+dev); our improvements over the probe do not hold
+  there (pre-registered H5) — see §5.3.
+→ *Spearman says how well the score tracks quality overall; which errors does it actually notice?*
 
-| Method | Flat | LOSO Δ | Layout | LOSO Δ |
-|---|---:|---:|---:|---:|
-| Stack (boundary loss) | 0.877 | — | 0.939 | — |
-| Post-hoc ridge QE (S2) | 0.860 | −0.032 | 0.927 | −0.023 |
-| Post-hoc F1 regressor / residual QE | 0.873 | −0.024 | 0.930 | −0.017 |
-| Quality loss only | 0.849 | −0.066 | 0.933 | −0.007 |
-| **Quality + boundary loss** | **0.903** (+0.026 [+0.014, +0.038]) | **+0.022** | **0.948** (+0.009 [+0.004, +0.015]) | **+0.010** |
+### 5.2 RQ2a: which errors does each evaluator notice?
+**[T3] Detection rate of one injected error** (EWT dev, fresh; * = 95% CI above 0.5; the control should be 0.50).
 
-  Post-hoc regressors learn the four seen systems and lose on an unseen one; quality loss alone breaks the
-  probabilities (held-out log loss ×3–5); quality + boundary loss improves and transfers (log loss unchanged). Outside
-  GUM the gain is small (GENTLE +0.007 / +0.020 R; EWT dev final vs +layout +0.004, T).
-- **Conclusion of 5.2:** stronger evidence makes the evaluator substantially more reliable, with clean held-out gains on
-  GENTLE and fresh EWT dev, but not on text with different annotation conventions (LinES) → what determines reliability?
+| Evaluator | Merge at terminal punct. | Merge, no punct., at paragraph break | Merge, no punct., inside paragraph | False split after abbrev./numbering | False split at comma etc. | False split, no punct. | Shifted boundary | Control |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| B1 Punctuation rule | 1.00* | 0.01 | 0.01 | 0.00 | 0.97* | 0.97* | 0.89* | 0.50 |
+| B2 Length prior | 1.00* | 1.00* | 1.00* | 0.00 | 0.01 | 0.00 | 0.52 | 0.50 |
+| B3 Masked LM | 0.81* | 0.54 | 0.28 | 0.23 | 0.99* | 0.97* | 0.95* | 0.51 |
+| B4 SaT-12l-sm output | 0.98* | 0.91* | 0.71* | 0.68* | 0.97* | 0.99* | 0.97* | 0.50 |
+| B5 SaT-12l-sm probabilities | 0.96* | 0.85* | 0.64* | **0.75*** | 0.99* | 1.00* | 1.00* | 0.49 |
+| B6 Consensus | 1.00* | 0.52 | 0.51 | 0.55 | 0.97* | 0.98* | 0.96* | 0.50 |
+| B7 DocAgree | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 |
+| **Ours (flat)** | 0.99* | **0.93*** | **0.84*** | 0.66* | 0.97* | 0.99* | 1.00* | 0.50 |
+| Ours (layout input) | 0.99* | 1.00* | 0.31 | 0.69* | 1.00* | 1.00* | 1.00* | 0.49 |
 
-### 5.3 What determines evaluation reliability?
-**A. The scoring formula (normalized vs raw vs hard; one failure mode).** Normalization is essential (GUM: +0.235
-[+0.181, +0.286] for PuncEv, +0.053 [+0.025, +0.084] for the final evaluator). With strong evidence, normalized Soft F1 ≈
-hard pseudo-reference (GUM final +0.008 n.s. flat, +0.015 with layout; GENTLE n.s.; EWT dev +0.005 n.s. / +0.009). **One
-failure mode of plain Soft F1**: in a document with no internal boundary (a single sentence) the correct "no split" has
-Soft F1 = 0, so the best candidate is ranked last. Found post hoc on the EWT test (33/316 such documents; final evaluator
-0.572 → 0.894 when the document end is counted, P), adopted before the final test, and **confirmed on fresh EWT dev**
-(42/318 single-sentence documents; +0.348 [+0.251, +0.449], T, H3); GUM, GENTLE and LinES have no such documents.
-**[F3] Evidence quality vs reliability:** one point per evaluator version (boundary F1 of the evidence used as a
-segmenter, or held-out log loss, vs global Spearman; GUM, GENTLE, EWT dev): reliability rises with evidence quality.
+Text (order the columns hard → easy in the final table):
+- Every evaluator that reads the text notices errors marked by punctuation (≈ 1.0); the control is at 0.50 for all, so
+  these are responses to quality, not to change.
+- Two error types separate the evaluators: **missing boundaries without terminal punctuation** and **false splits after
+  abbreviations/numbering**. Heuristics fail one side completely (the rule ignores unpunctuated boundaries; the length
+  prior always prefers shorter sentences); the masked LM and consensus are near chance on both (consensus cannot see an
+  error that most systems make).
+- Among evaluators that are not one-sided (the length prior catches every merge and no split), ours (flat) is the most
+  sensitive to unpunctuated merges (0.93 / 0.84 vs 0.85 / 0.64 for B5); B5 is better on post-abbreviation splits (0.75 vs
+  0.66) — complementary blind spots.
+- With layout, our evaluator catches every merge at a paragraph break but becomes blind inside paragraphs (0.31): it has
+  learned "unpunctuated boundary ≈ newline". The same holds on GUM and GENTLE (App. D; factorial in App. E).
+- B7 shows why V1 alone is not enough: ρ = 0.51 here, detection 0.50 everywhere.
+→ *What determines how reliable an evaluator is?*
 
-**B. Which errors does the evaluator notice? (controlled perturbations)** **[F4] Detection heatmap** (main figure of
-§5.3): inject exactly one error of a type into the gold segmentation; detection rate = share of cases where the score
-drops (ties ½); rows = error types, columns = PuncEv, Probe, Stack, +casing, +layout, final, consensus; panel (b) = slope
-of score on true F1 (does the penalty scale with the true loss; ideal 1). **[M6]** both definitions. GUM, ~197 docs ×
-9 types × 5 levels × 20 replicates. Findings (GUM; replicated on GENTLE, EWT test and fresh EWT dev, App. C):
-- Every version notices merges at terminal punctuation, splits at commas or unpunctuated positions, and shifted
-  boundaries (≈ 1.0). Two error types are hard:
-- **Missing a boundary without terminal punctuation.** At a paragraph break: Stack 0.67 → +casing 0.81 → +layout 0.98
-  → final 0.98. *Inside a paragraph*: Stack 0.52, +casing 0.61, final (flat) 0.62, but **+layout 0.05 and final (layout)
-  0.07 [0.03, 0.13]** — having learned "unpunctuated boundary ≈ newline", the layout evaluator now *rewards* removing
-  such boundaries (slope −0.59); on fresh EWT dev the same: 0.84 (flat final) vs 0.35 (layout final). This trade-off
-  explains the layout evaluator's drop on LinES (no paragraph marks; H6 −0.095, n.s.).
-- **False split after an abbreviation or numbering**: PuncEv 0.22 (rewards it), Probe 0.77, Stack 0.73, final 0.81–0.84
-  on GUM; only 0.19–0.36 on LinES, whose conventions differ.
-- Consensus is blind to unpunctuated merges at paragraph breaks (0.46): all systems make them.
-Real outputs (E3, one or two sentences): fixing a system's missed boundaries at paragraph breaks is rewarded at 0.34 of
-their true value by the Stack and at 1.01 by the final evaluator; inside paragraphs −0.18 and −0.58 (fixing them is
-penalized). Punkt's errors concentrate in these blind spots, so it is overrated (rank residual +0.067 on GUM). Two or
-three real examples from E4 (e.g. GENTLE poetry: boundaries after semicolons and dashes get p = 0.02–0.4, so Punkt,
-which never splits there, is overrated). Takeaway: a high overall Spearman can hide error types that are mis-priced.
-
-**C. Evidence vs consensus: they measure different things.** **[F5] Between/within-document decomposition.** Consensus is
-good at telling which *documents* are hard (between-document ρ 0.89–0.92, like DocAgree) but weak within a document
-(0.37–0.58) and bad at ranking the *systems*. **[T4] System-ranking agreement** (Kendall τ_b between the evaluator's and the
-true ranking of the four systems, averaged over genres / documents): GUM final 0.933 / 0.894 vs consensus 0.489 / 0.458;
-GENTLE 0.773 / 0.758 vs 0.300 / 0.383; fresh EWT dev 1.000 / 0.783 vs 0.467 / 0.541 (T, H4); LinES train+dev 1.000 / 0.840
-vs 0.667 / 0.628. Consensus rewards agreeing with the majority and cannot see errors all systems share; evidence carries
-its own model biases (B). On fresh EWT dev the final evaluator wins within documents (0.802 vs 0.539) while consensus is
-better between documents (0.919 vs 0.876) — the two are complementary.
-
-**D. Domain shift.** Reliability is highest on GUM-like text (GUM, GENTLE) and holds on fresh web text (EWT dev), but the
-GUM-derived improvements do not transfer to LinES (test and fresh train+dev): its conventions invert the blind spots
-(unpunctuated in-paragraph boundaries; splits after abbreviations), and the layout-trained evaluator must not be used on
-text without layout. The evaluator ranks SaT first on every corpus, so dynamic selection has no headroom (§5.1), but the
-system ranking is useful as such (C).
-- **Conclusion of 5.3:** reliability depends less on the formula than on whether the evidence sees the errors that
-  actually separate the candidates — and every added cue (casing, layout) moves the blind spots rather than removing them.
+### 5.3 RQ2b: what limits reliability?
+- **The formula matters only in two ways** (three sentences, App. C): normalization (+0.24 for PuncEv, +0.05 for ours on
+  GUM) and counting the document end (single-sentence documents: +0.348 [+0.251, +0.449] on fresh EWT dev, T); beyond
+  that, soft ≈ hard pseudo-reference for our evidence (+0.005 / +0.009), although soft scoring helps turn SaT into an
+  evaluator (B5 vs B4).
+- **The evidence matters most** (one sentence + App. B): along our development each evidence component added agreement
+  (GUM 0.57 → 0.90 flat); our course-method evidence reaches the level of the best supervised segmenter, but neither
+  covers both hard error types (T3).
+- **Consensus vs evidence** (one sentence + App. C): consensus is good at *which document is hard* (between-document ρ
+  0.92) and poor at *which segmentation is better* (within-document 0.54 vs ours 0.80, EWT dev).
+- **Domain shift**: annotation conventions set the ceiling — on LinES (fresh and test) all evaluators fall to ≤ 0.63 and
+  post-abbreviation splits are detected at 0.2–0.4 (App. D).
+- **Selection** (one paragraph, App. F): SaT is the best segmenter on every corpus; no evaluator selects better than
+  always using it — the useful output is the ranking (§5.1), not a switch.
+- **Conclusion of §5:** an evaluator is only as reliable as its evidence on the gaps that separate the candidates; adding
+  cues moves its blind spots rather than removing them.
 
 ## 6 Discussion and limitations (0.8 page)
 ### 6.1 Main findings
-1. Reference-free quality estimation for sentence segmentation is feasible on real systems, and its reliability varies by domain.
-2. Better boundary evidence — heterogeneous sources, casing, layout, quality-oriented training — substantially improves it;
-   systematic boundary errors remain the main bottleneck.
-3. Evidence-based scoring and system consensus carry complementary information: consensus knows which documents are
-   hard, evidence knows which system is better; each new cue moves the evidence's blind spots rather than removing them.
-One sentence: the improved evidence used directly as a segmenter matches or beats SaT (App. G) — evaluating and
-segmenting meet when the evidence is strong.
+1. Reference-free quality estimation for sentence segmentation works: with good evidence a simple scoring rule tracks
+   true quality closely on held-out text and ranks the segmenters correctly.
+2. Course-method evidence reaches the level of a state-of-the-art supervised segmenter; the two fail on different error
+   types, and combining them helps on web text.
+3. Controlled error injection is necessary next to correlation: it reveals what each evaluator cannot see (consensus:
+   shared errors; layout-trained evidence: in-paragraph boundaries).
+One sentence: the evidence used directly as a segmenter matches or beats SaT (App. G).
 ### 6.2 Limitations
-- Dynamic selection is not shown to beat Always-SaT (no headroom on our corpora).
-- The improvements do not transfer to LinES (test and fresh train+dev); the layout evaluator is unreliable on text
-  without layout and on unpunctuated boundaries inside paragraphs.
-- Soft scoring does not beat a hard pseudo-reference once evidence is strong; the document-end correction was found post
-  hoc (then confirmed on a fresh test).
-- Small test sets (GENTLE 26 docs, LinES 9 + 18), four English systems, UD conventions; idealized layout; EWT dev is a
-  fresh set of documents but the same domain as the EWT test.
-- Training-data overlap (SaT-sm, Stanza with GUM/EWT; shared GUM supervision of our evidence and SaT-sm; GENTLE follows GUM conventions).
-- The design was adaptive (twelve dated amendments, pre-registered); numbers on re-used tests are exploratory (R) —
-  the fresh one-shot tests (EWT dev, LinES train+dev) are the clean evidence for the final evaluator.
+- English only; four segmenters; UD annotation; idealized paragraph layout from UD.
+- Small held-out sets (GENTLE 26 docs, LinES 9 + 18); EWT dev is new documents but the same domain as EWT test.
+- Baseline comparisons on the fresh corpora are post hoc (our evaluator's numbers there are the one-shot test).
+- Training-data overlap: SaT-sm and Stanza with GUM/EWT; our evidence and SaT-sm both supervised on GUM; GENTLE follows
+  GUM conventions.
+- Adaptive design (13 dated amendments, pre-registered); the document-end correction was found post hoc and then
+  confirmed on a fresh test.
+- Selection not shown to beat Always-SaT; transfer to different annotation conventions (LinES) fails.
 ### 6.3 Future work
-Evidence for hard cases (unpunctuated boundaries without layout cues, abbreviations); calibration across annotation
-conventions; domains where the best splitter actually changes, so that selection can be tested.
+Evidence for unpunctuated boundaries without layout; adaptation to annotation conventions; combining evidence sources
+with different blind spots; domains where the best segmenter changes.
 
 ## 7 Conclusion (0.2 page)
-We developed and evaluated a reference-free quality estimator for sentence segmentation. Stronger, heterogeneous
-boundary evidence substantially improved quality ranking on held-out corpora — on fresh web text the final evaluator
-reaches a Spearman of 0.85 and ranks the segmenters correctly, well above system consensus — while systematic error
-patterns and different annotation conventions limit its reliability. Comparisons with hard pseudo-references and
-consensus show that effective evaluation depends less on the scoring function than on the accuracy, coverage and blind
-spots of the boundary evidence.
+We built and evaluated a reference-free quality estimator for sentence segmentation. On held-out and fresh text it
+tracks true quality far better than heuristics, a language model or system consensus and matches the strongest
+supervised segmenter used as an evaluator, while controlled error injection shows exactly which errors it misses and why
+domain conventions limit it.
 
 ## End matter
-Team contributions (who did what); code and data availability (repository, commit, `scripts/*.slurm`).
+Team contributions; code and data availability (repository, commit, `scripts/*.slurm`).
 
 ---
 
 ## Appendix plan (not counted in the 8 pages)
-- **A. Preliminary exploration.** Synthetic perturbations on GUM dev; Qwen vs BERT; BCE vs Soft F1; early calibration
-  (P2 search), candidate-conditioned context, paragraph-[SEP] control.
-- **B. Implementation details.** Probe and evidence stack; ModernBERT tagger training; rules and n-gram features; casing and
-  layout variants; normalization derivation (top-k closed form) and the gradient of the quality loss.
-- **C. Additional experiments.** Full perturbation results (7 types × 4 rates, three corpora); error pricing; gold as a
-  candidate; evidence ablations and same-family check; Dawid–Skene and HSMM variants; trivial baselines; Pk / WindowDiff /
-  B-cubed robustness; document length.
-- **D. Robustness and exploratory analyses.** Bootstrap sensitivity, leave-one-genre-out, seed variance; case × layout
-  factorial (both scenarios, four corpora); SaT design analysis.
-- **E. Quality-oriented training.** All variants (incl. ranking loss), nested cross-fitting, LOSO, boundary metrics, R-corpus tables.
-- **F. Selection.** Macro / per-document routing regret vs Always-SaT, DIS, oracle headroom.
-- **G. Evidence as a segmenter.** Comparisons with SaT-3l-sm, SaT-12l, SaT-12l-sm.
-- **H. Reproducibility and protocol.** Data releases and checksums; experimental chronology (amendments 1–12, test-reuse
-  rules, tie-exact erratum); the amendment-12 hypotheses table; code and configuration; job ids.
+- **A. Preliminary exploration.** Synthetic perturbations on GUM dev; Qwen vs BERT; BCE vs Soft F1; early calibration.
+- **B. Method details and development.** Probe, rules, n-gram, taggers, hyperparameters; the development ladder (old main
+  table: Probe → stack → +casing → +layout → +quality training, all corpora, both conditions); the controlled
+  training-objective comparison (boundary loss vs quality loss vs post-hoc QE, leave-one-segmenter-out); derivation of
+  the top-k maximum and the gradient of the quality loss.
+- **C. Agreement, full.** T2 with CIs, within-document pairwise, system-ranking τ, rank residuals (same-family bias), the
+  layout condition, the unfitted ensemble, normalized vs raw vs hard scoring, between/within decomposition.
+- **D. Sensitivity, full.** All severities (1 error … 40% of boundaries), slopes, z-scores (with their caveats), real-error
+  pricing, GUM / GENTLE / LinES train+dev.
+- **E. Blind-spot diagnosis.** Evidence by left context; oracle ceiling; case × layout factorial.
+- **F. Selection.** Regret vs Always-SaT, Direct Internal Splitter, oracle headroom.
+- **G. SaT analysis and evidence as a segmenter.**
+- **H. Protocol and reproducibility.** Amendment timeline 1–13, test-reuse rules, one-shot hypotheses (amendment 12 table),
+  tie-exact erratum, data releases, scripts, job ids.
 
-## Figures and tables (summary)
-| Slot | Content | Source | Priority |
-|---|---|---|---|
-| F1 | Evaluator overview (+ gold-isolation box) | drawn | 1 |
-| F4 | Perturbation test: detection heatmap (one injected error) + slope panel, error type × evaluator version | `results/a11/report.json` (perturbation) | 2 |
-| F3 | Evidence quality vs reliability | `results/a9/layout_report.json`, `results/a10`, `results/a12` | 3 |
-| F5 | Between vs within decomposition (final evaluator, M0, DocAgree; three corpora) | `results/a6`, `results/a9`, `results/a10` | 4 |
-| F2 | Protocol timeline D → T → R (optional / panel of F1) | drawn | 5 |
-| T1 | Data and systems | manifests | — |
-| T2 | Evaluator versions × corpora | above | — |
-| T3 | Quality-oriented training vs post-hoc QE | `results/a10` | — |
-| T4 | System-ranking agreement (genre-mean / document-mean Kendall τ): final vs Probe vs consensus, GUM / GENTLE / EWT dev / LinES train+dev | `results/a11/report.json`, `results/a12/report.json` | — |
-All plots from one script `paper/figures/make_figures.py` reading the JSON results (to write).
+## Figures and tables
+| Slot | Content | Source |
+|---|---|---|
+| F1 | Evaluator overview (+ gold-isolation box) | drawn |
+| F2 | Worked example: snippet, p_i bars, two candidates, Q̃ vs true F1 | `results/a11/examples.md` (pick), evidence caches |
+| F3 | Scatter of score vs true F1 on EWT dev: consensus / B5 / ours (what ρ = 0.63 vs 0.85 looks like) | `results/a12`, `results/a13` |
+| F4 (optional) | Detection rate vs number of injected errors for the two hard error types | `results/a13/report.json` |
+| T1 | Data and segmenters | manifests |
+| T2 | Agreement (V1), baselines vs ours | `results/a13/report.json` |
+| T3 | Sensitivity (V3) on EWT dev | `results/a13/report.json` |
+All plots from one script `paper/figures/make_figures.py` (to write).
 
-## Notation (keep consistent in all math blocks)
-X document; i gap index, n gaps; y candidate (0/1 per gap); g gold; p evidence; x_i features; θ fusion weights; Q Soft F1;
-Q̃ normalized Soft F1 (document end counted); F1(y, g) true quality; ρ Spearman; LOSO = leave one segmenter out.
+## Notation
+X document; i gap, n gaps; y candidate (0/1 per gap); g gold; p evidence; x_i features; θ fusion weights; Q Soft F1
+(document end counted); Q̃ normalized; F1(y, g) true quality; ρ Spearman; τ Kendall.
 
 ## Open decisions
-1. F2 separate or panel of F1.
-2. Team-size / contribution statement; division of writing (suggested: Weifeng §3–5 and appendix; Yanhan §1–2, §5.3-B
-   examples, F1 drawing, slides; both §6–7).
-3. Next step: `paper/main.tex` (ACL template, compiled on Overleaf), starting with §3–4 (notation and formulas).
+1. F4 in or out (page budget).
+2. Team-size / contribution statement; division of writing (suggested: Weifeng §3–5 and appendix; Yanhan §1–2, F1/F2
+   drawings, examples, slides; both §6–7).
+3. Next step: `paper/main.tex` (ACL template, Overleaf), starting with §3–4.
