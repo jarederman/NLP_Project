@@ -1,4 +1,4 @@
-# Paper outline (v5, 2026-11-19)
+# Paper outline (v5.1, 2026-11-19)
 
 **What changed from v4 (user feedback):** this is a new task with no prior evaluator, so the main text compares the
 evaluator with the evaluators a reader would naturally try (simple heuristics, a language model, an off-the-shelf
@@ -6,7 +6,7 @@ segmenter turned into an evaluator, system consensus) — not with our own earli
 Agreement with true quality (Spearman) is reported together with a **controlled sensitivity test** that shows which
 error types each evaluator notices (with a quality-neutral control). The main text keeps only what a reader needs to see
 that the idea is clear, the experiments are complete and the conclusions are careful; everything else is one sentence
-plus an appendix. v1–v4 are in git history.
+plus an appendix. v5.1 adds two classic baselines (GPT-2 perplexity, Dawid–Skene). v1–v4 are in git history.
 
 Format: ACL template, **8 pages main text**; references and appendix do not count. Markers: **[M#]** math to write
 (planned, not written); **[F#]** figure; **[T#]** table. Status: **D** = GUM development (leave-one-genre-out);
@@ -26,8 +26,8 @@ Q̃_end, checked against `results/a12`, `results/a13` on 2026-11-19.
    agreement on the ranking of the segmenters, and a controlled sensitivity test with a quality-neutral control; all
    under gold isolation, with pre-registered one-shot tests on fresh data.
 4. **Results.** It tracks true quality closely on held-out text (Spearman 0.80–0.91; 0.851 on fresh web text, T), far
-   above heuristics, a masked LM and system consensus, and on par with the strongest supervised segmenter (SaT-12l-sm)
-   plugged into the same scoring; the two have different blind spots.
+   above heuristics, a masked LM, GPT-2 perplexity, system consensus and Dawid–Skene aggregation, and on par with the
+   strongest supervised segmenter (SaT-12l-sm) plugged into the same scoring; the two have different blind spots.
 5. **What limits it.** Evidence, not the formula: every evaluator misses some boundaries without terminal punctuation and
    some false splits after abbreviations, extra cues (layout) move rather than remove these blind spots, consensus cannot
    see errors that all systems share, and different annotation conventions (LinES) break the transfer; selection cannot
@@ -53,7 +53,7 @@ Rule: main text = the evaluator, the baselines, the three evaluation views, and 
 | Final evaluator (evidence, fusion, scoring Q̃_end) | §3 (method, F1, F2) | B (details, hyperparameters) |
 | Evaluators we tried on the way (PuncEv-only, Probe-only, HSMM length prior, Dawid–Skene, QE regression, LLM pilot) | §3.5, one paragraph | A, B |
 | Development ladder (Probe → stack → +casing → +layout → +quality training) and controlled training-objective comparison (amendment 10) | one sentence each (§3.4, §5.3) | B |
-| Baselines B1–B7 and the agreement table (amendment 13) | **§4.2, §5.1, T2** | C |
+| Baselines B1–B9 and the agreement table (amendment 13) | **§4.2, §5.1, T2** | C |
 | Controlled sensitivity with control (amendments 11, 13) | **§5.2, T3** | D (all levels, slopes, z, real-error pricing, other corpora) |
 | One-shot tests and hypotheses (amendments 4, 6, 12) | T2 status labels; §5.1 text | H |
 | Scoring-formula analysis (normalization, document end, soft vs hard) | §5.3, three sentences | C |
@@ -79,7 +79,8 @@ segmentation by its normalized Soft F1 against these probabilities. We evaluate 
 and SaT on held-out English corpora, against simple and adapted baselines, with three views: agreement with true
 quality, agreement on the ranking of segmenters, and controlled error injection with a quality-neutral control. On fresh
 web text the evaluator reaches a Spearman correlation of 0.85 with true quality, far above heuristics, a masked language
-model and system consensus (0.63), and on par with the strongest supervised segmenter plugged into the same scoring.
+model, GPT-2 perplexity and system consensus (0.63), and on par with the strongest supervised segmenter plugged into the
+same scoring.
 Error injection shows what limits every evaluator: boundaries without terminal punctuation, false splits after
 abbreviations, and annotation conventions that differ from the training corpus.
 
@@ -107,7 +108,7 @@ taggers and is trained so that its scores track true quality.
 1. **A reference-free evaluator for sentence segmentation** (§3): a scoring rule that turns boundary probabilities into a
    quality score (normalized Soft F1 counting the document end) and an evidence model built from course methods
    (regular expressions, Kneser–Ney n-gram, MaxEnt probe, BIO tagger) fused by logistic regression trained for quality.
-2. **A way to evaluate such evaluators** (§4): seven natural baselines, three complementary views (agreement on real
+2. **A way to evaluate such evaluators** (§4): nine natural baselines, three complementary views (agreement on real
    outputs, system ranking, controlled error injection with a quality-neutral control), gold isolation, and pre-registered
    one-shot tests including two fresh corpora.
 3. **Findings** (§5): on held-out text the evaluator reaches Spearman 0.80–0.91 (0.851 on fresh EWT dev, T), +0.23 over
@@ -178,8 +179,10 @@ B1 punctuation rule (pseudo-reference: cut after every terminal punctuation); B2
 (BERT probability of terminal punctuation, Platt-calibrated) with our scoring; B4 the strongest available segmenter,
 SaT-12l-sm, **its output as pseudo-reference**; B5 **its probabilities with our scoring** (the simplest way to turn a
 segmenter into an evaluator); B6 multi-system consensus (agreement with the majority of the other segmenters);
-B7 DocAgree (how much the four segmenters agree on the document — document difficulty only). With layout, baselines also
-see the paragraph breaks. SaT-12l-sm was trained on GUM train (its GUM numbers are inflated).
+B7 DocAgree (how much the four segmenters agree on the document — document difficulty only); B8 **GPT-2 perplexity**, the
+classic fluency score (mean token log-likelihood of the text written one sentence per line); B9 **Dawid–Skene**, the
+classic EM aggregation of noisy annotators (one confusion matrix per segmenter, leave-one-out posterior, our scoring).
+With layout, baselines also see the paragraph breaks. SaT-12l-sm was trained on GUM train (its GUM numbers are inflated).
 ### 4.3 Three views
 - **V1 Agreement with true quality** **[M5]**: global Spearman ρ between score and true F1 over all items; within-
   document pairwise accuracy.
@@ -212,16 +215,22 @@ T on GENTLE/LinES test for the stack version and on the fresh corpora, R elsewhe
 | B5 SaT-12l-sm probabilities | **0.936**† | 0.891 | 0.873 | 0.778 | 0.762 | **0.630** |
 | B6 Consensus | 0.733 | 0.830 | 0.861 | 0.657 | 0.657 | 0.468 |
 | B7 DocAgree | 0.637 | 0.773 | 0.741 | 0.529 | 0.508 | 0.410 |
+| B8 GPT-2 perplexity | 0.104 | 0.064 | −0.322 | 0.043 | 0.062 | 0.049 |
+| B9 Dawid–Skene | 0.746 | 0.826 | 0.859 | 0.667 | 0.618 | 0.505 |
 | **Ours** | 0.903 | **0.907** | 0.873 | **0.787** | **0.797** | 0.563 |
 
 *With paragraph layout* (compact second block): EWT dev (fresh) ours **0.851** vs B1 rule + newlines 0.796, B3 0.698,
-B4 0.797, B5 0.835, B6 0.625, B7 0.509; GENTLE 0.903 vs B5 0.929; EWT test 0.894 vs B5 0.879.
+B4 0.797, B5 0.835, B6 0.625, B7 0.509, B8 0.039, B9 0.619; GENTLE 0.903 vs B5 0.929; EWT test 0.894 vs B5 0.879.
 
 Text:
 - **Against simple baselines and consensus**: large, significant margins on every corpus except the 9-document LinES test
   (EWT dev, flat: +0.42 over the rule, +0.33 over the masked LM, +0.14 over consensus; with layout +0.227 [+0.158, +0.298]
   over consensus, the pre-registered primary test). With layout a punctuation + newline rule is already strong (0.80 on
   EWT dev); ours is still ahead (+0.055 [+0.033, +0.083]).
+- **Classic baselines** (B8, B9): GPT-2 perplexity separates candidates of the same document (pairwise 0.71 on EWT dev)
+  but not across documents (ρ ≈ 0.04–0.10; −0.32 on LinES): its likelihood mostly reflects what a document is about — the
+  same confound that normalization removes from Soft F1. Dawid–Skene aggregation is no better than majority consensus
+  (EWT dev 0.618 vs 0.657; ours +0.179 [+0.113, +0.249]).
 - **Against the strongest adapted segmenter** (B4/B5): ours beats using SaT-12l-sm's *output* as reference on web text
   (EWT dev +0.060 [+0.008, +0.112] flat, +0.054 [+0.003, +0.105] with layout) and ties with its *probabilities in our
   scoring* everywhere held out (EWT dev +0.035 [−0.014, +0.088], GENTLE +0.015, LinES train+dev −0.066, all n.s.). B5 > B4
@@ -246,6 +255,8 @@ Text:
 | B5 SaT-12l-sm probabilities | 0.96* | 0.85* | 0.64* | **0.75*** | 0.99* | 1.00* | 1.00* | 0.49 |
 | B6 Consensus | 1.00* | 0.52 | 0.51 | 0.55 | 0.97* | 0.98* | 0.96* | 0.50 |
 | B7 DocAgree | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 | 0.50 |
+| B8 GPT-2 perplexity | 0.82* | 0.86* | **0.89*** | 0.53 | 0.87* | 0.95* | 0.98* | 0.49 |
+| B9 Dawid–Skene | 1.00* | 0.63* | 0.57 | 0.50 | 0.98* | 1.00* | 0.98* | 0.50 |
 | **Ours (flat)** | 0.99* | **0.93*** | **0.84*** | 0.66* | 0.97* | 0.99* | 1.00* | 0.50 |
 | Ours (layout input) | 0.99* | 1.00* | 0.31 | 0.69* | 1.00* | 1.00* | 1.00* | 0.49 |
 
@@ -254,11 +265,12 @@ Text (order the columns hard → easy in the final table):
   these are responses to quality, not to change.
 - Two error types separate the evaluators: **missing boundaries without terminal punctuation** and **false splits after
   abbreviations/numbering**. Heuristics fail one side completely (the rule ignores unpunctuated boundaries; the length
-  prior always prefers shorter sentences); the masked LM and consensus are near chance on both (consensus cannot see an
-  error that most systems make).
-- Among evaluators that are not one-sided (the length prior catches every merge and no split), ours (flat) is the most
-  sensitive to unpunctuated merges (0.93 / 0.84 vs 0.85 / 0.64 for B5); B5 is better on post-abbreviation splits (0.75 vs
-  0.66) — complementary blind spots.
+  prior always prefers shorter sentences); the masked LM, consensus and Dawid–Skene are near chance on both (aggregating
+  the systems cannot reveal an error that most of them make).
+- Among evaluators that are not one-sided (the length prior catches every merge and no split), ours (flat) and GPT-2
+  perplexity are the most sensitive to unpunctuated merges (0.93 / 0.84 and 0.86 / 0.89 vs 0.85 / 0.64 for B5); B5 is the
+  best on post-abbreviation splits (0.75 vs 0.66 ours, 0.53 GPT-2) — complementary blind spots. Dawid–Skene shares the
+  consensus blind spot (0.50 on post-abbreviation splits).
 - With layout, our evaluator catches every merge at a paragraph break but becomes blind inside paragraphs (0.31): it has
   learned "unpunctuated boundary ≈ newline". The same holds on GUM and GENTLE (App. D; factorial in App. E).
 - B7 shows why V1 alone is not enough: ρ = 0.51 here, detection 0.50 everywhere.
