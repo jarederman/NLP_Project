@@ -1,0 +1,136 @@
+{
+  "checks": {
+    "probe_logo_vs_reference": 0.0,
+    "probe_logo_vs_dev_evidence": 0.0,
+    "design_e0_column": 0.0,
+    "design_ngram_columns": 0.0
+  },
+  "note": "GUM train LOGO (D); global Spearman of Q_end vs item Gold F1; paired difference nested - current, genre-stratified document bootstrap",
+  "evaluators": {
+    "Stack (flat, lower)": {
+      "global_spearman": {
+        "current": 0.8170971731767975,
+        "nested probe": 0.8187368548004003,
+        "nested n-gram": 0.8193915618575468,
+        "nested probe + n-gram": 0.8206900684818415
+      },
+      "nested_minus_current": {
+        "nested probe": [
+          0.001639681623602729,
+          0.0007464427986869027,
+          0.0026867780391834455
+        ],
+        "nested n-gram": [
+          0.002294388680749271,
+          0.0013303033928129316,
+          0.0034064137010839765
+        ],
+        "nested probe + n-gram": [
+          0.0035928953050439194,
+          0.002324922184602404,
+          0.005061015135761792
+        ]
+      }
+    },
+    "+casing (flat)": {
+      "global_spearman": {
+        "current": 0.8765512392359951,
+        "nested probe": 0.8774007455651895,
+        "nested n-gram": 0.8777732316757271,
+        "nested probe + n-gram": 0.8785418624205713
+      },
+      "nested_minus_current": {
+        "nested probe": [
+          0.0008495063291944493,
+          -0.00014258573067057188,
+          0.0019219031120234625
+        ],
+        "nested n-gram": [
+          0.0012219924397319781,
+          0.0005951703493402849,
+          0.0020351462753165905
+        ],
+        "nested probe + n-gram": [
+          0.0019906231845762123,
+          0.0006341557344019172,
+          0.003456731245316391
+        ]
+      }
+    },
+    "+layout": {
+      "global_spearman": {
+        "current": 0.9388071264414375,
+        "nested probe": 0.9394384796891917,
+        "nested n-gram": 0.9400908800917966,
+        "nested probe + n-gram": 0.9405921191897268
+      },
+      "nested_minus_current": {
+        "nested probe": [
+          0.0006313532477542072,
+          0.00024052074226925957,
+          0.0010795968249242306
+        ],
+        "nested n-gram": [
+          0.001283753650359154,
+          0.0006679249484752541,
+          0.002045856739998103
+        ],
+        "nested probe + n-gram": [
+          0.0017849927482893602,
+          0.0008898148623271596,
+          0.002928462889033123
+        ]
+      }
+    },
+    "final (flat)": {
+      "global_spearman": {
+        "current": 0.9025571822584648,
+        "nested probe": 0.9029119235019902,
+        "nested n-gram": 0.9033145211738559,
+        "nested probe + n-gram": 0.9030863454161059
+      },
+      "nested_minus_current": {
+        "nested probe": [
+          0.0003547412435254138,
+          -0.00047252279217371016,
+          0.0012035037770511984
+        ],
+        "nested n-gram": [
+          0.0007573389153910925,
+          -3.307810384137466e-05,
+          0.001664694439536726
+        ],
+        "nested probe + n-gram": [
+          0.000529163157641066,
+          -0.0006199770866131076,
+          0.0017283570954103066
+        ]
+      }
+    },
+    "final (layout)": {
+      "global_spearman": {
+        "current": 0.9480716695035785,
+        "nested probe": 0.9481114963246898,
+        "nested n-gram": 0.9488209128495956,
+        "nested probe + n-gram": 0.9487443391915348
+      },
+      "nested_minus_current": {
+        "nested probe": [
+          3.982682111136615e-05,
+          -0.0002607373953188385,
+          0.0003774290840624611
+        ],
+        "nested n-gram": [
+          0.0007492433460171144,
+          -0.0007819240653731158,
+          0.002240526423626462
+        ],
+        "nested probe + n-gram": [
+          0.0006726696879563177,
+          -0.0007790660473580652,
+          0.002179774427971939
+        ]
+      }
+    }
+  }
+}

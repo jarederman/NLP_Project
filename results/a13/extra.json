@@ -186,7 +186,16 @@
             0.4955583756345175,
             0.4808375634517763,
             0.5112975888324871
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": true,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ours": {
           "merge_terminal": [
@@ -228,7 +237,16 @@
             0.4946700507614212,
             0.479689086294416,
             0.5088895939086292
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ensemble (ours + SaT-12l-sm, average)": {
           "merge_terminal": [
@@ -270,7 +288,16 @@
             0.49263959390862944,
             0.47842639593908654,
             0.5071129441624365
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         }
       }
     }
@@ -462,7 +489,16 @@
             0.510576923076923,
             0.47112980769230767,
             0.5519471153846154
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ours": {
           "merge_terminal": [
@@ -504,7 +540,16 @@
             0.5211538461538461,
             0.48264423076923063,
             0.5576923076923076
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ensemble (ours + SaT-12l-sm, average)": {
           "merge_terminal": [
@@ -546,7 +591,16 @@
             0.5096153846153845,
             0.4769230769230768,
             0.5423076923076923
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         }
       }
     }
@@ -961,7 +1015,16 @@
             0.4887681159420288,
             0.4751749917053748,
             0.5022337841386552
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": true,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ours": {
           "merge_terminal": [
@@ -1003,7 +1066,16 @@
             0.4940217391304347,
             0.48180022944396744,
             0.5086996630835872
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ensemble (ours + SaT-12l-sm, average)": {
           "merge_terminal": [
@@ -1045,7 +1117,16 @@
             0.49057971014492757,
             0.47762178233952396,
             0.5055775744368008
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": true,
+            "merge_other_inpar": false,
+            "split_terminal": true,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         }
       }
     }
@@ -1164,7 +1245,16 @@
             0.5097222222222223,
             0.45694444444444454,
             0.5611111111111111
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": false,
+            "merge_other_inpar": false,
+            "split_terminal": false,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ours": {
           "merge_terminal": [
@@ -1206,7 +1296,16 @@
             0.5611111111111111,
             0.5138888888888888,
             0.6083333333333333
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": false,
+            "merge_other_inpar": false,
+            "split_terminal": false,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         },
         "Ensemble (ours + SaT-12l-sm, average)": {
           "merge_terminal": [
@@ -1248,7 +1347,16 @@
             0.575,
             0.5249305555555555,
             0.6195138888888889
-          ]
+          ],
+          "_detected": {
+            "merge_terminal": true,
+            "merge_other_par": false,
+            "merge_other_inpar": false,
+            "split_terminal": false,
+            "split_punct": true,
+            "split_nopunct": true,
+            "shift": true
+          }
         }
       }
     }

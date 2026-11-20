@@ -28,8 +28,10 @@ could change those numbers or invalidate the protocol.
 
 - **Gold isolation**: scorers and splitters read only raw/surface artifacts; gold of a test corpus is written only after
   its frozen scores exist (`a6_test.gold`, `a12_test.gold`, `materialize_dev_gold`). GUM test is never read.
-- **Cross-fitting on GUM**: every GUM number is leave-one-genre-out (LOGO); a model that scores genre g must not have
-  seen genre g's labels (including nested features in `a10_quality.fold_job`).
+- **Cross-fitting on GUM**: every GUM number is leave-one-genre-out (LOGO) at the level of the model that scores genre g.
+  The base features fed to a fusion model (probe, ModernBERT tagger, n-grams) are themselves LOGO, not nested, so g's
+  labels reach g's scorer at second order (review 2026-11-20, finding 1; size measured in
+  `results/review_fixes/nested.md`). GUM numbers are development numbers; test-time models are fitted on all of GUM.
 - **Alignment of arrays**: per-gap arrays are concatenated in `surfaces()` document order (sorted by `doc_id`); items are
   document-major in `SYSTEMS` order; flat and newline versions of a corpus have identical gaps.
 - **Reproducibility**: perturbation seeds `(SEED, doc_index, type, level)`; types 0–6 and levels 0–3 of
@@ -44,6 +46,11 @@ could change those numbers or invalidate the protocol.
   it can therefore differ from a gap-only F1.
 - In the layout condition baselines also see paragraph breaks (hard references ∪ breaks; soft evidence 1 at breaks).
 - The control in the sensitivity test is exchangeable by construction (expected detection 0.5 for any scorer).
+- Two consensus definitions, by design: real-system items use M0 (amendment 6; full boundary sets, majority of the
+  other three systems), as amendments 11–13 pre-register; synthetic/perturbed candidates belong to no system and use
+  the gap-level mean over the four leave-one-out references (amendment 8). Their agreement on real items is in
+  `results/review_fixes/checks.md`.
+- The sentence-length prior is capped at 200 words; no Gold sentence in GUM / GENTLE / LinES test exceeds 122 words.
 - SaT on newline text: `split_on_input_newlines` is reproduced on offsets (`real_splitters.with_input_newlines`).
 
 ## Where to look hardest
@@ -58,3 +65,14 @@ could change those numbers or invalidate the protocol.
 Tests: `python -m unittest discover -s tests` (CPU only; numpy, scipy, torch needed for some modules).
 Out of scope: the preliminary synthetic-perturbation / Qwen study (`run_experiment`, `data`, `lm`, `candidates`,
 `evaluate`, `report`, …) and older diagnostics, whose results appear only in the paper's appendix.
+
+## Review 2026-11-20: what was fixed
+
+Findings of the first review and what changed (details: `results/calibration_search/PREREGISTRATION.md`, section
+"代码审查勘误（2026-11-20）"; old reports in `results/review_fixes/before/`, differences in `results/review_fixes/changes.md`):
+Dawid–Skene leave-one-system-out refits EM without the left-out system (`a6_signals.dawid_skene`); GUM PuncEv reads the
+LOGO calibration (`a8_supplement.PUNCEV_GUM`); the perturbation test scores with Q_end (`a11_analysis.perturbation`);
+`a12_test.freeze` refuses to run once test Gold exists; top-1 agreement is tie-aware (`a11_analysis.top1_hit`);
+`a6_data.write_jsonl` uses a per-writer temporary file; torch-dependent tests are skipped without torch; every job
+script runs the unit tests first, in the foreground. Diagnostics: `src/review_checks.py`, `src/review_nested.py`.
+

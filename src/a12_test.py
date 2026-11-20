@@ -236,6 +236,11 @@ def q_scores(rows: np.ndarray, q: np.ndarray, kind: str) -> np.ndarray:
 
 
 def freeze(args) -> None:
+    # Review fix (2026-11-20): never refit or re-freeze once any test Gold is on disk (cf. a6_combine.freeze).
+    existing = [str(TEST[c].data_root / "gold_test.jsonl") for m in SCENARIOS.values() for c in m.values()
+                if (TEST[c].data_root / "gold_test.jsonl").exists()]
+    if existing:
+        raise RuntimeError(f"Gold already materialized ({existing[0]}); refusing to (re)fit or (re)freeze scores")
     started = time.time()
     models = fit_models(args.threads)
     MODELS.parent.mkdir(parents=True, exist_ok=True)

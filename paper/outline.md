@@ -1,4 +1,4 @@
-# Paper outline (v5.3, 2026-11-19)
+# Paper outline (v5.4, 2026-11-20)
 
 **Structure (since v5):** the final evaluator is the main character; the main text compares it with the evaluators a
 reader would naturally try (heuristics, language models, an off-the-shelf segmenter turned into an evaluator, system
@@ -12,6 +12,9 @@ the statistics support; T2/T3 in the main text are trimmed (full tables in the a
 scoring forms is given with measured numbers; the control is described as a procedural sanity check; §5.1 reports key
 paired differences with CIs instead of blanket statements. The structure is final; next step is writing. v1–v5.2 are in
 git history.
+**v5.4 (code review, 2026-11-20):** numbers updated after the review fixes (Dawid–Skene leave-one-out refit, LOGO PuncEv on
+GUM, Q_end in every perturbation table, tie-aware top-1); main-text numbers changed only for B9 (EWT dev +0.179 → +0.183).
+GUM LOGO is not nested for the base features: stated in §4.4 with the measured size (App. H).
 
 Format: ACL template, **8 pages main text**; references and appendix do not count. Markers: **[M#]** math to write
 (planned, not written); **[F#]** figure; **[T#]** table. Status: **D** = GUM development (leave-one-genre-out);
@@ -220,8 +223,11 @@ Gold isolation (scores frozen before gold is loaded); all method decisions on GU
 before results; genre-stratified document bootstrap (1000) for CIs. **Final evaluator:** GUM = D; GENTLE, LinES test,
 EWT test = R; EWT dev, LinES train+dev = T (pre-registered hypotheses; primary: final evaluator > consensus in the layout
 condition). **Baselines and all comparisons with them, and the sensitivity test, are post hoc (P)** — computed after the
-one-shot test without changing the final evaluator; baselines are fixed or fitted on GUM only. Footnote: tie-exact
-ranking; protocol history in App. H.
+one-shot test without changing the final evaluator; baselines are fixed or fitted on GUM only. Footnotes: tie-exact
+ranking; GUM cross-fitting is leave-one-genre-out for the fused model but not nested for its learned base features (the
+probe, tagger and n-gram features of the training genres were fitted with the held-out genre) — refitting the probe and
+n-gram features nested changes the final evaluator's GUM ρ by +0.0005 / +0.0007 (n.s.), so the GUM numbers are not
+inflated; test-time models never see test data either way (App. H). Protocol history in App. H.
 → *§5.*
 
 ## 5 Results (2.8 pages)
@@ -241,7 +247,7 @@ ranking; protocol history in App. H.
 
 Text:
 - **Key paired differences (ours − baseline, 95% CI).** EWT dev, flat: consensus +0.141 [+0.075, +0.213], Dawid–Skene
-  +0.179 [+0.113, +0.249], masked LM +0.333 [+0.256, +0.414], rule +0.419 [+0.334, +0.503], GPT-2 +0.735 [+0.640, +0.838].
+  +0.183 [+0.117, +0.253], masked LM +0.333 [+0.256, +0.414], rule +0.419 [+0.334, +0.503], GPT-2 +0.735 [+0.640, +0.838].
   EWT dev with paragraphs given: consensus +0.227 [+0.158, +0.298] (the pre-registered primary test), rule +0.055
   [+0.033, +0.083] (the rule becomes strong, 0.796, once paragraph breaks are given). GENTLE: consensus +0.077 [+0.021,
   +0.141]. LinES train+dev: consensus +0.095 [+0.007, +0.210], masked LM +0.124 [−0.061, +0.369] (n.s.); LinES test:
@@ -324,7 +330,8 @@ One sentence: our evidence used directly as a segmenter matches or beats SaT-3l-
 - Training-data overlap: SaT-sm and Stanza with GUM/EWT; our evidence and SaT-sm both supervised on GUM; GENTLE follows
   GUM conventions.
 - Adaptive design (13 dated amendments, pre-registered); the document-end correction was found post hoc and then
-  confirmed on a new split.
+  confirmed on a new split. An independent code review found five issues affecting reported numbers (App. H); after the fixes the
+  pre-registered selections and all one-shot hypotheses (amendment 12) are unchanged.
 - Selection not shown to beat Always-SaT; transfer to different annotation conventions (LinES) fails.
 ### 6.3 Future work
 Evidence for unpunctuated boundaries without layout; adaptation to annotation conventions; combining evidence sources
@@ -356,7 +363,8 @@ Team contributions; code and data availability (repository, commit, `scripts/*.s
 - **F. Selection.** Regret vs Always-SaT, Direct Internal Splitter, oracle headroom.
 - **G. SaT analysis and evidence as a segmenter.**
 - **H. Protocol and reproducibility.** Amendment timeline 1–13, test-reuse rules, one-shot hypotheses (amendment 12),
-  tie-exact erratum, data releases, scripts, job ids.
+  tie-exact erratum, code-review erratum (findings, fixes, before/after numbers, the nested-LOGO check:
+  `results/review_fixes/`), data releases, scripts, job ids.
 
 ## Figures and tables
 | Slot | Content | Source |

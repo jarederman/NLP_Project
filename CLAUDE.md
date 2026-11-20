@@ -43,6 +43,9 @@ sbatch scripts/run_calibration_search.slurm   # P2: feature x model calibration 
 sbatch scripts/run_conditioned_context.slurm  # BERT context: raw vs raw+candidate vs candidate-only (GPU, ~11 min; raw wins)
 sbatch scripts/run_boundary_probe.slurm      # amendment 3: [MASK]-state probe / insertion likelihood ratio / paragraph-[SEP] layout control (GPU, one job, ~14 min)
 sbatch scripts/run_ewt_test.slurm            # amendment 4: one-shot EWT test of the frozen method (fetch with scripts/fetch_ewt.sh first). Run ONCE.
+sbatch scripts/run_review_fixes.slurm         # code review 2026-11-20: rerun a8/a11/a12-analyze/a13 + diagnostics (CPU, ~1 h)
+sbatch scripts/run_review_nested_gpu.slurm    # finding 1: nested-LOGO probe refits (also runs on CPU, see header); then
+sbatch scripts/run_review_nested_cpu.slurm    #   nested n-grams + refits -> results/review_fixes/nested.md
 # scripts/run_real_smoke.slurm still exists for debugging GPU-only code paths
 
 # Preliminary Qwen study (synthetic perturbation candidates)

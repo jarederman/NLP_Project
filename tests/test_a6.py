@@ -52,6 +52,19 @@ class DawidSkeneTests(unittest.TestCase):
         self.assertGreater(np.mean((fit["posterior"] > 0.5) == z), 0.95)
         self.assertEqual(fit["leave_one_out"].shape, votes.shape)
 
+    def test_leave_one_out_never_sees_the_left_out_system(self):
+        rng = np.random.default_rng(2)
+        z = rng.random(500) < 0.3
+        votes = np.array([np.where(rng.random(500) < a, z, ~z) for a in (0.9, 0.8, 0.85, 0.7)], dtype=float)
+        for prior in (None, np.full(500, 0.3)):
+            base = dawid_skene(votes, np.zeros(500, dtype=int), prior)["leave_one_out"]
+            for s in range(len(votes)):
+                flipped = votes.copy()
+                flipped[s] = rng.random(500) < 0.5          # (a full flip is uninformative-invariant in DS)
+                other = dawid_skene(flipped, np.zeros(500, dtype=int), prior)["leave_one_out"]
+                np.testing.assert_allclose(other[s], base[s])
+                self.assertGreater(np.abs(np.delete(other, s, 0) - np.delete(base, s, 0)).max(), 1e-6)
+
     def test_fixed_prior_moves_posterior(self):
         votes = np.array([[1, 0], [1, 0], [0, 0]], dtype=float)
         low = dawid_skene(votes, np.zeros(2, dtype=int), np.array([0.01, 0.01]))["posterior"]

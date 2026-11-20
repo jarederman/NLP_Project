@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 
-from src.a11_analysis import LEVELS, TYPES2, candidates2, error_masks2, ranking_stats, soft_f1_end
+from src.a11_analysis import LEVELS, TYPES2, candidates2, error_masks2, ranking_stats, soft_f1_end, top1_hit
 from src.a8_supplement import NOPUNCT, PUNCT, RATES, TERMINAL, TYPES, DocCtx, candidates
 
 
@@ -53,6 +53,11 @@ class A11Tests(unittest.TestCase):
         idx = np.arange(6)
         np.testing.assert_allclose(ranking_stats(f1, f1, genre, idx), [1.0, 1.0, 1.0, 1.0])
         self.assertAlmostEqual(ranking_stats(-f1, f1, genre, idx)[1], -1.0)
+
+    def test_top1_is_tie_aware(self):
+        self.assertEqual(top1_hit(np.array([0.5, 0.5, 0.5, 0.5]), np.array([0.1, 0.2, 0.3, 0.9])), 0.25)
+        self.assertEqual(top1_hit(np.array([0.1, 0.2, 0.9, 0.3]), np.array([0.9, 0.2, 0.9, 0.3])), 1.0)
+        self.assertEqual(top1_hit(np.array([0.9, 0.2, 0.9, 0.3]), np.array([0.1, 0.2, 0.9, 0.3])), 0.5)
 
     def test_end_boundary_variant(self):
         q = np.array([0.02, 0.01, 0.03])
