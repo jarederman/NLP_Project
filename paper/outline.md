@@ -19,8 +19,8 @@ GUM LOGO is not nested for the base features: stated in §4.4 with the measured 
 Format: ACL template, **8 pages main text**; references and appendix do not count. Markers: **[M#]** math to write
 (planned, not written); **[F#]** figure; **[T#]** table. Status: **D** = GUM development (leave-one-genre-out);
 **T** = pre-registered one-shot test; **R** = re-used test; **P** = post-hoc analysis. All numbers: tie-exact, scoring
-Q̃_end, checked against `results/a12`, `results/a13` on 2026-11-19. `paper/draft.md` is the superseded Chinese draft of
-2026-11-14 and is not the basis of the paper.
+Q̃_end, checked against `results/a12`, `results/a13` on 2026-11-19. The superseded Chinese draft `paper/draft.md`
+(2026-11-14) was deleted on 2026-11-21 (git history); the paper is now `paper/main.tex`.
 
 ---
 
@@ -386,4 +386,4 @@ quality; ρ Spearman; τ Kendall.
 1. F3 in or out (page budget).
 2. Team-size / contribution statement; division of writing (suggested: Weifeng §3–5 and appendix; Yanhan §1–2, F1/F2
    drawings, examples, slides; both §6–7).
-3. Next step: `paper/main.tex` (ACL template, Overleaf), starting with §3–4.
+3. ~~Next step: `paper/main.tex`~~ — draft v1 written 2026-11-21 (all sections + appendix A–H; F3 included).
