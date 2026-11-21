@@ -1,0 +1,60 @@
+% ====================================================================================================
+% APPENDIX H  PROTOCOL AND REPRODUCIBILITY
+%   Amendment timeline; one-shot hypotheses table; errata; reproducibility.
+% ====================================================================================================
+
+\section{Protocol and Reproducibility}
+\label{app:protocol}
+
+\paragraph{Amendments.} The pre-registration (\texttt{results/calibration\_search/PREREGISTRATION.md}) records each
+decision before the numbers it affects were computed:
+1--2 (Nov 6) primary goal changed from selection to agreement with true quality (global $\rho$ of normalized Soft F1);
+3 (Nov 7) probe and likelihood-ratio evidence;
+4 (Nov 8) probe frozen and tested once on EWT test ($+0.074$ [$+0.023$, $+0.126$] over PuncEv);
+5 (Nov 8) reference-free baselines;
+6 (Nov 12) fused evidence, tested once on GENTLE (stack $-$ probe $+0.212$ [$+0.101$, $+0.326$]) and LinES test;
+7--8 (Nov 14--17) post-test robustness and validity analyses;
+9 (Nov 18) casing and layout allowed as evidence (test re-use rules: pre-specified variants, decisions on GUM only,
+re-used numbers labeled R);
+10 (Nov 18) quality-oriented fusion;
+11 (Nov 19) analyses for the paper, which found the single-sentence degeneracy;
+12 (Nov 19) document-end scoring adopted and the final evaluator tested once on EWT dev and LinES train+dev;
+13 (Nov 19) natural baselines and the controlled sensitivity test (post hoc).
+
+\begin{table}[h]
+  \centering
+  \small
+  \fitbox{\begin{tabular}{llcc}
+    \toprule
+    & Pre-registered hypothesis (amendment 12) & Estimate [95\% CI] & Holds \\
+    \midrule
+    H1 & EWT dev, paragraphs: final $-$ consensus $> 0$ (primary) & $+0.227$ [$+0.158$, $+0.298$] & yes \\
+    H2a & EWT dev, paragraphs: final $-$ probe $> 0$ & $+0.195$ [$+0.133$, $+0.256$] & yes \\
+    H2b & EWT dev, flat: final $-$ probe $> 0$ & $+0.202$ [$+0.146$, $+0.261$] & yes \\
+    H3 & EWT dev, paragraphs: $\Qt$ $-$ $\Qt$ without document end $> 0$ & $+0.348$ [$+0.251$, $+0.449$] & yes \\
+    H4 & EWT dev, paragraphs: genre-mean $\tau$, final $-$ consensus $> 0$ & $+0.533$ [$+0.067$, $+0.600$] & yes \\
+    H5 & LinES train+dev: final $-$ probe $> 0$ & $-0.088$ [$-0.245$, $+0.075$] & no \\
+    H6 & LinES train+dev: layout evaluator $-$ flat evaluator $< 0$ & $-0.095$ [$-0.299$, $+0.050$] & no (n.s.) \\
+    \bottomrule
+  \end{tabular}}
+  \caption{One-shot hypotheses for the final evaluator (status T).}
+  \label{tab:hypotheses}
+\end{table}
+
+\paragraph{Errata.} (1)~\emph{Ties} (Nov 19): mathematically equal scores of identical segmentations differed by about
+$10^{-16}$ through floating-point summation order and were ranked arbitrarily, which lowered global $\rho$ (most on EWT:
+$+0.018$ to $+0.034$ after the fix); all statistics now round scores to $10^{-10}$ before ranking, and all
+pre-registered decisions were unchanged. (2)~\emph{Code review} (Nov 20): an independent review found five issues that
+affected reported numbers---Dawid--Skene leave-one-out did not refit EM without the left-out system; PuncEv on GUM used
+5-fold instead of leave-one-genre-out calibration; perturbation tables of amendments 11--12 used $Q$ instead of $\Qt$;
+top-1 ties were broken by position; and the GUM cross-fitting is not nested for the base features. After the fixes,
+B9 on EWT dev moved from $+0.179$ to $+0.183$ (ours $-$ B9); the pre-registered selections and all amendment-12
+hypotheses are unchanged. Nested refits of the probe and $n$-gram features change the GUM $\rho$ of the final evaluator by
+$+0.0005$ [$-0.0006$, $+0.0017$] (flat) and $+0.0007$ [$-0.0008$, $+0.0022$] (layout), and of the intermediate stacks by
+$+0.002$ to $+0.004$---never downwards (\texttt{results/review\_fixes/}).
+
+\paragraph{Reproducibility.} Data: UD GUM pinned to commit \texttt{1fe6355}; EWT, GENTLE and LinES from UD r2.18, each
+with a recorded SHA-256. Every stage is a Slurm script (\texttt{scripts/*.slurm}) whose first step runs the unit tests;
+the final evaluator's one-shot test is \texttt{scripts/run\_a12\_test\_*.slurm} (scores frozen before gold
+materialization, enforced in code), baselines \texttt{scripts/run\_a13*.slurm}, figures and appendix tables
+\texttt{paper/figures/make\_figures.py} and \texttt{make\_tables.py}.

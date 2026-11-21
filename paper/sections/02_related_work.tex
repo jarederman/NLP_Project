@@ -1,0 +1,31 @@
+% ====================================================================================================
+% SECTION 2  RELATED WORK  (budget ~0.6 page)
+%   Sentence segmentation; evaluation without references; testing evaluators.
+% ====================================================================================================
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Sentence segmentation.} Early work cast sentence boundary detection as classifying punctuation marks, with
+maximum-entropy \citep{reynar-ratnaparkhi-1997-maximum} or neural \citep{palmer-hearst-1997-adaptive} classifiers;
+Punkt \citep{kiss-strunk-2006-unsupervised} learns abbreviations without supervision, and abbreviations remain a main
+source of errors \citep{gillick-2009-sentence}. Stanza \citep{qi-etal-2020-stanza} segments jointly with tokenization,
+trained on Universal Dependencies (UD) treebanks \citep{demarneffe-etal-2021-universal}. WtP and SaT
+\citep{minixhofer-etal-2023-wheres,frohmann-etal-2024-segment} predict newline positions with transformers and are robust
+to missing punctuation. \citet{read-etal-2012-sentence} show that accuracy varies strongly across genres and annotation
+conventions---the variation we want to measure without gold.
+
+\paragraph{Evaluation without references.} Segmentations are normally compared with a reference by boundary
+P/R/F1, $P_k$ \citep{beeferman-etal-1999-statistical}, WindowDiff \citep{pevzner-hearst-2002-critique} or boundary edit
+distance \citep{fournier-2013-evaluating}. Reference-free quality estimation is established for machine translation
+\citep{specia-etal-2018-quality,rei-etal-2020-comet}, where a metric is judged by its correlation with human judgments
+\citep{freitag-etal-2021-results}. Without references, outputs of other systems can act as pseudo-references
+\citep{albrecht-hwa-2007-regression,louis-nenkova-2013-automatically,gao-etal-2020-supert}, and noisy votes can be
+aggregated by Dawid--Skene EM \citep{dawid-skene-1979-maximum}; both serve as baselines here.
+
+\paragraph{Testing evaluators.} Correlation can hide what a metric cannot see. Behavioral tests
+\citep{ribeiro-etal-2020-beyond} and perturbation checklists for generation metrics \citep{sai-etal-2021-perturbation}
+inject controlled errors, and \citet{deutsch-etal-2022-limitations} show that reference-free metrics favor outputs that
+resemble their own underlying models. We use both ideas: error injection with a quality-neutral control
+(\S\ref{sec:views}) and a check for same-family bias (\S\ref{sec:rq1}). We are not aware of work that evaluates
+reference-free estimators of sentence segmentation quality in this way.

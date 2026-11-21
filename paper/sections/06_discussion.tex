@@ -1,0 +1,22 @@
+% ====================================================================================================
+% SECTION 6  DISCUSSION  (budget ~0.5 page)
+%   Main findings; future work.
+% ====================================================================================================
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Main findings.} (1)~Reference-free quality estimation for sentence segmentation is feasible: with good
+boundary evidence and a normalized, document-end-aware score, it tracks true quality on held-out splits and ranks
+segmenters correctly. (2)~Evidence that fuses course techniques with pretrained neural models is comparable to a strong
+off-the-shelf segmenter used as an evaluator; the two fail on different error types, and their unweighted average helps
+on web text. (3)~Controlled error injection is needed next to correlation: it shows what each evaluator cannot see---
+consensus misses shared errors, perplexity is not comparable across documents and ignores abbreviation errors, and
+evidence trained with paragraph cues misses in-paragraph boundaries. Thresholded at 0.5, the boundary-only version
+of our fused evidence is also a competitive segmenter in its own right, matching or beating the SaT system we evaluate
+(App.~\ref{app:sat}).
+
+\paragraph{Future work.} Better evidence for unpunctuated boundaries in text without layout; adapting the evidence to a
+target corpus's annotation conventions from a handful of examples; combining evidence sources whose blind spots differ;
+one objective for training and evaluation; and domains where the best segmenter changes, so that selection has room to
+help.

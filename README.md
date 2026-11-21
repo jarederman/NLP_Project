@@ -16,7 +16,7 @@
 - `src/quality_agreement.py`：跨文档质量一致性（主指标：全局 Spearman；按 |ΔGold F1| 分档的配对准确率）。
 - `src/boundary_probe.py`、`src/boundary_probe_eval.py`、`src/layout_data.py`：`[MASK]` 隐状态探针、插入似然比与版面控制变量（修订 3）。
 - `src/ewt_test.py`：冻结方法的 EWT 一次性测试（修订 4）。
-- `paper/main.tex`、`paper/references.bib`：论文草稿（ACL 格式，英文；2026-11-21 起取代已删除的中文草稿 `paper/draft.md`）；`paper/outline.md`：提纲；`paper/figures/make_figures.py`、`make_tables.py` 从结果文件生成图和附录表。
+- `paper/main.tex`、`paper/sections/`（正文各节）、`paper/appendix/`（附录 A–H）、`paper/references.bib`：论文草稿（ACL 格式，英文；2026-11-21 起取代已删除的中文草稿 `paper/draft.md`）；`python3 paper/make_overleaf_zip.py` 生成可直接上传 Overleaf 的 `paper/overleaf_upload.zip`；`paper/outline.md`：提纲；`paper/figures/make_figures.py`、`make_tables.py` 从结果文件生成图和附录表。
 - `tests/`：不依赖 GPU 的数据契约与 selection-metric 单元测试。
 - `results/`：正式输出；`logs/`：Slurm stdout/stderr。
 

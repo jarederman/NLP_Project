@@ -1,0 +1,19 @@
+% ====================================================================================================
+% APPENDIX A  PRELIMINARY EXPLORATION
+%   Synthetic candidates, Qwen vs. BERT, normalization, context conditioning.
+% ====================================================================================================
+
+\section{Preliminary Exploration}
+\label{app:prelim}
+Before real segmenter outputs were available, we studied synthetic candidates on GUM dev: gold-derived benchmarks in which
+sentence-final punctuation was removed and Gold/Over/Under/Shift/Mixed candidates were generated, scored with the
+next-token terminal-punctuation probability of a decoder LLM (Qwen3.5-9B, left context only) and with BERT's
+\texttt{[MASK]} probability (bidirectional context). BERT evidence was better, and only BERT benefited from
+normalization (global Spearman of Soft F1 on synthetic GUM dev candidates: Qwen 0.211 $\to$ 0.217 normalized, BERT
+0.239 $\to$ 0.442). On real segmenter outputs (GUM train, 5-fold cross-fitting, 788 items) normalization raised BERT's
+agreement from 0.118 to 0.354 ($+0.235$ [$+0.181$, $+0.286$]) without changing within-document order. Conditioning
+BERT's context on the candidate (adding or removing periods where the candidate cuts) lowered agreement (0.354 $\to$
+0.318 and 0.275): the evidence then mostly confirms the candidate's own errors (mean $p$ at the candidate's false
+boundaries 0.24 $\to$ 0.45). An oracle analysis on GUM train showed what limits the first evaluator: replacing the
+evidence at unpunctuated gold boundaries by 1 raised within-document pairwise accuracy from 0.63 to 0.85, while fixing
+calibration at punctuated gaps raised it only to 0.67 (App.~\ref{app:blindspots}).

@@ -1,0 +1,14 @@
+% ====================================================================================================
+% APPENDIX F  SELECTION
+%   Selection regret vs. Always-SaT.
+% ====================================================================================================
+
+\section{Selection}
+\label{app:selection}
+SaT-3l-sm is the best segmenter on every corpus (macro F1, flat: GUM 0.971 vs.\ Stanza 0.949; GENTLE 0.818 vs.\ 0.781;
+LinES test 0.954 vs.\ 0.950; EWT test 0.897 vs.\ 0.878; EWT dev 0.901 vs.\ 0.899; LinES train+dev 0.963 vs.\ 0.956).
+Always choosing SaT therefore has zero corpus-level regret, and an evaluator can at best tie it. The final evaluator ranks
+SaT first at corpus level on every corpus. Routing each document to the segmenter with the highest score does worse than
+always using SaT on GUM for every evaluator we tried (e.g., stack $+0.006$ [$+0.003$, $+0.010$] regret over Always-SaT);
+on GENTLE only an earlier multi-system QE regression did better ($-0.043$ [$-0.079$, $-0.015$]); on LinES no difference
+is significant (amendment 8; \texttt{results/a8/summary.md}).

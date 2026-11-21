@@ -1,0 +1,19 @@
+% ====================================================================================================
+% ABSTRACT (~190 words)
+%   Problem, method, evaluation design, headline numbers, limits.
+% ====================================================================================================
+
+\begin{abstract}
+Sentence segmentation quality is hard to measure in a new domain, where gold boundaries are missing.
+Reference-free quality estimation for segmentation has received little attention, and so has the question of how to
+evaluate such an estimator. We build an evaluator that predicts a boundary probability at every gap between words,
+fusing regular-expression rules, a Kneser--Ney $n$-gram model, a probe on a frozen BERT and two pretrained neural
+boundary models, and that scores a segmentation by its normalized Soft F1 against these probabilities. We evaluate it on
+the outputs of Punkt, Stanza, WtP and SaT on held-out English splits, against simple and adapted baselines, with three
+views: agreement with true quality, agreement on the ranking of segmenters, and controlled error injection with a
+quality-neutral control. On a fresh split of web text the evaluator reaches a Spearman correlation of 0.80 with true
+quality (0.85 when paragraph structure is given), well above heuristics, language-model perplexity and system consensus
+(0.66), and comparable to a strong supervised segmenter used as an evaluator. Error injection shows what remains hard:
+boundaries without terminal punctuation, false splits after abbreviations, and annotation conventions that differ from
+the training corpus.
+\end{abstract}

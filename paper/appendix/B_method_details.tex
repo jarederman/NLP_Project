@@ -1,0 +1,99 @@
+% ====================================================================================================
+% APPENDIX B  METHOD DETAILS AND DEVELOPMENT
+%   Hyperparameters; development ladder; controlled comparison of training objectives.
+% ====================================================================================================
+
+\section{Method Details and Development}
+\label{app:method}
+
+\paragraph{Probe and PuncEv.} Frozen \texttt{google-bert/bert-base-uncased}; raw-text context of about 126 tokens on
+each side; one query per gap; a visible terminal mark (including one inside closing quotes) is replaced by
+\texttt{[MASK]}, otherwise \texttt{[MASK]} is inserted. PuncEv is the Platt-calibrated probability that the mask is a
+terminal mark. The probe (Eq.~\ref{eq:probe}) is an L2 logistic regression ($\lambda = 10^{-3}$) on the layer-8 and
+layer-12 states plus insertion likelihood ratios (change of the masked log-probabilities of the 2 left and 3 right tokens
+when a period is inserted).
+
+\paragraph{Rules and $n$-gram.} 24 casing-free features: the category of the left context (terminal punctuation, none
+after an alphanumeric token, none after other tokens, dash, colon, semicolon, comma), abbreviation cues (known
+abbreviation, single letter, short token, internal period, a Punkt-style document-level type statistic), log distance
+to the previous and next terminal mark, list markers, numbers and times on the left, and closers, digits, bullets,
+openers and list markers on the right. An interpolated Kneser--Ney trigram model \citep{kneser-ney-1995-improved,chen-goodman-1999-empirical}
+ trained on lower-cased GUM training sentences gives four features: $\log P(\langle/s\rangle
+\mid w_{i-1} w_i)$, $\log P(w_{i+1} \mid \langle s\rangle\langle s\rangle)$, $\log P(w_{i+1} \mid w_{i-1} w_i)$ and the
+log-ratio of the first two to the third.
+
+\paragraph{Neural sources.} SaT-12l (zero-shot; not the \texttt{-sm} variant, which was trained on UD data) gives a
+boundary logit per gap. The ModernBERT-large tagger reads lower-cased text in windows of 510 tokens (stride 256) and
+predicts one logit per word from its last sub-token; 3 epochs, AdamW, learning rate $2\cdot 10^{-5}$, batch 16, 10\%
+warm-up, weight decay 0.01; during training the terminal mark before a gold boundary is dropped with probability 0.3.
+Development scores use 15 leave-one-genre-out taggers; the final tagger is trained on all of GUM train. With three extra
+seeds the tagger alone is unstable (leave-one-genre-out $\rho$ 0.59--0.78), the fused stack much less ($0.804 \pm 0.010$).
+
+\paragraph{Fusion.} Features are standardized on the training documents. Eq.~\ref{eq:objective} is minimized in double
+precision by L-BFGS (strong Wolfe line search, at most 200 iterations), starting from the boundary-only solution. The
+flat evaluator uses the cased SaT-12l logit; the layout evaluator uses lower-cased inputs, the paragraph flag, and a
+tagger fine-tuned on text with newlines.
+
+\subsection{Development ladder}
+\label{app:ladder}
+Each step adds one component; all numbers are global $\rho$ under $\Qt$. \textbf{Bold}: best in the column (within
+each block) and values within 0.01 of it.
+
+\begin{center}
+\small
+\fitbox{\begin{tabular}{lcccccc}
+\toprule
+Flat text & GUM (D) & GENTLE & LinES test & EWT test & EWT dev (T) & LinES tr+dev (T) \\
+\midrule
+PuncEv (B3) & 0.351 & 0.542 & 0.758 & 0.508 & 0.464 & 0.440 \\
+Probe & 0.568 & 0.661 & \textbf{0.868} & 0.647 & 0.595 & \textbf{0.651} \\
+Stack (BCE; lower-cased) & 0.817 & 0.881 & 0.818 & 0.772 & 0.739 & 0.560 \\
++ cased SaT-12l & 0.877 & \textbf{0.901} & 0.840 & \textbf{0.814} & \textbf{0.800} & 0.541 \\
++ quality training (final, flat) & \textbf{0.903} & \textbf{0.907} & \textbf{0.873} & 0.787 & \textbf{0.797} & 0.563 \\
+\midrule
+Paragraphs given & GUM (D) & GENTLE & & EWT test & EWT dev (T) & \\
+\midrule
+Probe & 0.690 & 0.643 & & 0.692 & 0.656 & \\
+Stack & 0.843 & 0.848 & & 0.800 & 0.776 & \\
++ cased SaT-12l & 0.897 & 0.867 & & 0.845 & 0.831 & \\
++ layout (lower-cased, paragraph flag) & \textbf{0.939} & 0.886 & & \textbf{0.892} & \textbf{0.847} & \\
++ quality training (final, layout) & \textbf{0.948} & \textbf{0.903} & & \textbf{0.894} & \textbf{0.851} & \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent Pre-registered one-shot tests on EWT dev (amendment 12): final $-$ probe $+0.202$ [$+0.146$, $+0.261$] (flat),
+$+0.195$ [$+0.133$, $+0.256$] (layout); final $-$ stack $+0.059$ [$+0.021$, $+0.103$] (flat), $+0.075$ [$+0.030$,
+$+0.121$] (layout). The gains do not transfer to LinES (Table~\ref{tab:hypotheses}).
+
+\subsection{Controlled comparison of training objectives}
+\label{app:objective}
+Same design matrix, leave-one-genre-out folds, items and $\Qt^0$ in every row; only the objective or a second stage
+changes (amendment 10). T1 = lower-cased flat features, T2 = cased flat (the flat evaluator), T3 = layout.
+\textbf{Bold}: best in the column and values within 0.01 of it (the last two rows are paired differences).
+
+\begin{center}
+\small
+\fitbox{\begin{tabular}{lccc}
+\toprule
+GUM leave-one-genre-out $\rho$ & T1 & T2 & T3 \\
+\midrule
+Boundary loss only (stack) & 0.818 & 0.877 & \textbf{0.939} \\
+Post-hoc ridge quality regression & 0.819 & 0.860 & 0.927 \\
+F1 regressor / residual regression & 0.820 & 0.873 & 0.930 \\
+Quality loss only & 0.795 & 0.849 & 0.933 \\
+Quality + ranking loss & 0.805 & 0.849 & 0.937 \\
+Quality + boundary loss (adopted) & \textbf{0.849} & \textbf{0.903} & \textbf{0.948} \\
+Quality + boundary + ranking loss & \textbf{0.848} & \textbf{0.903} & \textbf{0.948} \\
+\midrule
+Adopted $-$ boundary only & $+0.031$ [$+0.014$, $+0.049$] & $+0.026$ [$+0.014$, $+0.038$] & $+0.009$ [$+0.004$, $+0.015$] \\
+Same, one segmenter held out & $+0.021$ [$+0.004$, $+0.038$] & $+0.022$ [$+0.011$, $+0.034$] & $+0.010$ [$+0.005$, $+0.015$] \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\noindent Post-hoc regressions over the four segmenters degrade when a segmenter is held out ($-0.016$ to $-0.040$ vs.\
+boundary-only), i.e., they learn these systems rather than quality. Without the boundary loss the probabilities drift
+(held-out log loss 3--4$\times$ higher) and GENTLE drops by 0.08--0.10. With the adopted objective, held-out boundary
+log loss is almost unchanged (T2: 0.0103 $\to$ 0.0107). On the re-used tests the gain shrinks and is mostly n.s.\
+(GENTLE T3 $+0.020$ [$+0.005$, $+0.039$]; EWT $-0.008$ to $+0.002$).

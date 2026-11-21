@@ -1,0 +1,23 @@
+% ====================================================================================================
+% LIMITATIONS + CONTRIBUTIONS  (unnumbered; not counted toward the 8 pages)
+%   TODO(team): contribution statement and author names.
+% ====================================================================================================
+
+\section*{Limitations}
+English only, four segmenters and UD annotation. The layout condition takes paragraph breaks from UD, where they are
+sentence boundaries by construction, so results with paragraphs are optimistic (``structure given''). The held-out sets are
+small (GENTLE 26 documents, LinES 9 and 18) and the new splits are new documents, not new domains. Baseline comparisons
+and the sensitivity test are post hoc; only the final evaluator's scores on EWT dev and LinES train+dev are one-shot tests,
+and its numbers on GENTLE, LinES test and EWT test are re-used tests. The training objective omits the document-end term
+used in evaluation (harmless on GUM, but not unified). Training data overlap: SaT-sm and Stanza were trained on GUM (and
+Stanza on EWT); our evidence and SaT-12l-sm are both supervised on GUM, and GENTLE follows GUM's conventions. The design
+was adaptive (13 dated, pre-registered amendments); the document-end correction was found post hoc on a re-used test and
+then confirmed on a new split. An independent code review found five issues that affected reported numbers; after the
+fixes, the pre-registered selections and all one-shot hypotheses are unchanged (App.~\ref{app:protocol}). Selecting a
+segmenter was not shown to beat always using SaT, and transfer to different annotation conventions (LinES) fails.
+
+\section*{Contributions and Availability}
+% TODO(team): confirm the team-size / contribution statement with the instructor.
+Weifeng: method, experiments, analysis, \S3--5 and appendix. Yanhan: \S1--2, figures, examples, presentation. Both:
+\S6--7. Code, configurations, Slurm scripts and all result files are in the project repository; every number in this
+paper is produced by a script listed in App.~\ref{app:protocol}.

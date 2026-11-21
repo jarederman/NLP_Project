@@ -1,0 +1,16 @@
+% ====================================================================================================
+% APPENDIX G  SAT ANALYSIS AND EVIDENCE AS A SEGMENTER
+%   Evidence thresholded at 0.5 vs. SaT.
+% ====================================================================================================
+
+\section{SaT Analysis and Evidence as a Segmenter}
+\label{app:sat}
+Thresholded at $p \ge 0.5$, our fused evidence is itself a segmenter. Macro F1 against the SaT-3l-sm system we evaluate
+(same input condition, paired CI): the cased flat stack is better on GENTLE ($+0.043$ [$+0.003$, $+0.088$]), EWT test
+($+0.049$ [$+0.029$, $+0.070$]) and LinES ($+0.013$ [$+0.003$, $+0.024$]); the layout stack is better on EWT ($+0.020$
+[$+0.003$, $+0.037$]) and n.s.\ on GENTLE and LinES. Against SaT-12l-sm, the strongest SaT, the cased flat stack is better
+on EWT ($+0.029$ [$+0.008$, $+0.051$]) but worse on GENTLE ($-0.027$ [$-0.046$, $-0.007$]); a cased layout variant is
+better on GENTLE ($+0.028$) and EWT ($+0.024$). Both our evidence and SaT-12l-sm are supervised on GUM, and GENTLE follows
+GUM's conventions. SaT-12l-sm alone would be the strongest single evidence source (GUM 0.897), but it shares family and
+training data with the evaluated SaT-3l-sm and overrates it on GUM (rank residual $+0.078$), so it is a baseline, not a
+component.

@@ -1,0 +1,26 @@
+% ====================================================================================================
+% APPENDIX E  BLIND-SPOT DIAGNOSIS
+%   Casing x layout factorial; oracle ceiling; layout dependence.
+% ====================================================================================================
+
+\section{Blind-Spot Diagnosis}
+\label{app:blindspots}
+\paragraph{Casing $\times$ layout.} A $2 \times 2$ factorial on the boundary-only stack (GUM, leave-one-genre-out, systems
+see newlines): lower-cased flat 0.844, cased flat 0.908, lower-cased with layout 0.939, cased with layout 0.944. Layout
+helps by $+0.095$ [$+0.075$, $+0.118$] for lower-cased evidence and $+0.036$ [$+0.025$, $+0.048$] for cased evidence;
+casing helps by $+0.064$ [$+0.046$, $+0.085$] on flat text and $+0.005$ (n.s.) with layout; the interaction is $-0.059$
+[$-0.078$, $-0.043$]. Casing and layout repair
+the same blind spot: most unpunctuated boundaries in GUM are paragraph breaks, after which the next word is
+capitalized. SaT-12l is unaffected by newlines (it was trained to predict them and treats them as spaces); the layout
+gain comes from the tagger and the paragraph flag.
+
+\paragraph{Evidence by left context and the oracle ceiling.} With the first evaluator (PuncEv), 94\% of gaps after
+terminal punctuation were gold boundaries but unpunctuated gold boundaries (titles, list items, about 10\% of GUM
+boundaries) received mean $p = 0.29$. Replacing the evidence only at those boundaries by 1 lifted within-document
+pairwise accuracy from 0.63 to 0.85 and genre-mean $\tau$ from 0.29 to 0.71, more than any calibration fix at punctuated
+gaps (0.67, 0.42). The probe raised mean $p$ at unpunctuated gold boundaries from 0.25 to 0.56 and lowered it at
+punctuated non-boundaries from 0.64 to 0.20.
+
+\paragraph{Layout dependence.} LinES has no paragraph breaks. Applied to it, the layout-trained stack drops from 0.818 to
+0.744 (n.s., 9 documents) and its response to unpunctuated missed boundaries turns negative: without newlines it suppresses exactly those
+boundaries. Hence the layout evaluator is used only for input with layout.

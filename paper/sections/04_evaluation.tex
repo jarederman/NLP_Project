@@ -1,0 +1,111 @@
+% ====================================================================================================
+% SECTION 4  EVALUATING AN EVALUATOR  (budget ~1.2 pages)
+%   4.1 data and input conditions (Table 2) | 4.2 baselines B1-B9 | 4.3 three views V1-V3 (Eq. 6-7)
+%   4.4 protocol and status letters D / T / R / P
+% ====================================================================================================
+
+\section{Evaluating an Evaluator}
+\label{sec:eval}
+
+\subsection{Data, segmenters and input conditions}
+\label{sec:data}
+Table~\ref{tab:data} lists the corpora, all English UD treebanks. GUM train \citep{zeldes-2017-gum} is used for training
+and development by leave-one-genre-out cross-fitting (15 genres). EWT test \citep{silveira-etal-2014-gold}, GENTLE
+test \citep{aoyama-etal-2023-gentle} and LinES test \citep{ahrenberg-2007-lines} were used to test earlier frozen
+versions of the evaluator, so their numbers for the final evaluator are \emph{re-used} tests (R). EWT dev and LinES
+train+dev had never been processed before the final evaluator's one-shot test (T); they are new documents, not new
+domains. GUM test is never read. The candidates are the outputs of Punkt, Stanza, WtP (\texttt{wtp-bert-mini}) and SaT
+(\texttt{sat-3l-sm}) with default settings; an \emph{item} is a document paired with one segmenter's output. Training-data
+overlap: Stanza's English model was trained on GUM and EWT training data and the SaT-sm models on UD training data
+including GUM train; the test splits of GENTLE and LinES are unseen by all models.
+
+\begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{3.2pt}
+  \fitbox{\begin{tabular}{@{}lrrrrrc@{}}
+    \toprule
+    Split & Docs & Gen. & Words & Bound. & No punct. & Status \\
+    \midrule
+    GUM train & 197 & 15 & 169k & 11{,}117 & 10.9\% & D \\
+    GENTLE test & 26 & 8 & 15k & 1{,}308 & 43.1\% & R \\
+    LinES test & 9 & -- & 17k & 1{,}112 & 6.2\% & R \\
+    EWT test & 316 & 5 & 22k & 1{,}761 & 29.8\% & R \\
+    EWT dev & 318 & 5 & 22k & 1{,}683 & 23.9\% & T \\
+    LinES tr+dev & 18 & -- & 75k & 4{,}557 & 6.3\% & T \\
+    \bottomrule
+  \end{tabular}}
+  \caption{Corpora. Bound.: gold sentence boundaries inside documents; No punct.: share of them whose preceding word does
+  not end in terminal punctuation (titles, list items, dashes, missing periods). EWT test and dev contain 33 and 42
+  single-sentence documents. Status of the final evaluator's numbers: D development (leave-one-genre-out), R re-used test,
+  T pre-registered one-shot test. LinES has no genre labels and is resampled as one stratum.}
+  \label{tab:data}
+\end{table}
+
+\paragraph{Input conditions.} \emph{Flat text} is the default, fully reference-free setting: paragraph breaks are
+replaced by spaces. \emph{Paragraph layout} is a controlled condition in which the paragraph breaks recorded in UD
+(\texttt{\# newpar}) are given as newlines to segmenters and evaluators. In UD every paragraph break is a sentence
+boundary, so this condition supplies part of the gold structure; we report it as ``paragraphs given'', not as raw text.
+LinES has no paragraph markup and appears only in the flat condition.
+
+\subsection{Baselines}
+\label{sec:baselines}
+We compare with the evaluators a reader would naturally try. \textbf{B1} punctuation rule: candidate F1 against a
+pseudo-reference that cuts after every terminal punctuation mark. \textbf{B2} length prior: mean log-probability of the
+candidate's sentence lengths under the GUM length distribution. \textbf{B3} masked LM: the PuncEv probability of
+\S\ref{sec:tried} with our scoring $\Qt$. \textbf{B4} the strongest available segmenter, SaT-12l-sm, as
+pseudo-reference (candidate F1 against its segmentation). \textbf{B5} SaT-12l-sm's Platt-calibrated
+\citep{platt-1999-probabilistic} boundary probabilities with our scoring $\Qt$. \textbf{B6} consensus: F1 against the
+majority vote of the other three segmenters. \textbf{B7} DocAgree: the mean pairwise F1 among the four outputs, which
+measures only how hard a document is (constant within a document). \textbf{B8} GPT-2 \citep{radford-etal-2019-language}
+perplexity: mean token log-likelihood of the text written one sentence per line. \textbf{B9} Dawid--Skene EM over the four
+segmenters' votes \citep{dawid-skene-1979-maximum}, leave-one-out posterior of the other three systems, with our scoring.
+In the layout condition the baselines also see the paragraph breaks. All learned parts (B2, B5, B9) are fitted on GUM
+or on the evaluated system outputs only. Note that SaT-12l-sm was trained on GUM train.
+
+\subsection{Three views}
+\label{sec:views}
+\paragraph{V1: agreement with true quality.} Our primary criterion is the Spearman correlation over \emph{all} items
+of a corpus,
+\begin{equation}
+  \rho = \operatorname{Spearman}\big(\{s(X_d, y_{ds})\},\ \{\Fone(y_{ds}, g_d)\}\big)_{(d,s)},
+  \label{eq:rho}
+\end{equation}
+which requires scores to be comparable across documents and domains. We also report within-document pairwise accuracy:
+the share of pairs of segmenters on the same document with different true F1 that the score orders correctly (score ties
+count $\frac12$).
+
+\paragraph{V2: ranking the segmenters.} Kendall's $\tau_b$ between the evaluator's ranking of the four segmenters (by mean
+score) and their true ranking (by mean F1), computed per genre and averaged (and per document).
+
+\paragraph{V3: controlled sensitivity.} For each document we take the gold segmentation $g$ and inject exactly one error
+of a given type, 20 times at random positions. The \emph{detection rate} is the probability that the score drops,
+\begin{equation}
+  D_t = \Pr\big[s(X, g \oplus e_t) < s(X, g)\big] + \tfrac12 \Pr\big[s(X, g \oplus e_t) = s(X, g)\big],
+  \label{eq:detection}
+\end{equation}
+averaged over documents that contain a position of type $t$. Error types: removing a gold boundary after terminal
+punctuation (M-term), without terminal punctuation at a paragraph break (M-par) or inside a paragraph (M-inpar); adding a
+false boundary after a period that does not end a sentence, i.e.\ after abbreviations or numbering (S-abbr), after other
+punctuation such as a comma (S-punct), or with no punctuation (S-none); and shifting a boundary by up to three words. The
+\emph{control} moves one injected false boundary to another random non-boundary gap, which leaves true quality
+unchanged. Because the two positions are exchangeable, every evaluator sits at 0.5 in expectation; the control is a
+sanity check of the procedure (no directional bias, correct handling of ties), not evidence that a response is driven by
+quality. An error type counts as detected when the 95\% CI of $D_t$ lies above 0.5. V3 is needed because V1 can be high
+without any sensitivity: DocAgree reacts to no error at all, yet reaches $\rho = 0.51$--$0.77$.
+
+\subsection{Protocol and status of the numbers}
+\label{sec:protocol}
+Scores are written to disk before gold is loaded (gold isolation). All method decisions were made on GUM by
+leave-one-genre-out cross-fitting, with selection rules written down before the results were computed; the
+protocol was amended 13 times, always before the affected numbers existed (App.~\ref{app:protocol}). Confidence intervals
+come from a genre-stratified document bootstrap \citep{efron-tibshirani-1993-introduction} with 1000 resamples; paired
+differences use the same resamples. For the final evaluator, GUM numbers are development (D); GENTLE, LinES test and EWT
+test are re-used tests (R); EWT dev and LinES train+dev are pre-registered one-shot tests (T), with the primary hypothesis
+that the final evaluator beats consensus in the layout condition. \textbf{All baseline numbers, comparisons with
+baselines and the sensitivity test are post hoc (P)}: computed after the one-shot test, without changing the final
+evaluator; baselines are fixed or fitted on GUM only.\footnote{Scores are rounded to $10^{-10}$ before ranking so that
+identical segmentations get identical ranks. On GUM, the fused model is fitted leave-one-genre-out but its learned base
+features (probe, tagger, $n$-gram) are not nested; refitting the probe and $n$-gram features nested changes the final
+evaluator's GUM $\rho$ by $+0.0005$ (flat) and $+0.0007$ (layout), both n.s., so the GUM numbers are not inflated
+(App.~\ref{app:protocol}).}
