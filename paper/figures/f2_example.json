@@ -1,0 +1,22 @@
+{
+ "doc": "reviews-030875",
+ "text": "Slice Pizza at former Britt's Location Britt's Pizza is long gone. Their location, the northwest corner of S. 10th & Federal Sts., is now home to Slice Pizza.",
+ "scores": {
+  "sat": 0.9698705946682876,
+  "punkt": 0.7553697915001132,
+  "wtp": 0.6607537367341391
+ },
+ "true_f1": {
+  "sat": 1.0,
+  "punkt": 0.6666666666666666,
+  "wtp": 0.5
+ },
+ "gold_score": 0.9698705946682876,
+ "p": {
+  "Slice": 0.195,
+  "Pizza": 0.141,
+  "Britt's": 0.537,
+  "Location": 0.995,
+  "gone.": 0.985
+ }
+}
